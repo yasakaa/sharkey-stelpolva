@@ -56,7 +56,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				.andWhere('following.followeeHost = :host', { host: ps.host });
 
 			if (!await this.roleService.isModerator(me)) {
-				query.leftJoin(MiBlocking, 'blocking', 'blocking."blockerId" = following."followerId" AND blocking."blockeeId" = :me', { me: me.id });
+				query.leftJoin(MiBlocking, 'blocking', 'blocking."blockerId" = following."followeeId" AND blocking."blockeeId" = :me', { me: me.id });
 				query.andWhere('blocking.id IS NULL');
 			}
 

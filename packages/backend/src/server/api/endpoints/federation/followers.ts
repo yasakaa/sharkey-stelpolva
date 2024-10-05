@@ -5,10 +5,11 @@
 
 import { Inject, Injectable } from '@nestjs/common';
 import { Endpoint } from '@/server/api/endpoint-base.js';
-import type { FollowingsRepository } from '@/models/_.js';
+import { MiBlocking, type FollowingsRepository } from '@/models/_.js';
 import { QueryService } from '@/core/QueryService.js';
 import { FollowingEntityService } from '@/core/entities/FollowingEntityService.js';
 import { DI } from '@/di-symbols.js';
+import { RoleService } from '@/core/RoleService.js';
 
 export const meta = {
 	tags: ['federation'],
@@ -48,10 +49,16 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 
 		private followingEntityService: FollowingEntityService,
 		private queryService: QueryService,
+		private roleService: RoleService,
 	) {
 		super(meta, paramDef, async (ps, me) => {
 			const query = this.queryService.makePaginationQuery(this.followingsRepository.createQueryBuilder('following'), ps.sinceId, ps.untilId)
 				.andWhere('following.followeeHost = :host', { host: ps.host });
+
+			if (!await this.roleService.isModerator(me)) {
+				query.leftJoin(MiBlocking, 'blocking', 'blocking."blockerId" = following."followerId" AND blocking."blockeeId" = :me', { me: me.id });
+				query.andWhere('blocking.id IS NULL');
+			}
 
 			const followings = await query
 				.limit(ps.limit)

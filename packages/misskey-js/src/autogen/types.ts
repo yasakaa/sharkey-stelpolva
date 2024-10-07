@@ -1645,7 +1645,7 @@ export type paths = {
      * federation/followers
      * @description No description provided.
      *
-     * **Credential required**: *No*
+     * **Credential required**: *Yes* / **Permission**: *read:account*
      */
     post: operations['federation___followers'];
   };
@@ -1654,7 +1654,7 @@ export type paths = {
      * federation/following
      * @description No description provided.
      *
-     * **Credential required**: *No*
+     * **Credential required**: *Yes* / **Permission**: *read:account*
      */
     post: operations['federation___following'];
   };
@@ -15563,7 +15563,7 @@ export type operations = {
    * federation/followers
    * @description No description provided.
    *
-   * **Credential required**: *No*
+   * **Credential required**: *Yes* / **Permission**: *read:account*
    */
   federation___followers: {
     requestBody: {
@@ -15626,7 +15626,7 @@ export type operations = {
    * federation/following
    * @description No description provided.
    *
-   * **Credential required**: *No*
+   * **Credential required**: *Yes* / **Permission**: *read:account*
    */
   federation___following: {
     requestBody: {

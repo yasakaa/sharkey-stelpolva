@@ -5153,6 +5153,9 @@ export type components = {
       iconUrl: string | null;
       sidebarLogoUrl: string | null;
       maxNoteTextLength: number;
+      maxRemoteNoteTextLength: number;
+      maxAltTextLength: number;
+      maxRemoteAltTextLength: number;
       ads: {
           /**
            * Format: id

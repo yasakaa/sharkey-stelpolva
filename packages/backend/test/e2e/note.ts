@@ -9,9 +9,11 @@ process.env.NODE_ENV = 'test';
 
 import * as assert from 'assert';
 import { MiNote } from '@/models/Note.js';
-import { MAX_NOTE_TEXT_LENGTH } from '@/const.js';
 import { api, castAsError, initTestDb, post, role, signup, uploadFile, uploadUrl } from '../utils.js';
 import type * as misskey from 'misskey-js';
+
+// TODO: these tests are probably wrong for depending on this, but that's a problem for later.
+const MAX_NOTE_TEXT_LENGTH = 3000;
 
 describe('Note', () => {
 	let Notes: Repository<MiNote>;

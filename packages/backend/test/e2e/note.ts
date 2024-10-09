@@ -12,7 +12,7 @@ import { MiNote } from '@/models/Note.js';
 import { api, castAsError, initTestDb, post, role, signup, uploadFile, uploadUrl } from '../utils.js';
 import type * as misskey from 'misskey-js';
 
-// TODO: these tests are probably wrong for depending on this, but that's a problem for later.
+// Important: this must match the value of maxNoteLength in .config/ci.yml!
 const MAX_NOTE_TEXT_LENGTH = 3000;
 
 describe('Note', () => {

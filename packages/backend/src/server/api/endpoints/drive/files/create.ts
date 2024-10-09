@@ -60,7 +60,7 @@ export const meta = {
 		commentTooLong: {
 			message: 'Cannot upload the file because the comment exceeds the instance limit.',
 			code: 'COMMENT_TOO_LONG',
-			id: 'sj3hsm2l-s83j-4sk3-sk3j-sn3k2k4nsm3l',
+			id: '333652d9-0826-40f5-a2c3-e2bedcbb9fe5',
 		},
 	},
 } as const;

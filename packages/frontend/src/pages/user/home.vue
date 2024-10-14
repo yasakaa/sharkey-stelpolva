@@ -145,36 +145,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 						<XListenBrainz :key="user.id" :user="user" :collapsed="true"/>
 					</MkLazy>
 				</template>
-				<!-- <div v-if="!disableNotes">
-					<MkLazy>
-						<XTimeline :user="user"/>
-					</MkLazy>
-				</div> -->
-				<MkStickyContainer>
-					<template #header>
-						<!-- You can't use v-if on these, as MkTab first *deletes* and replaces all children with native HTML elements. -->
-						<!-- Instead, we add a "no notes" placeholder and default to null (all notes) if there's nothing pinned. -->
-						<!-- It also converts all comments into text! -->
-						<MkTab v-model="noteview" :class="$style.tab">
-							<option value="pinned">{{ i18n.ts.pinnedOnly }}</option>
-							<option :value="null">{{ i18n.ts.notes }}</option>
-							<option value="all">{{ i18n.ts.all }}</option>
-							<option value="files">{{ i18n.ts.withFiles }}</option>
-						</MkTab>
-					</template>
-					<MkLazy>
-						<div v-if="noteview === 'pinned'" class="_gaps">
-							<div v-if="user.pinnedNotes.length < 1" class="_fullinfo">
-								<img :src="infoImageUrl" class="_ghost" aria-hidden="true" :alt="i18n.ts.noNotes"/>
-								<div>{{ i18n.ts.noNotes }}</div>
-							</div>
-							<div v-else class="_panel">
-								<MkNote v-for="note of user.pinnedNotes" :key="note.id" class="note" :class="$style.pinnedNote" :note="note" :pinned="true"/>
-							</div>
-						</div>
-						<MkNotes v-else :class="$style.tl" :noGap="true" :pagination="AllPagination"/>
-					</MkLazy>
-				</MkStickyContainer>
+				<notes-container :user="user" :includeFeatured="false" :includePinned="user.pinnedNotes.length > 0"/>
 			</div>
 		</div>
 		<div v-if="!narrow" class="sub _gaps" style="container-type: inline-size;">
@@ -190,8 +161,6 @@ SPDX-License-Identifier: AGPL-3.0-only
 <script lang="ts" setup>
 import { defineAsyncComponent, computed, onMounted, onUnmounted, nextTick, watch, ref } from 'vue';
 import * as Misskey from 'misskey-js';
-import MkTab from '@/components/MkTab.vue';
-import MkNotes from '@/components/MkNotes.vue';
 import MkFollowButton from '@/components/MkFollowButton.vue';
 import MkAccountMoved from '@/components/MkAccountMoved.vue';
 import MkRemoteCaution from '@/components/MkRemoteCaution.vue';
@@ -212,6 +181,7 @@ import { misskeyApi } from '@/scripts/misskey-api.js';
 import { isFollowingVisibleForMe, isFollowersVisibleForMe } from '@/scripts/isFfVisibleForMe.js';
 import { useRouter } from '@/router/supplier.js';
 import { getStaticImageUrl } from '@/scripts/media-proxy.js';
+import NotesContainer from '@/pages/user/notes-container.vue';
 import { infoImageUrl } from '@/instance.js';
 
 const MkNote = defineAsyncComponent(() =>
@@ -260,7 +230,6 @@ const memoDraft = ref(props.user.memo);
 const isEditingMemo = ref(false);
 const moderationNote = ref(props.user.moderationNote);
 const editModerationNote = ref(false);
-const noteview = ref<string | null>(null);
 
 const listenbrainzdata = ref(false);
 if (props.user.listenbrainz) {
@@ -298,26 +267,6 @@ const background = computed(() => {
 watch(moderationNote, async () => {
 	await misskeyApi('admin/update-user-note', { userId: props.user.id, text: moderationNote.value });
 });
-
-const pagination = {
-	endpoint: 'users/featured-notes' as const,
-	limit: 10,
-	params: computed(() => ({
-		userId: props.user.id,
-	})),
-};
-
-const AllPagination = {
-	endpoint: 'users/notes' as const,
-	limit: 10,
-	params: computed(() => ({
-		userId: props.user.id,
-		withRenotes: noteview.value === 'all',
-		withReplies: noteview.value === 'all',
-		withChannelNotes: noteview.value === 'all',
-		withFiles: noteview.value === 'files',
-	})),
-};
 
 const style = computed(() => {
 	if (props.user.bannerUrl == null) return {};
@@ -794,13 +743,6 @@ onUnmounted(() => {
 </style>
 
 <style lang="scss" module>
-.tl {
-	background-color: rgba(0, 0, 0, 0);
-	border-radius: var(--radius);
-	overflow: clip;
-	z-index: 0;
-}
-
 .tab {
 	margin-bottom: calc(var(--margin) / 2);
 	padding: calc(var(--margin) / 2) 0;
@@ -818,10 +760,6 @@ onUnmounted(() => {
 .verifiedLink {
 	margin-left: 4px;
 	color: var(--success);
-}
-
-.pinnedNote:not(:last-child) {
-	border-bottom: solid 0.5px var(--divider);
 }
 
 .infoBadges {

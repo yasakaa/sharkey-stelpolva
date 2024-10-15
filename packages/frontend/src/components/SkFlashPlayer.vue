@@ -19,17 +19,27 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<span>Always be wary of arbitrary code execution!</span>
 			<span>{{ i18n.ts.clickToShow }}</span>
 		</div>
+		<div v-if="ruffleError" class="player-hide">
+			<b><i class="ph-warning ph-bold ph-lg"></i> Flash Content Failed To Load:</b>
+			<code>{{ ruffleError }}</code>
+		</div>
+		<div v-else-if="loadingStatus" class="player-hide">
+			<b>Flash Content Is Loading<MkEllipsis/></b>
+			<MkLoading/>
+			<p>{{ loadingStatus }}</p>
+		</div>
 		<div ref="ruffleContainer" class="container"></div>
 	</div>
 	<div class="controls">
 		<button class="play" @click="playPause()">
-			<i v-if="player.value?.isPlaying" class="ph-pause ph-bold ph-lg"></i> <!-- FIXME: Broken? -->
+			<i v-if="player?.isPlaying" class="ph-pause ph-bold ph-lg"></i> <!-- FIXME: Broken? (Though less so than before) -->
 			<i v-else class="ph-play ph-bold ph-lg"></i>
 		</button>
 		<button class="stop" @click="stop()">
 			<i class="ph-stop ph-bold ph-lg"></i>
 		</button>
-		<input v-model="player.volume" type="range" min="0" max="1" step="0.1"/>
+		<input v-if="player" v-model="player.volume" type="range" min="0" max="1" step="0.1"/>
+		<input v-else type="range" min="0" max="1" value="1" disabled/>
 		<a class="download" :title="i18n.ts.download" :href="flashFile.url" target="_blank">
 			<i class="ph-download ph-bold ph-lg"></i>
 		</a>
@@ -43,12 +53,15 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { ref, nextTick, computed, watch, onDeactivated, onMounted } from 'vue';
+import { ref, computed, onDeactivated } from 'vue';
 import * as Misskey from 'misskey-js';
 import packageInfo from '../../package.json';
+import MkEllipsis from './global/MkEllipsis.vue';
+import MkLoading from './global/MkLoading.vue';
 import { i18n } from '@/i18n.js';
 import { defaultStore } from '@/store.js';
-import '@ruffle-rs/ruffle';
+import { PublicAPI, PublicAPILike } from '@/types/ruffle/setup'; // This gives us the types for window.RufflePlayer, etc via side effects
+import { PlayerElement } from '@/types/ruffle/player';
 
 const props = defineProps<{
 	flashFile: Misskey.entities.DriveFile
@@ -60,66 +73,105 @@ const comment = computed(() => { return props.flashFile.comment ?? ''; });
 let hide = ref((defaultStore.state.nsfw === 'force') ? true : isSensitive.value && (defaultStore.state.nsfw !== 'ignore'));
 let playerHide = ref(true);
 let ruffleContainer = ref<HTMLDivElement>();
-
-declare global {
-	interface Window {
-		RufflePlayer: any;
-	}
-}
-
-window.RufflePlayer = window.RufflePlayer || {};
-window.RufflePlayer.config = {
-	// Options affecting the whole page
-	'publicPath': `https://unpkg.com/@ruffle-rs/ruffle@${packageInfo.dependencies['@ruffle-rs/ruffle']}/`,
-	'polyfills': false,
-
-	// Options affecting files only
-	'allowScriptAccess': false,
-	'autoplay': true,
-	'unmuteOverlay': 'visible',
-	'backgroundColor': null,
-	'wmode': 'window',
-	'letterbox': 'on',
-	'warnOnUnsupportedContent': true,
-	'contextMenu': 'off',
-	'showSwfDownload': false,
-	'upgradeToHttps': window.location.protocol === 'https:',
-	'maxExecutionDuration': 15,
-	'logLevel': 'error',
-	'base': null,
-	'menu': true,
-	'salign': '',
-	'forceAlign': false,
-	'scale': 'showAll',
-	'forceScale': false,
-	'frameRate': null,
-	'quality': 'high',
-	'splashScreen': false,
-	'preferredRenderer': null,
-	'openUrlMode': 'allow',
-	'allowNetworking': 'all',
-	'favorFlash': true,
-	'socketProxy': [],
-	'fontSources': [],
-	'defaultFonts': {},
-	'credentialAllowList': [],
-	'playerRuntime': 'flashPlayer',
-	'allowFullscreen': false, // Handled by custom fullscreen button
-};
-
-const ruffle = window.RufflePlayer.newest();
-const player = ref(ruffle.createPlayer());
-player.value.style.width = '100%';
-player.value.style.height = '100%';
+let loadingStatus = ref<string | undefined>(undefined);
+let player = ref<PlayerElement | undefined>(undefined);
+let ruffleError = ref<string | undefined>(undefined);
 
 function dismissWarning() {
 	playerHide.value = false;
-	loadContent();
+	loadRuffle().then(() => {
+		try {
+			createPlayer();
+			loadContent();
+		} catch (error) {
+			handleError(error);
+		}
+	}).catch(handleError);
 }
 
+function handleError(error: unknown) {
+	if (error instanceof Error) ruffleError.value = error.stack;
+	else ruffleError.value = `${error}`; // Fallback for if something is horribly wrong
+}
+
+/**
+ * @throws if unpkg shits itself
+ */
+async function loadRuffle() {
+	if (window.RufflePlayer !== undefined) return;
+	loadingStatus.value = 'Loading Ruffle player';
+	await import('@ruffle-rs/ruffle'); // Assumption: this will throw if unpkg has a hiccup or something. If not, the next undefined check will catch it.
+	window.RufflePlayer = window.RufflePlayer as PublicAPILike | PublicAPI | undefined; // Assert unknown type due to side effects
+	if (window.RufflePlayer === undefined) throw Error('unpkg has shit itself, but not in an expected way (has unpkg permanently shut down? how close is the heat death of the universe?)');
+
+	window.RufflePlayer.config = {
+		// Options affecting the whole page
+		'publicPath': `https://unpkg.com/@ruffle-rs/ruffle@${packageInfo.dependencies['@ruffle-rs/ruffle']}/`,
+		'polyfills': false,
+
+		// Options affecting files only
+		'allowScriptAccess': false,
+		'autoplay': true,
+		'unmuteOverlay': 'visible',
+		'backgroundColor': null,
+		'wmode': 'window',
+		'letterbox': 'on',
+		'warnOnUnsupportedContent': true,
+		'contextMenu': 'off', // Prevent two overlapping context menus. Most of the stuff in this context menu is available in the controls below the player.
+		'showSwfDownload': false, // Handled by custom download button
+		'upgradeToHttps': window.location.protocol === 'https:',
+		'maxExecutionDuration': 15,
+		'logLevel': 'error',
+		'base': null,
+		'menu': true,
+		'salign': '',
+		'forceAlign': false,
+		'scale': 'showAll',
+		'forceScale': false,
+		'frameRate': null,
+		'quality': 'high',
+		'splashScreen': false,
+		'preferredRenderer': null,
+		'openUrlMode': 'allow',
+		'allowNetworking': 'all',
+		'favorFlash': true,
+		'socketProxy': [],
+		'fontSources': [],
+		'defaultFonts': {},
+		'credentialAllowList': [],
+		'playerRuntime': 'flashPlayer',
+		'allowFullscreen': false, // Handled by custom fullscreen button
+	};
+}
+
+/**
+ * @throws If `ruffle.newest()` fails (impossible)
+ */
+function createPlayer() {
+	if (player.value !== undefined) return;
+	const ruffle = (() => {
+		const ruffleAPI = (window.RufflePlayer as PublicAPI).newest();
+		if (ruffleAPI === null) {
+			// This error exists because non-null assertions are forbidden, apparently.
+			throw Error('Ruffle could not get the latest Ruffle source. Since we\'re loading from unpkg this is genuinely impossible and you must\'ve done something incredibly cursed.');
+		}
+		return ruffleAPI;
+	})();
+	player.value = ruffle.createPlayer();
+	player.value.style.width = '100%';
+	player.value.style.height = '100%';
+}
+
+/**
+ * @throws If `player.value` is uninitialized.
+ */
 function loadContent() {
+	if (player.value === undefined) throw Error('Player is uninitialized.');
 	ruffleContainer.value?.appendChild(player.value);
-	player.value.load(url.value).catch((error) => {
+	loadingStatus.value = 'Loading Flash file';
+	player.value.load(url.value).then(() => {
+		loadingStatus.value = undefined;
+	}).catch((error) => {
 		console.error(error);
 	});
 }
@@ -129,6 +181,7 @@ function playPause() {
 		dismissWarning();
 		return;
 	}
+	if (player.value === undefined) return; // Not done loading or something
 	if (player.value.isPlaying) {
 		player.value.pause();
 	} else {
@@ -137,6 +190,7 @@ function playPause() {
 }
 
 function fullscreen() {
+	if (player.value === undefined) return; // Can't fullscreen an element that doesn't exist.
 	if (player.value.isFullscreen) {
 		player.value.exitFullscreen();
 	} else {
@@ -145,6 +199,7 @@ function fullscreen() {
 }
 
 function stop() {
+	if (player.value === undefined) return; // FIXME: This doesn't stop the loading process. (Though, should this even be implemented?)
 	try {
 		ruffleContainer.value?.removeChild(player.value);
 	} catch {
@@ -176,6 +231,7 @@ onDeactivated(() => {
 .height-hack {
 	/* HACK: I'm too stupid to do this better apparently. Copy-pasted from MkMediaList.vue */
 	/* height: 100% doesn't work */
+	/* FIXME: This breaks with more than one attachment, and the controls start overlapping the note buttons (like, boost, reply, etc) */
 	height: clamp(
 		64px,
 		50cqh,
@@ -293,6 +349,10 @@ onDeactivated(() => {
 			padding: 0;
 			margin: 4px 8px;
 			overflow-x: hidden;
+
+			&:disabled {
+				filter: grayscale(100%);
+			}
 
 			&:focus {
 				outline: none;

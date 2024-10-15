@@ -118,6 +118,7 @@ export class InboxProcessorService implements OnApplicationShutdown {
 		// HTTP-Signatureの検証
 		let httpSignatureValidated = httpSignature.verifySignature(signature, authUser.key.keyPem);
 
+		// maybe they changed their key? refetch it
 		if (!httpSignatureValidated) {
 			authUser.key = await this.apDbResolverService.refetchPublicKeyForApId(authUser.user);
 			if (authUser.key != null) {

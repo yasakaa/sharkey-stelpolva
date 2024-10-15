@@ -176,10 +176,17 @@ export class ApDbResolverService implements OnApplicationShutdown {
 	 */
 	@bindThis
 	public async refetchPublicKeyForApId(user: MiRemoteUser): Promise<MiUserPublickey | null> {
-		this.apLoggerService.logger.info('Re-fetching public key for user', { userId: user.id });
+		this.apLoggerService.logger.debug('Re-fetching public key for user', { userId: user.id, uri: user.uri });
 		await this.apPersonService.updatePerson(user.uri);
+
 		const key = await this.userPublickeysRepository.findOneBy({ userId: user.id });
 		this.publicKeyByUserIdCache.set(user.id, key);
+
+		if (key) {
+			this.apLoggerService.logger.info('Re-fetched public key for user', { userId: user.id, uri: user.uri });
+		} else {
+			this.apLoggerService.logger.warn('Failed to re-fetch key for user', { userId: user.id, uri: user.uri });
+		}
 		return key;
 	}
 

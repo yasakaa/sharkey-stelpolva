@@ -32,7 +32,7 @@ import { AbuseReportService } from '@/core/AbuseReportService.js';
 import { FederatedInstanceService } from '@/core/FederatedInstanceService.js';
 import { fromTuple } from '@/misc/from-tuple.js';
 import { IdentifiableError } from '@/misc/identifiable-error.js';
-import { getApHrefNullable, getApId, getApIds, getApType, isAccept, isActor, isAdd, isAnnounce, isBlock, isCollection, isCollectionOrOrderedCollection, isCreate, isDelete, isFlag, isFollow, isLike, isMove, isPost, isReject, isRemove, isTombstone, isUndo, isUpdate, validActor, validPost } from './type.js';
+import { getApHrefNullable, getApId, getApIds, getApType, isAccept, isActor, isAdd, isAnnounce, isApObject, isNote, isBlock, isCollection, isCollectionOrOrderedCollection, isCreate, isDelete, isFlag, isFollow, isLike, isMove, isPost, isReject, isRemove, isTombstone, isUndo, isUpdate, validActor, validPost } from './type.js';
 import { ApNoteService } from './models/ApNoteService.js';
 import { ApLoggerService } from './ApLoggerService.js';
 import { ApDbResolverService } from './ApDbResolverService.js';
@@ -271,8 +271,12 @@ export class ApInboxService {
 		}
 
 		if (activity.target === actor.featured) {
-			const object = fromTuple(activity.object);
-			const note = await this.apNoteService.resolveNote(object, { resolver });
+			const activityObject = fromTuple(activity.object);
+			if (isApObject(activityObject) && !isNote(activityObject)) {
+				return 'unsupported featured object type';
+			}
+
+			const note = await this.apNoteService.resolveNote(activityObject, { resolver });
 			if (note == null) return 'note not found';
 			await this.notePiningService.addPinned(actor, note.id);
 			return;
@@ -642,6 +646,10 @@ export class ApInboxService {
 
 		if (activity.target === actor.featured) {
 			const activityObject = fromTuple(activity.object);
+			if (isApObject(activityObject) && !isNote(activityObject)) {
+				return 'unsupported featured object type';
+			}
+
 			const note = await this.apNoteService.resolveNote(activityObject, { resolver });
 			if (note == null) return 'note not found';
 			await this.notePiningService.removePinned(actor, note.id);

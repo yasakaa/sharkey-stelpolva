@@ -28,6 +28,17 @@ const externalPackages = [
 				: id;
 		},
 	},
+	// sharkey: Used for SkFlashPlayer, has large wasm files so it's loaded via Ruffle's preferred CDN
+	{
+		name: 'ruffle',
+		match: /^@ruffle-rs\/ruffle\/?(?<file>.*)$/,
+		path(id: string, pattern: RegExp): string {
+			const match = pattern.exec(id)?.groups;
+			return match
+				? `https://unpkg.com/@ruffle-rs/ruffle@${packageInfo.dependencies['@ruffle-rs/ruffle']}/${match['file']}`
+				: id;
+		},
+	},
 ];
 
 const hash = (str: string, seed = 0): number => {

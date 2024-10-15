@@ -45,9 +45,10 @@ SPDX-License-Identifier: AGPL-3.0-only
 <script lang="ts" setup>
 import { ref, nextTick, computed, watch, onDeactivated, onMounted } from 'vue';
 import * as Misskey from 'misskey-js';
+import packageInfo from '../../package.json';
 import { i18n } from '@/i18n.js';
 import { defaultStore } from '@/store.js';
-import '@/scripts/ruffle/ruffle';
+import '@ruffle-rs/ruffle';
 
 const props = defineProps<{
 	flashFile: Misskey.entities.DriveFile
@@ -69,7 +70,7 @@ declare global {
 window.RufflePlayer = window.RufflePlayer || {};
 window.RufflePlayer.config = {
 	// Options affecting the whole page
-	'publicPath': '/scripts/ruffle/',
+	'publicPath': `https://unpkg.com/@ruffle-rs/ruffle@${packageInfo.dependencies['@ruffle-rs/ruffle']}/`,
 	'polyfills': false,
 
 	// Options affecting files only

@@ -6,6 +6,7 @@ import type { PluginOption, UserConfig } from 'vite';
 import * as yaml from 'js-yaml';
 import locales from '../../locales/index.js';
 import { getConfig } from './vite.config.js';
+import packageInfo from './package.json' with { type: 'json' };
 
 dns.setDefaultResultOrder('ipv4first');
 

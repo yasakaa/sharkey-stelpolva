@@ -40,9 +40,13 @@ function walkDown(locale, path) {
  * to the MemberExpressions
  */
 function findCallExpression(node) {
-	if (node.type === 'CallExpression') return node
-	if (node.parent?.type === 'CallExpression') return node.parent;
-	if (node.parent?.type === 'MemberExpression') return findCallExpression(node.parent);
+	if (!node.parent) return null;
+
+	// the second half of this guard protects from cases like
+	// `foo(one.two.three)` where the CallExpression is parent of the
+	// MemberExpressions, but via `arguments`, not `callee`
+	if (node.parent.type === 'CallExpression' && node.parent.callee === node) return node.parent;
+	if (node.parent.type === 'MemberExpression') return findCallExpression(node.parent);
 	return null;
 }
 

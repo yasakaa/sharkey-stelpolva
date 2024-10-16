@@ -15,6 +15,7 @@ ruleTester.run(
       {code: 'i18n.tsx.foo.baz(1)', options: [locale] },
       {code: 'whatever.i18n.ts.blah.blah', options: [locale] },
       {code: 'whatever.i18n.tsx.does.not.matter', options: [locale] },
+      {code: 'whatever(i18n.ts.foo.bar)', options: [locale] },
     ],
     invalid: [
       {code: 'i18n.ts.not', options: [locale], errors: 1 },

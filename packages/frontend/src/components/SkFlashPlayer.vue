@@ -171,9 +171,7 @@ function loadContent() {
 	loadingStatus.value = 'Loading Flash file';
 	player.value.load(url.value).then(() => {
 		loadingStatus.value = undefined;
-	}).catch((error) => {
-		console.error(error);
-	});
+	}).catch(handleError);
 }
 
 function playPause() {

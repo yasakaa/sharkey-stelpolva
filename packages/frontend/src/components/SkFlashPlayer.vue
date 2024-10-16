@@ -95,18 +95,18 @@ function handleError(error: unknown) {
 }
 
 /**
- * @throws if unpkg shits itself
+ * @throws if esm.sh shits itself
  */
 async function loadRuffle() {
 	if (window.RufflePlayer !== undefined) return;
 	loadingStatus.value = 'Loading Ruffle player';
-	await import('@ruffle-rs/ruffle'); // Assumption: this will throw if unpkg has a hiccup or something. If not, the next undefined check will catch it.
+	await import('@ruffle-rs/ruffle'); // Assumption: this will throw if esm.sh has a hiccup or something. If not, the next undefined check will catch it.
 	window.RufflePlayer = window.RufflePlayer as PublicAPILike | PublicAPI | undefined; // Assert unknown type due to side effects
-	if (window.RufflePlayer === undefined) throw Error('unpkg has shit itself, but not in an expected way (has unpkg permanently shut down? how close is the heat death of the universe?)');
+	if (window.RufflePlayer === undefined) throw Error('esm.sh has shit itself, but not in an expected way (has esm.sh permanently shut down? how close is the heat death of the universe?)');
 
 	window.RufflePlayer.config = {
 		// Options affecting the whole page
-		'publicPath': `https://unpkg.com/@ruffle-rs/ruffle@${packageInfo.dependencies['@ruffle-rs/ruffle']}/`,
+		'publicPath': `https://esm.sh/@ruffle-rs/ruffle@${packageInfo.dependencies['@ruffle-rs/ruffle']}/`,
 		'polyfills': false,
 
 		// Options affecting files only
@@ -153,7 +153,7 @@ function createPlayer() {
 		const ruffleAPI = (window.RufflePlayer as PublicAPI).newest();
 		if (ruffleAPI === null) {
 			// This error exists because non-null assertions are forbidden, apparently.
-			throw Error('Ruffle could not get the latest Ruffle source. Since we\'re loading from unpkg this is genuinely impossible and you must\'ve done something incredibly cursed.');
+			throw Error('Ruffle could not get the latest Ruffle source. Since we\'re loading from esm.sh this is genuinely impossible and you must\'ve done something incredibly cursed.');
 		}
 		return ruffleAPI;
 	})();

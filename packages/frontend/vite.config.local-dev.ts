@@ -33,7 +33,7 @@ const externalPackages = [
 		path(id: string, pattern: RegExp): string {
 			const match = pattern.exec(id)?.groups;
 			return match
-				? `https://unpkg.com/@ruffle-rs/ruffle@${packageInfo.dependencies['@ruffle-rs/ruffle']}/${match['file']}`
+				? `https://esm.sh/@ruffle-rs/ruffle@${packageInfo.dependencies['@ruffle-rs/ruffle']}/${match['file']}`
 				: id;
 		},
 	},

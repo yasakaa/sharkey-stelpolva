@@ -11,6 +11,8 @@ ruleTester.run(
   {
     valid: [
       {code: 'i18n.ts.foo.bar', options: [locale] },
+      // we don't detect the problem here, but should still accept it
+      {code: 'i18n.ts.foo["something"]', options: [locale] },
       {code: 'i18n.ts.top', options: [locale] },
       {code: 'i18n.tsx.foo.baz({x:1})', options: [locale] },
       {code: 'whatever.i18n.ts.blah.blah', options: [locale] },

@@ -23,7 +23,7 @@ function collectMembers(node) {
  */
 function walkDown(locale, path) {
 	if (!locale) return null;
-	if (!path || path.length === 0) return locale;
+	if (!path || path.length === 0 || !path[0]) return locale;
 	return walkDown(locale[path[0]], path.slice(1));
 }
 
@@ -111,6 +111,11 @@ function theRule(context) {
 				});
 				return;
 			}
+
+			// we hit something weird, assume the programmers know what
+			// they're doing (this is usually some complicated slicing of
+			// the translation structure)
+			if (typeof(translation) !== 'string') return;
 
 			// some more checks on how the translation is called
 			if (method == 'ts') {

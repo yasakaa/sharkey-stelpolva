@@ -50,6 +50,36 @@ function findCallExpression(node) {
 	return null;
 }
 
+function areArgumentsOneObject(node) {
+	return node.arguments.length === 1 &&
+		node.arguments[0].type === 'ObjectExpression';
+}
+
+// only call if `areArgumentsOneObject(node)` is true
+function getArgumentObjectProperties(node) {
+	return new Set(node.arguments[0].properties.map(
+		p => {
+			if (p.key && p.key.type === 'Identifier') return p.key.name;
+			return null;
+		},
+	));
+}
+
+function getTranslationParameters(translation) {
+	return new Set(Array.from(translation.matchAll(/\{(\w+)\}/g)).map( m => m[1] ));
+}
+
+function setDifference(a,b) {
+	const result = [];
+	for (const element of a.values()) {
+		if (!b.has(element)) {
+			result.push(element);
+		}
+	}
+
+	return result;
+}
+
 /* the actual rule body
  */
 function theRule(context) {
@@ -73,8 +103,8 @@ function theRule(context) {
 			const pathStr = `i18n.${method}.${path.join('.')}`;
 
 			// does that path point to a real translation?
-			const matchingNode = walkDown(locale, path);
-			if (!matchingNode) {
+			const translation = walkDown(locale, path);
+			if (!translation) {
 				context.report({
 					node,
 					message: `translation missing for ${pathStr}`,
@@ -84,7 +114,7 @@ function theRule(context) {
 
 			// some more checks on how the translation is called
 			if (method == 'ts') {
-				if (matchingNode.match(/\{/)) {
+				if (translation.match(/\{/)) {
 					context.report({
 						node,
 						message: `translation for ${pathStr} is parametric, but called via 'ts'`,
@@ -101,7 +131,7 @@ function theRule(context) {
 			}
 
 			if (method == 'tsx') {
-				if (!matchingNode.match(/\{/)) {
+				if (!translation.match(/\{/)) {
 					context.report({
 						node,
 						message: `translation for ${pathStr} is not parametric, but called via 'tsx'`,
@@ -110,7 +140,6 @@ function theRule(context) {
 				}
 
 				const callExpression = findCallExpression(node);
-
 				if (!callExpression) {
 					context.report({
 						node,
@@ -119,14 +148,42 @@ function theRule(context) {
 					return;
 				}
 
-				const parameterCount = [...matchingNode.matchAll(/\{/g)].length ?? 0;
-				const argumentCount = callExpression.arguments.length;
+				if (!areArgumentsOneObject(callExpression)) {
+					context.report({
+						node,
+						message: `translation for ${pathStr} should be called with a single object as argument`,
+					});
+					return;
+				}
+
+				const translationParameters = getTranslationParameters(translation);
+				const parameterCount = translationParameters.size;
+				const callArguments = getArgumentObjectProperties(callExpression);
+				const argumentCount = callArguments.size;
+
 				if (parameterCount !== argumentCount) {
 					context.report({
 						node,
 						message: `translation for ${pathStr} has ${parameterCount} parameters, but is called with ${argumentCount} arguments`,
 					});
-					return;
+				}
+
+				// node 20 doesn't have `Set.difference`...
+				const extraArguments = setDifference(callArguments, translationParameters);
+				const missingArguments = setDifference(translationParameters, callArguments);
+
+				if (extraArguments.length > 0) {
+					context.report({
+						node,
+						message: `translation for ${pathStr} passes unused arguments ${extraArguments.join(' ')}`,
+					});
+				}
+
+				if (missingArguments.length > 0) {
+					context.report({
+						node,
+						message: `translation for ${pathStr} does not pass arguments ${missingArguments.join(' ')}`,
+					});
 				}
 			}
 		},

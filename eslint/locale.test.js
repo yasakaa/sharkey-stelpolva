@@ -3,31 +3,46 @@ const localeRule = require("./locale");
 
 const locale = { foo: { bar: 'ok', baz: 'good {x}' }, top: '123' };
 
-const ruleTester = new RuleTester();
+const ruleTester = new RuleTester({
+  languageOptions: {
+    parser: require('vue-eslint-parser'),
+    ecmaVersion: 2015,
+  },
+});
+
+function testCase(code,errors) {
+  return { code, errors, options: [ locale ], filename: 'test.ts' };
+}
+function testCaseVue(code,errors) {
+  return { code, errors, options: [ locale ], filename: 'test.vue' };
+}
 
 ruleTester.run(
   'sharkey-locale',
   localeRule,
   {
     valid: [
-      {code: 'i18n.ts.foo.bar', options: [locale] },
+      testCase('i18n.ts.foo.bar'),
       // we don't detect the problem here, but should still accept it
-      {code: 'i18n.ts.foo["something"]', options: [locale] },
-      {code: 'i18n.ts.top', options: [locale] },
-      {code: 'i18n.tsx.foo.baz({x:1})', options: [locale] },
-      {code: 'whatever.i18n.ts.blah.blah', options: [locale] },
-      {code: 'whatever.i18n.tsx.does.not.matter', options: [locale] },
-      {code: 'whatever(i18n.ts.foo.bar)', options: [locale] },
+      testCase('i18n.ts.foo["something"]'),
+      testCase('i18n.ts.top'),
+      testCase('i18n.tsx.foo.baz({x:1})'),
+      testCase('whatever.i18n.ts.blah.blah'),
+      testCase('whatever.i18n.tsx.does.not.matter'),
+      testCase('whatever(i18n.ts.foo.bar)'),
+      testCaseVue('<template><p>{{ i18n.ts.foo.bar }}</p></template>'),
+      testCaseVue('<template><I18n :src="i18n.ts.foo.baz"/></template>'),
     ],
     invalid: [
-      {code: 'i18n.ts.not', options: [locale], errors: 1 },
-      {code: 'i18n.tsx.deep.not', options: [locale], errors: 1 },
-      {code: 'i18n.tsx.deep.not({x:12})', options: [locale], errors: 1 },
-      {code: 'i18n.tsx.top({x:1})', options: [locale], errors: 1 },
-      {code: 'i18n.ts.foo.baz', options: [locale], errors: 1 },
-      {code: 'i18n.tsx.foo.baz', options: [locale], errors: 1 },
-      {code: 'i18n.tsx.foo.baz({y:2})', options: [locale], errors: 2 },
+      testCase('i18n.ts.not', 1),
+      testCase('i18n.tsx.deep.not', 1),
+      testCase('i18n.tsx.deep.not({x:12})', 1),
+      testCase('i18n.tsx.top({x:1})', 1),
+      testCase('i18n.ts.foo.baz', 1),
+      testCase('i18n.tsx.foo.baz', 1),
+      testCase('i18n.tsx.foo.baz({y:2})', 2),
+      testCaseVue('<template><p>{{ i18n.ts.not }}</p></template>', 1),
+      testCaseVue('<template><I18n :src="i18n.ts.not"/></template>', 1),
     ],
   },
 );
-

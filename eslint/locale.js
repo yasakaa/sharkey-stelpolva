@@ -50,6 +50,15 @@ function findCallExpression(node) {
 	return null;
 }
 
+// same, but for Vue expressions (`<I18n :src="i18n.ts.foo">`)
+function findVueExpression(node) {
+	if (!node.parent) return null;
+
+	if (node.parent.type.match(/^VExpr/) && node.parent.expression === node) return node.parent;
+	if (node.parent.type === 'MemberExpression') return findVueExpression(node.parent);
+	return null;
+}
+
 function areArgumentsOneObject(node) {
 	return node.arguments.length === 1 &&
 		node.arguments[0].type === 'ObjectExpression';
@@ -82,117 +91,141 @@ function setDifference(a,b) {
 
 /* the actual rule body
  */
+function theRuleBody(context,node) {
+	// we get the locale/translations via the options; it's the data
+	// that goes into a specific language's JSON file, see
+	// `scripts/build-assets.mjs`
+	const locale = context.options[0];
+
+	// sometimes we get MemberExpression nodes that have a
+	// *descendent* with the right identifier: skip them, we'll get
+	// the right ones as well
+	if (node.object?.name != 'i18n') {
+		return;
+	}
+
+	// `method` is going to be `'ts'` or `'tsx'`, `path` is going to
+	// be the various translation steps/names
+	const [ method, ...path ] = collectMembers(node);
+	const pathStr = `i18n.${method}.${path.join('.')}`;
+
+	// does that path point to a real translation?
+	const translation = walkDown(locale, path);
+	if (!translation) {
+		context.report({
+			node,
+			message: `translation missing for ${pathStr}`,
+		});
+		return;
+	}
+
+	// we hit something weird, assume the programmers know what
+	// they're doing (this is usually some complicated slicing of
+	// the translation structure)
+	if (typeof(translation) !== 'string') return;
+
+	const callExpression = findCallExpression(node);
+	const vueExpression = findVueExpression(node);
+
+	// some more checks on how the translation is called
+	if (method === 'ts') {
+		// the `<I18n> component gets parametric translations via
+		// `i18n.ts.*`, but we error out elsewhere
+		if (translation.match(/\{/) && !vueExpression) {
+			context.report({
+				node,
+				message: `translation for ${pathStr} is parametric, but called via 'ts'`,
+			});
+			return;
+		}
+
+		if (callExpression) {
+			context.report({
+				node,
+				message: `translation for ${pathStr} is not parametric, but is called as a function`,
+			});
+		}
+	}
+
+	if (method === 'tsx') {
+		if (!translation.match(/\{/)) {
+			context.report({
+				node,
+				message: `translation for ${pathStr} is not parametric, but called via 'tsx'`,
+			});
+			return;
+		}
+
+		if (!callExpression && !vueExpression) {
+			context.report({
+				node,
+				message: `translation for ${pathStr} is parametric, but not called as a function`,
+			});
+			return;
+		}
+
+		// we're not currently checking arguments when used via the
+		// `<I18n>` component, because it's too complicated (also, it
+		// would have to be done inside the `if (method === 'ts')`)
+		if (!callExpression) return;
+
+		if (!areArgumentsOneObject(callExpression)) {
+			context.report({
+				node,
+				message: `translation for ${pathStr} should be called with a single object as argument`,
+			});
+			return;
+		}
+
+		const translationParameters = getTranslationParameters(translation);
+		const parameterCount = translationParameters.size;
+		const callArguments = getArgumentObjectProperties(callExpression);
+		const argumentCount = callArguments.size;
+
+		if (parameterCount !== argumentCount) {
+			context.report({
+				node,
+				message: `translation for ${pathStr} has ${parameterCount} parameters, but is called with ${argumentCount} arguments`,
+			});
+		}
+
+		// node 20 doesn't have `Set.difference`...
+		const extraArguments = setDifference(callArguments, translationParameters);
+		const missingArguments = setDifference(translationParameters, callArguments);
+
+		if (extraArguments.length > 0) {
+			context.report({
+				node,
+				message: `translation for ${pathStr} passes unused arguments ${extraArguments.join(' ')}`,
+			});
+		}
+
+		if (missingArguments.length > 0) {
+			context.report({
+				node,
+				message: `translation for ${pathStr} does not pass arguments ${missingArguments.join(' ')}`,
+			});
+		}
+	}
+}
+
 function theRule(context) {
 	// we get the locale/translations via the options; it's the data
 	// that goes into a specific language's JSON file, see
 	// `scripts/build-assets.mjs`
 	const locale = context.options[0];
-	return {
-		// for all object member access that have an identifier 'i18n'...
-		'MemberExpression:has(> Identifier[name=i18n])': (node) => {
-			// sometimes we get MemberExpression nodes that have a
-			// *descendent* with the right identifier: skip them, we'll get
-			// the right ones as well
-			if (node.object?.name != 'i18n') {
-				return;
-			}
 
-			// `method` is going to be `'ts'` or `'tsx'`, `path` is going to
-			// be the various translation steps/names
-			const [ method, ...path ] = collectMembers(node);
-			const pathStr = `i18n.${method}.${path.join('.')}`;
-
-			// does that path point to a real translation?
-			const translation = walkDown(locale, path);
-			if (!translation) {
-				context.report({
-					node,
-					message: `translation missing for ${pathStr}`,
-				});
-				return;
-			}
-
-			// we hit something weird, assume the programmers know what
-			// they're doing (this is usually some complicated slicing of
-			// the translation structure)
-			if (typeof(translation) !== 'string') return;
-
-			// some more checks on how the translation is called
-			if (method == 'ts') {
-				if (translation.match(/\{/)) {
-					context.report({
-						node,
-						message: `translation for ${pathStr} is parametric, but called via 'ts'`,
-					});
-					return;
-				}
-
-				if (findCallExpression(node)) {
-					context.report({
-						node,
-						message: `translation for ${pathStr} is not parametric, but is called as a function`,
-					});
-				}
-			}
-
-			if (method == 'tsx') {
-				if (!translation.match(/\{/)) {
-					context.report({
-						node,
-						message: `translation for ${pathStr} is not parametric, but called via 'tsx'`,
-					});
-					return;
-				}
-
-				const callExpression = findCallExpression(node);
-				if (!callExpression) {
-					context.report({
-						node,
-						message: `translation for ${pathStr} is parametric, but not called as a function`,
-					});
-					return;
-				}
-
-				if (!areArgumentsOneObject(callExpression)) {
-					context.report({
-						node,
-						message: `translation for ${pathStr} should be called with a single object as argument`,
-					});
-					return;
-				}
-
-				const translationParameters = getTranslationParameters(translation);
-				const parameterCount = translationParameters.size;
-				const callArguments = getArgumentObjectProperties(callExpression);
-				const argumentCount = callArguments.size;
-
-				if (parameterCount !== argumentCount) {
-					context.report({
-						node,
-						message: `translation for ${pathStr} has ${parameterCount} parameters, but is called with ${argumentCount} arguments`,
-					});
-				}
-
-				// node 20 doesn't have `Set.difference`...
-				const extraArguments = setDifference(callArguments, translationParameters);
-				const missingArguments = setDifference(translationParameters, callArguments);
-
-				if (extraArguments.length > 0) {
-					context.report({
-						node,
-						message: `translation for ${pathStr} passes unused arguments ${extraArguments.join(' ')}`,
-					});
-				}
-
-				if (missingArguments.length > 0) {
-					context.report({
-						node,
-						message: `translation for ${pathStr} does not pass arguments ${missingArguments.join(' ')}`,
-					});
-				}
-			}
+	// for all object member access that have an identifier 'i18n'...
+	return context.getSourceCode().parserServices.defineTemplateBodyVisitor(
+		{
+			// this is for <template> bits, needs work
+			'MemberExpression:has(Identifier[name=i18n])': (node) => theRuleBody(context, node),
 		},
-	};
+		{
+			// this is for normal code
+			'MemberExpression:has(Identifier[name=i18n])': (node) => theRuleBody(context, node),
+		},
+	);
 }
 
 module.exports = {

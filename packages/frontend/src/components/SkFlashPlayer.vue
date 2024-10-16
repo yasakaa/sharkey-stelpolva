@@ -106,7 +106,7 @@ async function loadRuffle() {
 
 	window.RufflePlayer.config = {
 		// Options affecting the whole page
-		'publicPath': `https://esm.sh/@ruffle-rs/ruffle@${packageInfo.dependencies['@ruffle-rs/ruffle']}/`,
+		'publicPath': `https://raw.esm.sh/@ruffle-rs/ruffle@${packageInfo.dependencies['@ruffle-rs/ruffle']}/`,
 		'polyfills': false,
 
 		// Options affecting files only
@@ -171,7 +171,16 @@ function loadContent() {
 	loadingStatus.value = 'Loading Flash file';
 	player.value.load(url.value).then(() => {
 		loadingStatus.value = undefined;
-	}).catch(handleError);
+	}).catch(error => {
+		fetch('https://raw.esm.sh/', {
+			mode: 'cors',
+		}).then(() => {
+			handleError(error); // Unexpected error
+		}).catch(() => {
+			// Must be CSP because esm.sh should be online if `loadRuffle()` didn't fail
+			handleError('raw.esm.sh could not be accessed, meaning this instance\'s Content Security Policy is likely out of date. Please contact your instance administrators.');
+		});
+	});
 }
 
 function playPause() {

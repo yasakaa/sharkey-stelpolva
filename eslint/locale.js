@@ -12,6 +12,8 @@
 function collectMembers(node) {
 	if (!node) return [];
 	if (node.type !== 'MemberExpression') return [];
+	// this is something like `foo[bar]`
+	if (node.computed) return [];
 	return [ node.property.name, ...collectMembers(node.parent) ];
 }
 

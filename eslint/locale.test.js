@@ -23,8 +23,6 @@ ruleTester.run(
   {
     valid: [
       testCase('i18n.ts.foo.bar'),
-      // we don't detect the problem here, but should still accept it
-      testCase('i18n.ts.foo["something"]'),
       testCase('i18n.ts.top'),
       testCase('i18n.tsx.foo.baz({x:1})'),
       testCase('whatever.i18n.ts.blah.blah'),
@@ -32,6 +30,9 @@ ruleTester.run(
       testCase('whatever(i18n.ts.foo.bar)'),
       testCaseVue('<template><p>{{ i18n.ts.foo.bar }}</p></template>'),
       testCaseVue('<template><I18n :src="i18n.ts.foo.baz"/></template>'),
+      // we don't detect the problem here, but should still accept it
+      testCase('i18n.ts.foo["something"]'),
+      testCase('i18n.ts.foo[something]'),
     ],
     invalid: [
       testCase('i18n.ts.not', 1),

@@ -102,7 +102,7 @@ function theRuleBody(context,node) {
 	// sometimes we get MemberExpression nodes that have a
 	// *descendent* with the right identifier: skip them, we'll get
 	// the right ones as well
-	if (node.object?.name != 'i18n') {
+	if (node.object?.name !== 'i18n') {
 		return;
 	}
 

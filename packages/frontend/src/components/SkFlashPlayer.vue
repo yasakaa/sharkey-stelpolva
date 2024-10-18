@@ -31,23 +31,23 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<div ref="ruffleContainer" class="container"></div>
 	</div>
 	<div class="controls">
-		<button class="play" @click="playPause()">
-			<i v-if="player?.isPlaying" class="ph-pause ph-bold ph-lg"></i> <!-- FIXME: Broken? (Though less so than before) -->
+		<button :key="playPauseButtonKey" class="play" @click="playPause()">
+			<i v-if="player?.isPlaying" class="ph-pause ph-bold ph-lg"></i>
 			<i v-else class="ph-play ph-bold ph-lg"></i>
 		</button>
-		<button class="stop" @click="stop()">
+		<button class="stop" :disabled="playerHide" @click="stop()">
 			<i class="ph-stop ph-bold ph-lg"></i>
 		</button>
-		<input v-if="player" v-model="player.volume" type="range" min="0" max="1" step="0.1"/>
+		<input v-if="player && !playerHide" v-model="player.volume" type="range" min="0" max="1" step="0.1"/>
 		<input v-else type="range" min="0" max="1" value="1" disabled/>
 		<a class="download" :title="i18n.ts.download" :href="flashFile.url" target="_blank">
 			<i class="ph-download ph-bold ph-lg"></i>
 		</a>
-		<button class="fullscreen" @click="fullscreen()">
+		<button class="fullscreen" :disabled="playerHide" @click="fullscreen()">
 			<i class="ph-arrows-out ph-bold ph-lg"></i>
 		</button>
 	</div>
-	<div v-if="flashFile.comment" class="alt" :title="comment">ALT</div>
+	<div v-if="comment" class="alt" :title="comment">ALT</div>
 	<i class="hide ph-eye-slash ph-bold ph-lg" @click="toggleVisible()"></i>
 </div>
 </template>
@@ -73,6 +73,7 @@ const comment = computed(() => { return props.flashFile.comment ?? ''; });
 let hide = ref((defaultStore.state.nsfw === 'force') ? true : isSensitive.value && (defaultStore.state.nsfw !== 'ignore'));
 let playerHide = ref(true);
 let ruffleContainer = ref<HTMLDivElement>();
+let playPauseButtonKey = ref<number>(0);
 let loadingStatus = ref<string | undefined>(undefined);
 let player = ref<PlayerElement | undefined>(undefined);
 let ruffleError = ref<string | undefined>(undefined);
@@ -194,6 +195,7 @@ function playPause() {
 	} else {
 		player.value.play();
 	}
+	playPauseButtonKey.value += 1; // HACK: Used to re-render play/pause button
 }
 
 function fullscreen() {
@@ -206,7 +208,7 @@ function fullscreen() {
 }
 
 function stop() {
-	if (player.value === undefined) return; // FIXME: This doesn't stop the loading process. (Though, should this even be implemented?)
+	if (player.value === undefined) return; // FIXME: This doesn't stop the loading process. (That said, should this even be implemented?)
 	try {
 		ruffleContainer.value?.removeChild(player.value);
 	} catch {
@@ -338,15 +340,26 @@ onDeactivated(() => {
 			border: none;
 			background-color: transparent;
 			color: var(--accent);
+			text-decoration: none;
 			cursor: pointer;
 
 			&:hover {
 				background-color: var(--fg);
 			}
+
+			&:disabled {
+				filter: grayscale(100%);
+				background-color: transparent;
+				cursor: not-allowed;
+			}
 		}
 
 		> .fullscreen {
 			margin-left: auto;
+
+			&:disabled {
+				filter: grayscale(100%);
+			}
 		}
 
 		> input[type=range] {
@@ -356,9 +369,11 @@ onDeactivated(() => {
 			padding: 0;
 			margin: 4px 8px;
 			overflow-x: hidden;
+			cursor: pointer;
 
 			&:disabled {
 				filter: grayscale(100%);
+				cursor: not-allowed;
 			}
 
 			&:focus {
@@ -376,7 +391,6 @@ onDeactivated(() => {
 			&::-webkit-slider-runnable-track {
 				width: 100%;
 				height: 100%;
-				cursor: pointer;
 				border-radius: 0;
 				animate: 0.2s;
 				background: var(--bg);
@@ -390,7 +404,6 @@ onDeactivated(() => {
 				width: 14px;
 				border-radius: 0;
 				background: var(--accentLighten);
-				cursor: pointer;
 				-webkit-appearance: none;
 				box-shadow: calc(-100vw - 14px) 0 0 100vw var(--accent);
 				clip-path: polygon(1px 0, 100% 0, 100% 100%, 1px 100%, 1px calc(50% + 10.5px), -100vw calc(50% + 10.5px), -100vw calc(50% - 10.5px), 0 calc(50% - 10.5px));
@@ -400,7 +413,6 @@ onDeactivated(() => {
 			&::-moz-range-track {
 				width: 100%;
 				height: 100%;
-				cursor: pointer;
 				border-radius: 0;
 				animate: 0.2s;
 				background: var(--bg);
@@ -408,7 +420,6 @@ onDeactivated(() => {
 			}
 
 			&::-moz-range-progress {
-				cursor: pointer;
 				height: 100%;
 				background: var(--accent);
 			}
@@ -419,13 +430,11 @@ onDeactivated(() => {
 				border-radius: 0;
 				width: 14px;
 				background: var(--accentLighten);
-				cursor: pointer;
 			}
 
 			&::-ms-track {
 				width: 100%;
 				height: 100%;
-				cursor: pointer;
 				border-radius: 0;
 				animate: 0.2s;
 				background: transparent;
@@ -452,7 +461,6 @@ onDeactivated(() => {
 				width: 14px;
 				border-radius: 0;
 				background: var(--accentLighten);
-				cursor: pointer;
 			}
 		}
 	}

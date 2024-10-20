@@ -4,14 +4,14 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-<div v-if="hide" :class="[$style.flash_player_disabled, $style.height_hack]" @click="toggleVisible()">
+<div v-if="hide" :class="$style.flash_player_disabled" @click="toggleVisible()">
 	<div>
 		<b><i class="ph-eye ph-bold ph-lg"></i> {{ i18n.ts.sensitive }}</b>
 		<span>{{ i18n.ts.clickToShow }}</span>
 	</div>
 </div>
 
-<div v-else :class="[$style.flash_player_enabled, $style.height_hack]">
+<div v-else :class="$style.flash_player_enabled">
 	<div :class="$style.flash_display">
 		<div v-if="playerHide" :class="$style.player_hide" @click="dismissWarning()">
 			<b><i class="ph-eye ph-bold ph-lg"></i> Flash Content Hidden</b>
@@ -237,23 +237,12 @@ onDeactivated(() => {
 	font-size: 12px !important;
 }
 
-.height_hack {
-	/* HACK: I'm too stupid to do this better apparently. Copy-pasted from MkMediaList.vue */
-	/* height: 100% doesn't work */
-	/* FIXME: This breaks with more than one attachment, and the controls start overlapping the note buttons (like, boost, reply, etc) */
-	/* height: 100%; DOESN'T WORK AAAAAA */
-	height: clamp(
-		64px,
-		50cqh,
-		min(360px, 50vh)
-	);
-}
-
 .flash_player_enabled {
 	position: relative;
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
+	height: 100%; // ?????? Works somehow???
 
 	> i {
 		display: block;
@@ -475,6 +464,7 @@ onDeactivated(() => {
 	align-items: center;
 	background: #111;
 	color: #fff;
+	height: 100%; // ?????? Works somehow???
 
 	> div {
 		display: table-cell;

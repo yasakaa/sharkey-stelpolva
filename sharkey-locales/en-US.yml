@@ -155,6 +155,7 @@ showNonPublicNotes: "Show non-public"
 allowClickingNotifications: "Allow clicking on pop-up notifications"
 pinnedOnly: "Pinned"
 blockingYou: "Blocking you"
+warnExternalUrl: "Show warning when opening external URLs"
 _delivery:
   stop: "Suspend delivery"
   resume: "Resume delivery"

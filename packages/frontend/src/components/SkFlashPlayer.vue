@@ -4,51 +4,51 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-<div v-if="hide" class="flash-player-disabled height-hack" @click="toggleVisible()">
+<div v-if="hide" :class="[$style.flash_player_disabled, $style.height_hack]" @click="toggleVisible()">
 	<div>
 		<b><i class="ph-eye ph-bold ph-lg"></i> {{ i18n.ts.sensitive }}</b>
 		<span>{{ i18n.ts.clickToShow }}</span>
 	</div>
 </div>
 
-<div v-else class="flash-player-enabled height-hack">
-	<div class="flash-display">
-		<div v-if="playerHide" class="player-hide" @click="dismissWarning()">
+<div v-else :class="[$style.flash_player_enabled, $style.height_hack]">
+	<div :class="$style.flash_display">
+		<div v-if="playerHide" :class="$style.player_hide" @click="dismissWarning()">
 			<b><i class="ph-eye ph-bold ph-lg"></i> Flash Content Hidden</b>
 			<span>Powered by Ruffle.</span>
 			<span>Always be wary of arbitrary code execution!</span>
 			<span>{{ i18n.ts.clickToShow }}</span>
 		</div>
-		<div v-if="ruffleError" class="player-hide">
+		<div v-if="ruffleError" :class="$style.player_hide">
 			<b><i class="ph-warning ph-bold ph-lg"></i> Flash Content Failed To Load:</b>
 			<code>{{ ruffleError }}</code>
 		</div>
-		<div v-else-if="loadingStatus" class="player-hide">
+		<div v-else-if="loadingStatus" :class="$style.player_hide">
 			<b>Flash Content Is Loading<MkEllipsis/></b>
 			<MkLoading/>
 			<p>{{ loadingStatus }}</p>
 		</div>
-		<div ref="ruffleContainer" class="container"></div>
+		<div ref="ruffleContainer" :class="$style.container"></div>
 	</div>
-	<div class="controls">
-		<button :key="playPauseButtonKey" class="play" @click="playPause()">
+	<div :class="$style.controls">
+		<button :key="playPauseButtonKey" @click="playPause()">
 			<i v-if="player?.isPlaying" class="ph-pause ph-bold ph-lg"></i>
 			<i v-else class="ph-play ph-bold ph-lg"></i>
 		</button>
-		<button class="stop" :disabled="playerHide" @click="stop()">
+		<button :disabled="playerHide" @click="stop()">
 			<i class="ph-stop ph-bold ph-lg"></i>
 		</button>
 		<input v-if="player && !playerHide" v-model="player.volume" type="range" min="0" max="1" step="0.1"/>
 		<input v-else type="range" min="0" max="1" value="1" disabled/>
-		<a class="download" :title="i18n.ts.download" :href="flashFile.url" target="_blank">
+		<a :title="i18n.ts.download" :href="flashFile.url" target="_blank">
 			<i class="ph-download ph-bold ph-lg"></i>
 		</a>
-		<button class="fullscreen" :disabled="playerHide" @click="fullscreen()">
+		<button :class="$style.fullscreen" :disabled="playerHide" @click="fullscreen()">
 			<i class="ph-arrows-out ph-bold ph-lg"></i>
 		</button>
 	</div>
-	<div v-if="comment" class="alt" :title="comment">ALT</div>
-	<i class="hide ph-eye-slash ph-bold ph-lg" @click="toggleVisible()"></i>
+	<div v-if="comment" :class="$style.alt" :title="comment">ALT</div>
+	<i :class="$style.hide" class="ph-eye-slash ph-bold ph-lg" @click="toggleVisible()"></i>
 </div>
 </template>
 
@@ -228,7 +228,7 @@ onDeactivated(() => {
 
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" module>
 
 .hide {
 	border-radius: var(--radius-sm) !important;
@@ -237,10 +237,11 @@ onDeactivated(() => {
 	font-size: 12px !important;
 }
 
-.height-hack {
+.height_hack {
 	/* HACK: I'm too stupid to do this better apparently. Copy-pasted from MkMediaList.vue */
 	/* height: 100% doesn't work */
 	/* FIXME: This breaks with more than one attachment, and the controls start overlapping the note buttons (like, boost, reply, etc) */
+	/* height: 100%; DOESN'T WORK AAAAAA */
 	height: clamp(
 		64px,
 		50cqh,
@@ -248,7 +249,7 @@ onDeactivated(() => {
 	);
 }
 
-.flash-player-enabled {
+.flash_player_enabled {
 	position: relative;
 	overflow: hidden;
 	display: flex;
@@ -287,9 +288,10 @@ onDeactivated(() => {
 		z-index: 4;
 	}
 
-	> .flash-display {
+	> .flash_display {
 		width: 100%;
 		height: 100%;
+		flex-grow: 10;
 		overflow-x: scroll;
 		overflow-y: hidden;
 		background-color: black;
@@ -301,7 +303,7 @@ onDeactivated(() => {
 			display: none;
 		}
 
-		.player-hide {
+		.player_hide {
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
@@ -310,6 +312,7 @@ onDeactivated(() => {
 			backdrop-filter: var(--modalBgFilter);
 			color: #fff;
 			font-size: 12px;
+			border-radius: var(--radius-sm);
 
 			position: absolute;
 			z-index: 4;
@@ -466,7 +469,7 @@ onDeactivated(() => {
 	}
 }
 
-.flash-player-disabled {
+.flash_player_disabled {
 	display: flex;
 	justify-content: center;
 	align-items: center;

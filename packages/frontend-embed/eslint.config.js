@@ -47,7 +47,7 @@ export default [
 			},
 		},
 		rules: {
-			'sharkey/locale': ['error', buildLocales()['ja-JP']],
+			'sharkey/locale': ['error', buildLocales()['en-US']],
 
 			'@typescript-eslint/no-empty-interface': ['error', {
 				allowSingleExtends: true,

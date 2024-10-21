@@ -14,17 +14,17 @@ SPDX-License-Identifier: AGPL-3.0-only
 <div v-else :class="$style.flash_player_enabled">
 	<div :class="$style.flash_display">
 		<div v-if="playerHide" :class="$style.player_hide" @click="dismissWarning()">
-			<b><i class="ph-eye ph-bold ph-lg"></i> Flash Content Hidden</b>
-			<span>Powered by Ruffle.</span>
-			<span>Always be wary of arbitrary code execution!</span>
+			<b><i class="ph-eye ph-bold ph-lg"></i> {{ i18n.ts._flash.contentHidden }}</b>
+			<span>{{ i18n.ts._flash.poweredByRuffle }}</span>
+			<span>{{ i18n.ts._flash.arbitraryCodeExecutionWarning }}</span>
 			<span>{{ i18n.ts.clickToShow }}</span>
 		</div>
 		<div v-if="ruffleError" :class="$style.player_hide">
-			<b><i class="ph-warning ph-bold ph-lg"></i> Flash Content Failed To Load:</b>
+			<b><i class="ph-warning ph-bold ph-lg"></i> {{ i18n.ts._flash.failedToLoad }}</b>
 			<code>{{ ruffleError }}</code>
 		</div>
 		<div v-else-if="loadingStatus" :class="$style.player_hide">
-			<b>Flash Content Is Loading<MkEllipsis/></b>
+			<b>{{ i18n.ts._flash.isLoading }}<MkEllipsis/></b>
 			<MkLoading/>
 			<p>{{ loadingStatus }}</p>
 		</div>
@@ -100,7 +100,7 @@ function handleError(error: unknown) {
  */
 async function loadRuffle() {
 	if (window.RufflePlayer !== undefined) return;
-	loadingStatus.value = 'Loading Ruffle player';
+	loadingStatus.value = i18n.ts._flash.loadingRufflePlayer;
 	await import('@ruffle-rs/ruffle'); // Assumption: this will throw if esm.sh has a hiccup or something. If not, the next undefined check will catch it.
 	window.RufflePlayer = window.RufflePlayer as PublicAPILike | PublicAPI | undefined; // Assert unknown type due to side effects
 	if (window.RufflePlayer === undefined) throw Error('esm.sh has shit itself, but not in an expected way (has esm.sh permanently shut down? how close is the heat death of the universe?)');
@@ -169,7 +169,7 @@ function createPlayer() {
 function loadContent() {
 	if (player.value === undefined) throw Error('Player is uninitialized.');
 	ruffleContainer.value?.appendChild(player.value);
-	loadingStatus.value = 'Loading Flash file';
+	loadingStatus.value = i18n.ts._flash.loadingFlashFile;
 	player.value.load(url.value).then(() => {
 		loadingStatus.value = undefined;
 	}).catch(error => {
@@ -179,7 +179,7 @@ function loadContent() {
 			handleError(error); // Unexpected error
 		}).catch(() => {
 			// Must be CSP because esm.sh should be online if `loadRuffle()` didn't fail
-			handleError('raw.esm.sh could not be accessed, meaning this instance\'s Content Security Policy is likely out of date. Please contact your instance administrators.');
+			handleError(i18n.ts._flash.cspError);
 		});
 	});
 }

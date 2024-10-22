@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: dakkar and other Sharkey contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
+*/
+
 /* This is a ESLint rule to report use of the `i18n.ts` and `i18n.tsx`
  * objects that reference translation items that don't actually exist
  * in the lexicon (the `locale/` files)

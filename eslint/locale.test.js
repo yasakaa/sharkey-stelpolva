@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: dakkar and other Sharkey contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
+*/
+
 const {RuleTester} = require("eslint");
 const localeRule = require("./locale");
 

@@ -100,6 +100,10 @@ export class ApInboxService {
 			const resolver = this.apResolverService.createResolver();
 			for (const item of toArray(isCollection(activity) ? activity.items : activity.orderedItems)) {
 				const act = await resolver.resolve(item);
+				if (act.id == null || this.utilityService.extractDbHost(act.id) !== this.utilityService.extractDbHost(actor.uri)) {
+					this.logger.debug('skipping activity: activity id is null or mismatching');
+					continue;
+				}
 				try {
 					results.push([getApId(item), await this.performOneActivity(actor, act)]);
 				} catch (err) {

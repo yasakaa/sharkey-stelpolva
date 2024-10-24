@@ -129,7 +129,7 @@ export class HttpRequestService {
 		const finalUrl = res.url; // redirects may have been involved
 		const activity = await res.json() as IObject;
 
-		assertActivityMatchesUrls(activity, [url, finalUrl]);
+		assertActivityMatchesUrls(activity, [finalUrl]);
 
 		return activity;
 	}

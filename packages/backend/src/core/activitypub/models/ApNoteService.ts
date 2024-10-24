@@ -141,14 +141,24 @@ export class ApNoteService {
 
 		this.logger.debug(`Note fetched: ${JSON.stringify(note, null, 2)}`);
 
-		if (note.id && !checkHttps(note.id)) {
+		if (note.id == null) {
+			throw new Error('Refusing to create note without id');
+		}
+
+		if (!checkHttps(note.id)) {
 			throw new Error('unexpected schema of note.id: ' + note.id);
 		}
 
 		const url = getOneApHrefNullable(note.url);
 
-		if (url && !checkHttps(url)) {
-			throw new Error('unexpected schema of note url: ' + url);
+		if (url != null) {
+			if (!checkHttps(url)) {
+				throw new Error('unexpected schema of note url: ' + url);
+			}
+
+			if (this.utilityService.punyHost(url) !== this.utilityService.punyHost(note.id)) {
+				throw new Error(`note url <> uri host mismatch: ${url} <> ${note.id}`);
+			}
 		}
 
 		this.logger.info(`Creating the Note: ${note.id}`);
@@ -366,7 +376,11 @@ export class ApNoteService {
 
 		this.logger.debug(`Note fetched: ${JSON.stringify(note, null, 2)}`);
 
-		if (note.id && !checkHttps(note.id)) {
+		if (note.id == null) {
+			throw new Error('Refusing to update note without id');
+		}
+
+		if (!checkHttps(note.id)) {
 			throw new Error('unexpected schema of note.id: ' + note.id);
 		}
 
@@ -374,6 +388,16 @@ export class ApNoteService {
 
 		if (url && !checkHttps(url)) {
 			throw new Error('unexpected schema of note url: ' + url);
+		}
+
+		if (url != null) {
+			if (!checkHttps(url)) {
+				throw new Error('unexpected schema of note url: ' + url);
+			}
+
+			if (this.utilityService.punyHost(url) !== this.utilityService.punyHost(note.id)) {
+				throw new Error(`note url <> id host mismatch: ${url} <> ${note.id}`);
+			}
 		}
 
 		this.logger.info(`Creating the Note: ${note.id}`);

@@ -426,6 +426,9 @@ export class ApInboxService {
 					return 'skip: host in actor.uri !== note.id';
 				}
 			}
+			else {
+				return 'skip: note.id is not a string'
+			}
 		}
 
 		const unlock = await this.appLockService.getApLock(uri);

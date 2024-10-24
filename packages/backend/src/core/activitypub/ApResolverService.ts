@@ -121,7 +121,11 @@ export class Resolver {
 		// `object.id` or `object.url` matches the URL used to fetch the
 		// object after redirects; here we double-check that no redirects
 		// bounced between hosts
-		if (object.id && (this.utilityService.punyHost(object.id) !== this.utilityService.punyHost(value))) {
+		if (object.id == null) {
+			throw new Error('invalid AP object: missing id');
+		}
+
+		if (this.utilityService.punyHost(object.id) !== this.utilityService.punyHost(value)) {
 			throw new Error(`invalid AP object ${value}: id ${object.id} has different host`);
 		}
 

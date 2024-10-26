@@ -154,12 +154,23 @@ export class ApPersonService implements OnModuleInit {
 			throw new Error('invalid Actor: inbox has different host');
 		}
 
+		const sharedInboxObject = x.sharedInbox ?? (x.endpoints ? x.endpoints.sharedInbox : undefined);
+		if (sharedInboxObject != null) {
+			const sharedInbox = getApId(sharedInboxObject);
+			if (!(typeof sharedInbox === "string" && sharedInbox.length > 0 && this.utilityService.punyHost(sharedInbox) === expectHost)) {
+				throw new Error("invalid Actor: wrong shared inbox");
+			}
+		}
+
 		for (const collection of ['outbox', 'followers', 'following'] as (keyof IActor)[]) {
-			const collectionUri = (x as IActor)[collection];
+			const collectionUri = getApId((x as IActor)[collection]);
 			if (typeof collectionUri === 'string' && collectionUri.length > 0) {
 				if (this.utilityService.punyHost(collectionUri) !== expectHost) {
 					throw new Error(`invalid Actor: ${collection} has different host`);
 				}
+			}
+			else if (collectionUri != null) {
+				throw new Error(`invalid Actor: wrong ${collection}`);
 			}
 		}
 

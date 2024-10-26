@@ -136,13 +136,13 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<MkInfo v-if="user.pinnedNotes.length === 0 && $i?.id === user.id">{{ i18n.ts.userPagePinTip }}</MkInfo>
 				<template v-if="narrow">
 					<MkLazy>
-						<XFiles :key="user.id" :user="user"/>
+						<XFiles :key="user.id" :user="user" :collapsed="true"/>
 					</MkLazy>
 					<MkLazy>
-						<XActivity :key="user.id" :user="user"/>
+						<XActivity :key="user.id" :user="user" :collapsed="true"/>
 					</MkLazy>
 					<MkLazy>
-						<XListenBrainz v-if="user.listenbrainz && listenbrainzdata" :key="user.id" :user="user"/>
+						<XListenBrainz v-if="user.listenbrainz && listenbrainzdata" :key="user.id" :user="user" :collapsed="true"/>
 					</MkLazy>
 				</template>
 				<!-- <div v-if="!disableNotes">

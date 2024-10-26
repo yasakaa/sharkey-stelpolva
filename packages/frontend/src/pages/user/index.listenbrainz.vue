@@ -4,7 +4,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-	<MkContainer :foldable="true">
+	<MkContainer :foldable="true" :expanded="!collapsed">
 		<template #header
 			><i
 				class="ph-headphones ph-bold ph-lg"
@@ -40,8 +40,10 @@ import MkContainer from "@/components/MkContainer.vue";
 const props = withDefaults(
 	defineProps<{
 		user: misskey.entities.User;
-	}>(),
-	{},
+		collapsed?: boolean;
+	}>(), {
+		collapsed: false,
+	},
 );
 const listenbrainz = { title: '', artist: '', lastlisten: '', img: '', musicbrainzurl: '', listenbrainzurl: '' };
 if (props.user.listenbrainz) {

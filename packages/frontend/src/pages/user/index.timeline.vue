@@ -4,14 +4,78 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-<notes-container :user="user"/>
+<MkStickyContainer>
+	<template #header>
+		<MkTab v-model="tab" :class="$style.tab">
+			<option value="pinned">{{ i18n.ts.pinnedOnly }}</option>
+			<option value="featured">{{ i18n.ts.featured }}</option>
+			<option :value="null">{{ i18n.ts.notes }}</option>
+			<option value="all">{{ i18n.ts.all }}</option>
+			<option value="files">{{ i18n.ts.withFiles }}</option>
+		</MkTab>
+	</template>
+	<div v-if="tab === 'pinned'" class="_gaps">
+		<div v-if="user.pinnedNotes.length < 1" class="_fullinfo">
+			<img :src="infoImageUrl" class="_ghost" aria-hidden="true" :alt="i18n.ts.noNotes"/>
+			<div>{{ i18n.ts.noNotes }}</div>
+		</div>
+		<div v-else class="_panel">
+			<MkNote v-for="note of user.pinnedNotes" :key="note.id" class="note" :class="$style.pinnedNote" :note="note" :pinned="true"/>
+		</div>
+	</div>
+	<MkNotes v-else :class="$style.tl" :noGap="true" :pagination="pagination"/>
+</MkStickyContainer>
 </template>
 
 <script lang="ts" setup>
+import { ref, computed, defineAsyncComponent } from 'vue';
 import * as Misskey from 'misskey-js';
-import NotesContainer from '@/pages/user/notes-container.vue';
+import MkNotes from '@/components/MkNotes.vue';
+import MkTab from '@/components/MkTab.vue';
+import { i18n } from '@/i18n.js';
+import { infoImageUrl } from '@/instance.js';
+import { defaultStore } from '@/store.js';
 
-defineProps<{
+const MkNote = defineAsyncComponent(() =>
+	defaultStore.state.noteDesign === 'sharkey'
+		? import('@/components/SkNote.vue')
+		: import('@/components/MkNote.vue'),
+);
+
+const props = defineProps<{
 	user: Misskey.entities.UserDetailed;
 }>();
+
+const tab = ref<string | null>('all');
+
+const pagination = computed(() => tab.value === 'featured' ? {
+	endpoint: 'users/featured-notes' as const,
+	limit: 10,
+	params: {
+		userId: props.user.id,
+	},
+} : {
+	endpoint: 'users/notes' as const,
+	limit: 10,
+	params: {
+		userId: props.user.id,
+		withRenotes: tab.value === 'all',
+		withReplies: tab.value === 'all',
+		withChannelNotes: tab.value === 'all',
+		withFiles: tab.value === 'files',
+	},
+});
 </script>
+
+<style lang="scss" module>
+.tab {
+	padding: calc(var(--margin) / 2) 0;
+	background: var(--bg);
+}
+
+.tl {
+	background: var(--bg);
+	border-radius: var(--radius);
+	overflow: clip;
+}
+</style>

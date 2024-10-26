@@ -111,6 +111,8 @@ export class MetaEntityService {
 			logoImageUrl: instance.logoImageUrl,
 			maxNoteTextLength: this.config.maxNoteLength,
 			maxRemoteNoteTextLength: this.config.maxRemoteNoteLength,
+			maxCwLength: this.config.maxCwLength,
+			maxRemoteCwLength: this.config.maxRemoteCwLength,
 			maxAltTextLength: this.config.maxAltTextLength,
 			maxRemoteAltTextLength: this.config.maxRemoteAltTextLength,
 			defaultLightTheme,

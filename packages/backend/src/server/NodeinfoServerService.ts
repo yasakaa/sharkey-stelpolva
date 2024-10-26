@@ -123,6 +123,8 @@ export class NodeinfoServerService {
 					enableTurnstile: meta.enableTurnstile,
 					maxNoteTextLength: this.config.maxNoteLength,
 					maxRemoteNoteTextLength: this.config.maxRemoteNoteLength,
+					maxCwLength: this.config.maxCwLength,
+					maxRemoteCwLength: this.config.maxRemoteCwLength,
 					maxAltTextLength: this.config.maxAltTextLength,
 					maxRemoteAltTextLength: this.config.maxRemoteAltTextLength,
 					enableEmail: meta.enableEmail,

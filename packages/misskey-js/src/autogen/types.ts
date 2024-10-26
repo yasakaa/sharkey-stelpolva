@@ -5154,6 +5154,8 @@ export type components = {
       sidebarLogoUrl: string | null;
       maxNoteTextLength: number;
       maxRemoteNoteTextLength: number;
+      maxCwLength: number;
+      maxRemoteCwLength: number;
       maxAltTextLength: number;
       maxRemoteAltTextLength: number;
       ads: {

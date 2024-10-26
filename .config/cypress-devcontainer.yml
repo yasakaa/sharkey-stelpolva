@@ -183,6 +183,10 @@ id: 'aidx'
 #maxNoteLength: 3000
 # Amount of characters that will be saved for remote notes. Longer notes will be truncated to this length. (minimum: 1)
 #maxRemoteNoteLength: 100000
+# Amount of characters that can be used when writing content warnings. Longer warnings will be rejected. (minimum: 1)
+#maxCwLength: 500
+# Amount of characters that will be saved for remote content warnings. Longer warnings will be truncated to this length. (minimum: 1)
+#maxRemoteCwLength: 5000
 # Amount of characters that can be used when writing media descriptions (alt text). Longer descriptions will be rejected. (minimum: 1)
 #maxAltTextLength: 20000
 # Amount of characters that will be saved for remote media descriptions (alt text). Longer descriptions will be truncated to this length. (minimum: 1)

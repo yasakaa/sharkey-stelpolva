@@ -73,6 +73,8 @@ type Source = {
 
 	maxFileSize?: number;
 	maxNoteLength?: number;
+	maxCwLength?: number;
+	maxRemoteCwLength?: number;
 	maxRemoteNoteLength?: number;
 	maxAltTextLength?: number;
 	maxRemoteAltTextLength?: number;
@@ -153,6 +155,8 @@ export type Config = {
 	maxFileSize: number;
 	maxNoteLength: number;
 	maxRemoteNoteLength: number;
+	maxCwLength: number;
+	maxRemoteCwLength: number;
 	maxAltTextLength: number;
 	maxRemoteAltTextLength: number;
 	clusterLimit: number | undefined;
@@ -308,6 +312,8 @@ export function loadConfig(): Config {
 		maxFileSize: config.maxFileSize ?? 262144000,
 		maxNoteLength: config.maxNoteLength ?? 3000,
 		maxRemoteNoteLength: config.maxRemoteNoteLength ?? 100000,
+		maxCwLength: config.maxCwLength ?? 500,
+		maxRemoteCwLength: config.maxRemoteCwLength ?? 5000,
 		maxAltTextLength: config.maxAltTextLength ?? 20000,
 		maxRemoteAltTextLength: config.maxRemoteAltTextLength ?? 100000,
 		clusterLimit: config.clusterLimit,

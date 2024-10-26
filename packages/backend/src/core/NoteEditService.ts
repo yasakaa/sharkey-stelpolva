@@ -380,9 +380,13 @@ export class NoteEditService implements OnApplicationShutdown {
 			data.text = null;
 		}
 
+		const maxCwLength = user.host == null
+			? this.config.maxCwLength
+			: this.config.maxRemoteCwLength;
+
 		if (data.cw) {
-			if (data.cw.length > maxTextLength) {
-				data.cw = data.cw.slice(0, maxTextLength);
+			if (data.cw.length > maxCwLength) {
+				data.cw = data.cw.slice(0, maxCwLength);
 			}
 			data.cw = data.cw.trim();
 			if (data.cw === '') {

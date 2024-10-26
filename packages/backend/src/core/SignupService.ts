@@ -133,7 +133,7 @@ export class SignupService {
 				host: this.utilityService.toPunyNullable(host),
 				token: secret,
 				isRoot: isTheFirstUser,
-				approved: opts.approved ?? !this.meta.approvalRequiredForSignup,
+				approved: isTheFirstUser || (opts.approved ?? !this.meta.approvalRequiredForSignup),
 				signupReason: reason,
 			}));
 

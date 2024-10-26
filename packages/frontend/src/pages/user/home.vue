@@ -215,9 +215,9 @@ import { getStaticImageUrl } from '@/scripts/media-proxy.js';
 import { infoImageUrl } from '@/instance.js';
 
 const MkNote = defineAsyncComponent(() =>
-	(defaultStore.state.noteDesign === 'misskey') ? import('@/components/MkNote.vue') :
-	(defaultStore.state.noteDesign === 'sharkey') ? import('@/components/SkNote.vue') :
-	null
+	defaultStore.state.noteDesign === 'sharkey'
+		? import('@/components/SkNote.vue')
+		: import('@/components/MkNote.vue'),
 );
 
 function calcAge(birthdate: string): number {
@@ -237,7 +237,7 @@ function calcAge(birthdate: string): number {
 
 const XFiles = defineAsyncComponent(() => import('./index.files.vue'));
 const XActivity = defineAsyncComponent(() => import('./index.activity.vue'));
-const XListenBrainz = defineAsyncComponent(() => import("./index.listenbrainz.vue"));
+const XListenBrainz = defineAsyncComponent(() => import('./index.listenbrainz.vue'));
 //const XTimeline = defineAsyncComponent(() => import('./index.timeline.vue'));
 
 const props = withDefaults(defineProps<{
@@ -269,7 +269,7 @@ if (props.user.listenbrainz) {
 			const response = await fetch(`https://api.listenbrainz.org/1/user/${props.user.listenbrainz}/playing-now`, {
 				method: 'GET',
 				headers: {
-					'Content-Type': 'application/json'
+					'Content-Type': 'application/json',
 				},
 			});
 			const data = await response.json();
@@ -286,11 +286,11 @@ const background = computed(() => {
 	if (props.user.backgroundUrl == null) return {};
 	if (defaultStore.state.disableShowingAnimatedImages) {
 		return {
-			'--backgroundImageStatic': `url('${getStaticImageUrl(props.user.backgroundUrl)}')`
+			'--backgroundImageStatic': `url('${getStaticImageUrl(props.user.backgroundUrl)}')`,
 		};
 	} else {
 		return {
-			'--backgroundImageStatic': `url('${props.user.backgroundUrl}')`
+			'--backgroundImageStatic': `url('${props.user.backgroundUrl}')`,
 		};
 	}
 });
@@ -303,7 +303,7 @@ const pagination = {
 	endpoint: 'users/featured-notes' as const,
 	limit: 10,
 	params: computed(() => ({
-		userId: props.user.id
+		userId: props.user.id,
 	})),
 };
 

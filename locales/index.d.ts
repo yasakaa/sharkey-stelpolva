@@ -11511,6 +11511,14 @@ export interface Locale extends ILocale {
      * 来自 {domain} 的 {name} 说了什么
      */
     "stpvDomainUserSaysSomething": ParameterizedString<"domain" | "name">;
+    /**
+     * 表情回应统计图
+     */
+    "stpvReactionsStat": string;
+    /**
+     * 显示了你发布的前100多emoji的数量
+     */
+    "stpvReactionsStatDescription": string;
 }
 declare const locales: {
     [lang: string]: Locale;

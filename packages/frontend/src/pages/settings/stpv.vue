@@ -101,6 +101,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<div class="_gaps_s">
 				<MkButton link to="/make-private-many"><i class="ph-eye-slash ph-bold ph-lg"></i> {{ i18n.ts.makePrivate.bulkText }}</MkButton>
 			</div>
+			<div class="_gaps_s">
+				<MkButton link :to="`/stpv/reactions-stat`"><i class="ph-chart-bar ph-bold ph-lg"></i> {{ i18n.ts.stpvReactionsStat }} </MkButton>
+			</div>
 		</div>
 	</FormSection>
 </div>
@@ -128,8 +131,8 @@ import MkInfo from '@/components/MkInfo.vue';
 import { getDefaultFontSettings } from '@/scripts/font-settings';
 import MkTextarea from '@/components/MkTextarea.vue';
 
-// Uncomment the next line when signInRequired settings added
-// const $i = signinRequired();
+const $i = signinRequired();
+const meId = $i.id;
 
 const defaultFont = getDefaultFontSettings();
 console.log(defaultFont);

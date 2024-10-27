@@ -46,3 +46,5 @@ stpvMuteNote: "以后在时间线上折叠"
 stpvUnmuteNote: "以后在时间线上恢复显示"
 stpvMuteInstance: "在时间线上折叠来自此实例的帖子"
 stpvDomainUserSaysSomething: "来自 {domain} 的 {name} 说了什么"
+stpvReactionsStat: 表情回应统计图
+stpvReactionsStatDescription: 显示了你发布的前100多emoji的数量

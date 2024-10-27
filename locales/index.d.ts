@@ -11468,11 +11468,11 @@ export interface Locale extends ILocale {
         };
         "softMutedDomains": {
             /**
-             * Domain names soft muted on the timeline
+             * 在时间线上折叠的域名
              */
             "label": string;
             /**
-             * Fill in the domain names, one per line. At most 100 domains, and any exceeded will be deleted.
+             * 填写域名，一行一个，最多不能超过100个，超出的部分会被自动删除。
              */
             "caption": string;
         };

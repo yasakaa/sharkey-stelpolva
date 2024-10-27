@@ -31,3 +31,5 @@ _stpvPlus:
   fontType:
     label: フォントタイプ
     caption: フォントのサブフォントを選択
+    stpvReactionsStat: リアクション絵文字の統計
+    stpvReactionsStatDescription: 最もリアクションされた絵文字上位100個を表示します

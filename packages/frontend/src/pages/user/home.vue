@@ -30,7 +30,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 								</button>
 							</div>
 						</div>
-						<ul v-if="$i && $i.id != user.id" class="info-badges">
+						<ul v-if="$i && $i.id != user.id" :class="$style.infoBadges">
 							<li v-if="user.isFollowed && user.isFollowing">{{ i18n.ts.mutuals }}</li>
 							<li v-else-if="user.isFollowing">{{ i18n.ts.following }}</li>
 							<li v-else-if="user.isFollowed">{{ i18n.ts.followsYou }}</li>
@@ -469,32 +469,6 @@ onUnmounted(() => {
 						background: linear-gradient(transparent, rgba(#000, 0.7));
 					}
 
-					> .info-badges {
-						position: absolute;
-						top: 12px;
-						left: 12px;
-
-						display: flex;
-						flex-direction: row;
-
-						padding: 0;
-						margin: 0;
-
-						> * {
-							padding: 4px 8px;
-							color: #fff;
-							background: rgba(0, 0, 0, 0.7);
-							font-size: 0.7em;
-							border-radius: var(--radius-sm);
-							list-style-type: none;
-							margin-left: 0;
-						}
-
-						> :not(:first-child) {
-							margin-left: 8px;
-						}
-					}
-
 					> .actions {
 						position: absolute;
 						top: 12px;
@@ -848,5 +822,31 @@ onUnmounted(() => {
 
 .pinnedNote:not(:last-child) {
 	border-bottom: solid 0.5px var(--divider);
+}
+
+.infoBadges {
+	position: absolute;
+	top: 12px;
+	left: 12px;
+
+	display: flex;
+	flex-direction: row;
+
+	padding: 0;
+	margin: 0;
+
+	> * {
+		padding: 4px 8px;
+		color: #fff;
+		background: rgba(0, 0, 0, 0.7);
+		font-size: 0.7em;
+		border-radius: var(--radius-sm);
+		list-style-type: none;
+		margin-left: 0;
+	}
+
+	> :not(:first-child) {
+		margin-left: 8px;
+	}
 }
 </style>

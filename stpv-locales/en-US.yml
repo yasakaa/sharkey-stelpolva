@@ -40,6 +40,9 @@ _stpvPlus:
   softMutedDomains:
     label: Domain names soft muted on the timeline
     caption: Fill in the domain names, one per line. At most 100 domains, and any exceeded will be deleted.
+  hideReplyAcct:
+    label: Hide collapsed replied note acct
+    caption: Don't show @username@domain
 stpvMuteUser: "Soft mute notes in timeline"
 stpvUnmuteUser: "Don't soft mute notes in timeline"
 stpvMuteNote: "Soft mute this note later"

@@ -37,6 +37,9 @@ _stpvPlus:
   softMutedDomains:
     label: Domain names soft muted on the timeline
     caption: Fill in the domain names, one per line. At most 100 domains, and any exceeded will be deleted.
+  hideReplyAcct:
+    label: 隐藏被折叠回复的acct
+    caption: 不显示 @username@domain
 stpvMuteUser: "在时间线上折叠该用户的帖子"
 stpvUnmuteUser: "在时间线上恢复显示该用户的帖子"
 stpvMuteNote: "以后在时间线上折叠"

@@ -47,6 +47,12 @@ SPDX-License-Identifier: AGPL-3.0-only
 					<template #caption>{{ i18n.ts._stpvPlus.disableAllReactions.caption }}</template>
 				</MkSwitch>
 			</div>
+			<div v-show="collapsedInReplyTo" class="_gaps_s">
+				<MkSwitch v-model="stpvHideReplyAcct">
+					{{ i18n.ts._stpvPlus.hideReplyAcct.label }}
+					<template #caption>{{ i18n.ts._stpvPlus.hideReplyAcct.caption }}</template>
+				</MkSwitch>
+			</div>
 		</div>
 	</FormSection>
 
@@ -128,8 +134,11 @@ import MkTextarea from '@/components/MkTextarea.vue';
 const defaultFont = getDefaultFontSettings();
 console.log(defaultFont);
 
+const collapsedInReplyTo = defaultStore.reactiveState.collapseNotesRepliedTo;
+
 const autoSpacingBehaviour = computed(defaultStore.makeGetterSetter('chineseAutospacing'));
 const stpvDisableAllReactions = computed(defaultStore.makeGetterSetter('stpvDisableAllReactions'));
+const stpvHideReplyAcct = computed(defaultStore.makeGetterSetter('stpvHideReplyAcct'));
 
 const stpvMutedUsersList = computed({
 	get: () => defaultStore.reactiveState.stpvClientMutedUsers.value.filter(x => x).join('\n'),

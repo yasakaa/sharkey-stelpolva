@@ -11476,6 +11476,16 @@ export interface Locale extends ILocale {
              */
             "caption": string;
         };
+        "hideReplyAcct": {
+            /**
+             * 隐藏被折叠回复的acct
+             */
+            "label": string;
+            /**
+             * 不显示 @username@domain
+             */
+            "caption": string;
+        };
     };
     /**
      * 在时间线上折叠该用户的帖子

@@ -44,24 +44,18 @@ import { copyToClipboard } from '@/scripts/copy-to-clipboard';
 
 const $i = signinRequired();
 
-const myReactionsListMfm = ref('');
-const serverReactionsListMfm = ref('');
+const myReactionsListMfm = ref('Loading...');
+const serverReactionsListMfm = ref('Loading...');
 
 const tab = ref('me');
 
 watch(tab, async () => {
-	if (tab.value === 'site' && serverReactionsListMfm.value) { return; }
-	if (tab.value !== 'site' && myReactionsListMfm.value) { return; }
+	if (tab.value === 'site' && serverReactionsListMfm.value !== 'Loading...') { return; }
+	if (tab.value !== 'site' && myReactionsListMfm.value !== 'Loading...') { return; }
 
 	const reactionsList = await misskeyApi('stpv/reactions-stat', { site: tab.value === 'site' });
 
-	const res = reactionsList.map((x) => {
-		if (/[a-zA-Z0-9_]/.test(x.reaction)) {
-			return `:${x.reaction}: ${x.count}`;
-		} else {
-			return `${x.reaction} ${x.count}`;
-		}
-	}).join('\n');
+	const res = reactionsList.map((x) => `${x.reaction} ${x.count}`).join('\n');
 
 	if (tab.value === 'site') {
 		serverReactionsListMfm.value = res;

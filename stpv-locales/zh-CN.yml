@@ -35,8 +35,8 @@ _stpvPlus:
     label: 在时间线上折叠的帖子 ID
     caption: 填写从 URL 上可以看到的帖子 ID，一行一个。最多不能超过100个，超出的部分会被自动删除。
   softMutedDomains:
-    label: Domain names soft muted on the timeline
-    caption: Fill in the domain names, one per line. At most 100 domains, and any exceeded will be deleted.
+    label: 在时间线上折叠的域名
+    caption: 填写域名，一行一个，最多不能超过100个，超出的部分会被自动删除。
   hideReplyAcct:
     label: 隐藏被折叠回复的acct
     caption: 不显示 @username@domain

@@ -11486,6 +11486,16 @@ export interface Locale extends ILocale {
              */
             "caption": string;
         };
+        "advancedPostForm": {
+            /**
+             * 高级发帖框模式
+             */
+            "label": string;
+            /**
+             * 允许添加前缀和小尾巴等
+             */
+            "caption": string;
+        };
     };
     /**
      * 在时间线上折叠该用户的帖子
@@ -11519,6 +11529,14 @@ export interface Locale extends ILocale {
      * 显示了你发布的前100多emoji的数量
      */
     "stpvReactionsStatDescription": string;
+    /**
+     * 前缀...
+     */
+    "stpvPFprefix": string;
+    /**
+     * ...尾缀
+     */
+    "stpvPFsuffix": string;
 }
 declare const locales: {
     [lang: string]: Locale;

@@ -50,7 +50,10 @@ import { popupMenu } from '@/os.js';
 import { defaultStore } from '@/store.js';
 
 const props = defineProps<{
-	note: Misskey.entities.Note;
+	note: Misskey.entities.Note & {
+		isSchedule?: boolean
+	};
+	scheduled?: boolean;
 }>();
 
 const menuVersionsButton = shallowRef<HTMLElement>();

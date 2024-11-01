@@ -72,7 +72,7 @@ function options(ev) {
 			{
 				type: 'button',
 				icon: 'ph-image ph-bold ph-lg',
-				text: 'With Images',
+				text: `With Images ${filetype.value === 'image' ? '✔' : ''}`,
 				action: () => {
 					filetype.value = 'image';
 				},
@@ -80,7 +80,7 @@ function options(ev) {
 			{
 				type: 'button',
 				icon: 'ph-music-notes-simple ph-bold ph-lg',
-				text: 'With Audios',
+				text: `With Audios ${filetype.value === 'audio' ? '✔' : ''}`,
 				action: () => {
 					filetype.value = 'audio';
 				},
@@ -88,7 +88,7 @@ function options(ev) {
 			{
 				type: 'button',
 				icon: 'ph-video ph-bold ph-lg',
-				text: 'With Videos',
+				text: `With Videos ${filetype.value === 'video' ? '✔' : ''}`,
 				action: () => {
 					filetype.value = 'video';
 				},

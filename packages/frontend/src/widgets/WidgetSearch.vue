@@ -93,7 +93,14 @@ function options(ev) {
 					filetype.value = 'video';
 				},
 			}],
-	}], ev.currentTarget ?? ev.target);
+	},
+	...(filetype.value ? [{
+			text: 'Clear Filter',
+			icon: 'ti ti-trash',
+			action: () => {
+				filetype.value = null;
+			},
+	}] : [])], ev.currentTarget ?? ev.target);
 }
 
 async function search() {

@@ -49,7 +49,8 @@
 		"./src/**/*.ts",
 		"./src/**/*.vue",
 		"./test/**/*.ts",
-		"./test/**/*.vue"
+		"./test/**/*.vue",
+		"./@types/**/*.ts"
 	],
 	"exclude": [
 		"node_modules",

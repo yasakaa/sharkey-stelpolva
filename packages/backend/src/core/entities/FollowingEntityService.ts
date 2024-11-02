@@ -14,9 +14,9 @@ import type { MiLocalUser, MiUser } from '@/models/User.js';
 import { MiFollowing } from '@/models/Following.js';
 import { bindThis } from '@/decorators.js';
 import { IdService } from '@/core/IdService.js';
-import { UserEntityService } from './UserEntityService.js';
 import { QueryService } from '@/core/QueryService.js';
 import { RoleService } from '@/core/RoleService.js';
+import { UserEntityService } from './UserEntityService.js';
 
 type LocalFollowerFollowing = MiFollowing & {
 	followerHost: null;
@@ -175,7 +175,6 @@ export class FollowingEntityService {
 		);
 	}
 }
-
 
 interface FollowsQueryParams {
 	readonly host: string;

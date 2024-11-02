@@ -8,7 +8,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<template #header>
 		<MkPageHeader :actions="headerActions" :displayBackButton="true"/>
 	</template>
-	<SkUserRecentNotes ref="userRecentNotes" :userId="userId" :withNonPublic="withNonPublic" :withQuotes="withQuotes" :withBots="withBots" :withReplies="withReplies" :onlyFiles="onlyFiles"/>
+	<SkUserRecentNotes ref="userRecentNotes" :class="$style.notes" :userId="userId" :withNonPublic="withNonPublic" :withQuotes="withQuotes" :withBots="withBots" :withReplies="withReplies" :onlyFiles="onlyFiles"/>
 </MkStickyContainer>
 </template>
 
@@ -63,3 +63,17 @@ definePageMetadata(() => ({
 	} : {},
 }));
 </script>
+
+<style lang="scss" module>
+@container (min-width: 451px) {
+	.notes {
+		padding: 12px;
+	}
+}
+
+@container (min-width: 750px) {
+	.notes {
+		padding: 24px;
+	}
+}
+</style>

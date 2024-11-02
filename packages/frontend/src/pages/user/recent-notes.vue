@@ -4,7 +4,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-<MkStickyContainer ref="userScroll">
+<MkStickyContainer>
 	<template #header>
 		<MkPageHeader :actions="headerActions" :displayBackButton="true"/>
 	</template>
@@ -13,7 +13,6 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script setup lang="ts">
-
 import { computed, shallowRef } from 'vue';
 import { definePageMetadata } from '@/scripts/page-metadata.js';
 import { i18n } from '@/i18n.js';

@@ -77,7 +77,7 @@ export class CaptchaService {
 	@bindThis
 	public async verifyFriendlyCaptcha(secret: string, response: string | null | undefined): Promise<void> {
 		if (response == null) {
-			throw new Error('recaptcha-failed: no response provided');
+			throw new Error('frc-failed: no response provided');
 		}
 
 		const result = await this.httpRequestService.send('https://api.friendlycaptcha.com/api/v1/siteverify', {

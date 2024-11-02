@@ -5142,6 +5142,8 @@ export type components = {
       recaptchaSiteKey: string | null;
       enableTurnstile: boolean;
       turnstileSiteKey: string | null;
+      enableFC: boolean;
+      fcSiteKey: string | null;
       enableAchievements: boolean | null;
       swPublickey: string | null;
       /** @default /assets/ai.png */
@@ -5281,6 +5283,8 @@ export type operations = {
             recaptchaSiteKey: string | null;
             enableTurnstile: boolean;
             turnstileSiteKey: string | null;
+            enableFC: boolean;
+            fcSiteKey: string | null;
             swPublickey: string | null;
             /** @default /assets/ai.png */
             mascotImageUrl: string | null;
@@ -5309,6 +5313,7 @@ export type operations = {
             mcaptchaSecretKey: string | null;
             recaptchaSecretKey: string | null;
             turnstileSecretKey: string | null;
+            fcSecretKey: string | null;
             sensitiveMediaDetection: string;
             sensitiveMediaDetectionSensitivity: string;
             setSensitiveFlagAutomatically: boolean;
@@ -9891,6 +9896,9 @@ export type operations = {
           enableTurnstile?: boolean;
           turnstileSiteKey?: string | null;
           turnstileSecretKey?: string | null;
+          enableFC?: boolean;
+          fcSiteKey?: string | null;
+          fcSecretKey?: string | null;
           /** @enum {string} */
           sensitiveMediaDetection?: 'none' | 'all' | 'local' | 'remote';
           /** @enum {string} */

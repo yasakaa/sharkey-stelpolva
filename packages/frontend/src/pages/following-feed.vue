@@ -7,7 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 <div :class="$style.root">
 	<div :class="$style.header">
 		<MkPageHeader v-model:tab="userList" :tabs="headerTabs" :actions="headerActions" :displayBackButton="true" @update:tab="onChangeTab"/>
-		<MkInfo v-if="showRemoteWarning" :class="$style.remoteWarning" warn closable @close="remoteWarningDismissed = true">{{ i18n.ts.remoteFollowersWarning }}</MkInfo>
+		<SkRemoteFollowersWarning :class="$style.remoteWarning" :model="model"/>
 	</div>
 
 	<div ref="noteScroll" :class="$style.notes">
@@ -36,11 +36,12 @@ import { useRouter } from '@/router/supplier.js';
 import MkPageHeader from '@/components/global/MkPageHeader.vue';
 import SkUserRecentNotes from '@/components/SkUserRecentNotes.vue';
 import { useScrollPositionManager } from '@/nirax.js';
-import MkInfo from '@/components/MkInfo.vue';
 import { createModel, createOptions, followersTab, followingTab, mutualsTab } from '@/scripts/following-feed-utils.js';
 import SkLazy from '@/components/global/SkLazy.vue';
 import SkFollowingRecentNotes from '@/components/SkFollowingRecentNotes.vue';
+import SkRemoteFollowersWarning from '@/components/SkRemoteFollowersWarning.vue';
 
+const model = createModel();
 const {
 	userList,
 	withNonPublic,
@@ -48,8 +49,7 @@ const {
 	withBots,
 	withReplies,
 	onlyFiles,
-	remoteWarningDismissed,
-} = createModel();
+} = model;
 
 const router = useRouter();
 
@@ -57,8 +57,6 @@ const userRecentNotes = shallowRef<InstanceType<typeof SkUserRecentNotes>>();
 const followingRecentNotes = shallowRef<InstanceType<typeof SkFollowingRecentNotes>>();
 const userScroll = shallowRef<InstanceType<typeof SkLazy>>();
 const noteScroll = shallowRef<HTMLElement>();
-
-const showRemoteWarning = computed(() => userList.value === 'followers' && !remoteWarningDismissed.value);
 
 const selectedUserId: Ref<string | null> = ref(null);
 

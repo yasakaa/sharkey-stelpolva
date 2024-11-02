@@ -64,14 +64,14 @@ const selectedUserId: Ref<string | null> = ref(null);
 
 function listReady(initialUserId?: string): void {
 	if (initialUserId && !selectedUserId.value) {
-		userSelected(initialUserId);
+		selectedUserId.value = initialUserId;
 	}
 }
 
 function userSelected(userId: string): void {
-	if (userScroll.value?.showing) {
-		selectedUserId.value = userId;
-	} else {
+	selectedUserId.value = userId;
+
+	if (!userScroll.value?.showing) {
 		router.push(`/following-feed/${userId}`);
 	}
 }

@@ -23,7 +23,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<MkNote v-for="note of user.pinnedNotes" :key="note.id" class="note" :class="$style.pinnedNote" :note="note" :pinned="true"/>
 		</div>
 	</div>
-	<MkNotes v-else :class="$style.tl" :noGap="true" :pagination="pagination"/>
+	<MkNotes v-else :noGap="true" :pagination="pagination" :class="$style.tl"/>
 </MkStickyContainer>
 </template>
 

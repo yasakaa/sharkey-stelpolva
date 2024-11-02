@@ -9,6 +9,7 @@ import { deepMerge } from '@/scripts/merge.js';
 import { PageHeaderItem } from '@/types/page-header.js';
 import { i18n } from '@/i18n.js';
 import { popupMenu } from '@/os.js';
+import { MenuItem } from '@/types/menu.js';
 
 export const followingTab = 'following' as const;
 export const mutualsTab = 'mutuals' as const;
@@ -80,43 +81,40 @@ export function createOptionsMenu(storage?: Ref<StorageInterface>): MenuItem[] {
 		onlyFiles,
 	} = createModel(storage);
 
-	return {
-		icon: 'ti ti-dots',
-		text: i18n.ts.options,
-		handler: ev =>
-			popupMenu([
-				{
-					type: 'switch',
-					text: i18n.ts.showNonPublicNotes,
-					ref: withNonPublic,
-					disabled: userList.value === 'followers',
-				},
-				{
-					type: 'switch',
-					text: i18n.ts.showQuotes,
-					ref: withQuotes,
-				},
-				{
-					type: 'switch',
-					text: i18n.ts.showBots,
-					ref: withBots,
-				},
-				{
-					type: 'switch',
-					text: i18n.ts.showReplies,
-					ref: withReplies,
-					disabled: onlyFiles,
-				},
-				{
-					type: 'divider',
-				},
-				{
-					type: 'switch',
-					text: i18n.ts.fileAttachedOnly,
-					ref: onlyFiles,
-					disabled: withReplies,
-				},
-			], ev.currentTarget ?? ev.target),
+	return [
+		{
+			type: 'switch',
+			text: i18n.ts.showNonPublicNotes,
+			ref: withNonPublic,
+			disabled: computed(() => userList.value === followersTab),
+		},
+		{
+			type: 'switch',
+			text: i18n.ts.showQuotes,
+			ref: withQuotes,
+		},
+		{
+			type: 'switch',
+			text: i18n.ts.showBots,
+			ref: withBots,
+		},
+		{
+			type: 'switch',
+			text: i18n.ts.showReplies,
+			ref: withReplies,
+			disabled: onlyFiles,
+		},
+		{
+			type: 'divider',
+		},
+		{
+			type: 'switch',
+			text: i18n.ts.fileAttachedOnly,
+			ref: onlyFiles,
+			disabled: withReplies,
+		},
+	];
+}
 
 export function createModel(storage?: Ref<StorageInterface>): FollowingFeedModel {
 	// eslint-disable-next-line no-param-reassign

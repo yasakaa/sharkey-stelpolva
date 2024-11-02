@@ -25,7 +25,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { computed, Ref, ref, shallowRef } from 'vue';
+import { computed, ComputedRef, Ref, ref, shallowRef } from 'vue';
 import { getScrollContainer } from '@@/js/scroll.js';
 import { definePageMetadata } from '@/scripts/page-metadata.js';
 import { i18n } from '@/i18n.js';
@@ -36,7 +36,7 @@ import { useRouter } from '@/router/supplier.js';
 import MkPageHeader from '@/components/global/MkPageHeader.vue';
 import SkUserRecentNotes from '@/components/SkUserRecentNotes.vue';
 import { useScrollPositionManager } from '@/nirax.js';
-import { createModel, createOptions, followersTab, followingTab, mutualsTab } from '@/scripts/following-feed-utils.js';
+import { createModel, createHeaderItem, followingFeedTabs, followingTabIcon, followingTabName, followingTab } from '@/scripts/following-feed-utils.js';
 import SkLazy from '@/components/global/SkLazy.vue';
 import SkFollowingRecentNotes from '@/components/SkFollowingRecentNotes.vue';
 import SkRemoteFollowersWarning from '@/components/SkRemoteFollowersWarning.vue';
@@ -91,32 +91,20 @@ const headerActions: PageHeaderItem[] = [
 		text: i18n.ts.reload,
 		handler: () => reload(),
 	},
-	createOptions(),
+	createHeaderItem(),
 ];
 
-const headerTabs = computed(() => [
-	{
-		key: followingTab,
-		icon: 'ph-user-check ph-bold ph-lg',
-		title: i18n.ts.following,
-	} satisfies Tab,
-	{
-		key: mutualsTab,
-		icon: 'ph-user-switch ph-bold ph-lg',
-		title: i18n.ts.mutuals,
-	} satisfies Tab,
-	{
-		key: followersTab,
-		icon: 'ph-user ph-bold ph-lg',
-		title: i18n.ts.followers,
-	} satisfies Tab,
-]);
+const headerTabs: ComputedRef<Tab[]> = computed(() => followingFeedTabs.map(t => ({
+	key: t,
+	icon: followingTabIcon(t),
+	title: followingTabName(t),
+})));
 
 useScrollPositionManager(() => getScrollContainer(userScroll.value?.rootEl ?? null), router);
 useScrollPositionManager(() => getScrollContainer(noteScroll.value ?? null), router);
 definePageMetadata(() => ({
 	title: i18n.ts.following,
-	icon: 'ph-user-check ph-bold ph-lg',
+	icon: followingTabIcon(followingTab),
 }));
 
 </script>

@@ -20,7 +20,7 @@ import { PageHeaderItem } from '@/types/page-header.js';
 import MkPageHeader from '@/components/global/MkPageHeader.vue';
 import SkUserRecentNotes from '@/components/SkUserRecentNotes.vue';
 import { acct } from '@/filters/user.js';
-import { createModel, createOptions } from '@/scripts/following-feed-utils.js';
+import { createModel, createHeaderItem } from '@/scripts/following-feed-utils.js';
 import MkStickyContainer from '@/components/global/MkStickyContainer.vue';
 
 defineProps<{
@@ -44,7 +44,7 @@ const headerActions: PageHeaderItem[] = [
 		text: i18n.ts.reload,
 		handler: () => userRecentNotes.value?.reload(),
 	},
-	createOptions(),
+	createHeaderItem(),
 ];
 
 // Based on user/index.vue

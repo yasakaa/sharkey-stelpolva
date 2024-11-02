@@ -45,13 +45,32 @@ export interface FollowingFeedState {
 	remoteWarningDismissed: boolean,
 }
 
+export const defaultFollowingFeedState: FollowingFeedState = {
+	withNonPublic: false,
+	withQuotes: false,
+	withBots: true,
+	withReplies: false,
+	onlyFiles: false,
+	userList: followingTab,
+	remoteWarningDismissed: false,
+};
+
 interface StorageInterface<T extends Partial<FollowingFeedState> = Partial<FollowingFeedState>> {
 	readonly state: Partial<T>;
 	readonly reactiveState: Ref<Partial<T>>;
 	save(updated: T): void;
 }
 
-export function createOptions(storage?: Ref<StorageInterface>): PageHeaderItem {
+export function createHeaderItem(storage?: Ref<StorageInterface>): PageHeaderItem {
+	const menu = createOptionsMenu(storage);
+	return {
+		icon: 'ti ti-dots',
+		text: i18n.ts.options,
+		handler: ev => popupMenu(menu, ev.currentTarget ?? ev.target),
+	};
+}
+
+export function createOptionsMenu(storage?: Ref<StorageInterface>): MenuItem[] {
 	const {
 		userList,
 		withNonPublic,

@@ -7,7 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 <div :class="$style.root">
 	<div :class="$style.head">
 		<MkAvatar v-if="['pollEnded', 'note', 'edited'].includes(notification.type) && 'note' in notification" :class="$style.icon" :user="notification.note.user" link preview/>
-		<MkAvatar v-else-if="['roleAssigned', 'achievementEarned'].includes(notification.type)" :class="$style.icon" :user="$i" link preview/>
+		<MkAvatar v-else-if="['roleAssigned', 'achievementEarned', 'scheduledNoteFailed'].includes(notification.type)" :class="$style.icon" :user="$i" link preview/>
 		<div v-else-if="notification.type === 'reaction:grouped' && notification.note.reactionAcceptance === 'likeOnly'" :class="[$style.icon, $style.icon_reactionGroup]"><i class="ph-smiley ph-bold ph-lg" style="line-height: 1;"></i></div>
 		<div v-else-if="notification.type === 'reaction:grouped'" :class="[$style.icon, $style.icon_reactionGroup]"><i class="ph-smiley ph-bold ph-lg" style="line-height: 1;"></i></div>
 		<div v-else-if="notification.type === 'renote:grouped'" :class="[$style.icon, $style.icon_renoteGroup]"><i class="ti ti-repeat" style="line-height: 1;"></i></div>
@@ -29,6 +29,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				[$style.t_exportCompleted]: notification.type === 'exportCompleted',
 				[$style.t_roleAssigned]: notification.type === 'roleAssigned' && notification.role.iconUrl == null,
 				[$style.t_pollEnded]: notification.type === 'edited',
+				[$style.t_roleAssigned]: notification.type === 'scheduledNoteFailed',
 			}]"
 		> <!-- we re-use t_pollEnded for "edited" instead of making an identical style -->
 			<i v-if="notification.type === 'follow'" class="ti ti-plus"></i>
@@ -46,6 +47,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<i v-else class="ti ti-badges"></i>
 			</template>
 			<i v-else-if="notification.type === 'edited'" class="ph-pencil ph-bold ph-lg"></i>
+			<i v-else-if="notification.type === 'scheduledNoteFailed'" class="ti ti-calendar-event"></i>
 			<!-- notification.reaction が null になることはまずないが、ここでoptional chaining使うと一部ブラウザで刺さるので念の為 -->
 			<MkReactionIcon
 				v-else-if="notification.type === 'reaction'"
@@ -70,6 +72,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<span v-else-if="notification.type === 'renote:grouped'">{{ i18n.tsx._notification.renotedBySomeUsers({ n: notification.users.length }) }}</span>
 			<span v-else-if="notification.type === 'app'">{{ notification.header }}</span>
 			<span v-else-if="notification.type === 'edited'">{{ i18n.ts._notification.edited }}</span>
+			<span v-else-if="notification.type === 'scheduledNoteFailed'">{{ i18n.ts._notification.scheduledNoteFailed }}</span>
 			<MkTime v-if="withTime" :time="notification.createdAt" :class="$style.headerTime"/>
 		</header>
 		<div>
@@ -109,6 +112,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<MkA v-else-if="notification.type === 'exportCompleted'" :class="$style.text" :to="`/my/drive/file/${notification.fileId}`">
 				{{ i18n.ts.showFile }}
 			</MkA>
+			<div v-else-if="notification.type === 'scheduledNoteFailed'" :class="$style.text">
+				{{ notification.reason }}
+			</div>
 			<template v-else-if="notification.type === 'follow'">
 				<span :class="$style.text" style="opacity: 0.6;">{{ i18n.ts.youGotNewFollower }}</span>
 			</template>

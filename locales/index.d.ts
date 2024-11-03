@@ -9558,6 +9558,10 @@ export interface Locale extends ILocale {
          * Note got edited
          */
         "edited": string;
+        /**
+         * Posting scheduled note failed
+         */
+        "scheduledNoteFailed": string;
     };
     "_deck": {
         /**

@@ -122,6 +122,11 @@ export type MiNotification = {
 	createdAt: string;
 	notifierId: MiUser['id'];
 	noteId: MiNote['id'];
+} | {
+	type: 'scheduledNoteFailed';
+	id: string;
+	createdAt: string;
+	reason: string;
 };
 
 export type MiGroupedNotification = MiNotification | {

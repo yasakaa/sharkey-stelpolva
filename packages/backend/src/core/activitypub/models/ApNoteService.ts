@@ -313,7 +313,7 @@ export class ApNoteService {
 			quote = results.filter((x): x is { status: 'ok', res: MiNote } => x.status === 'ok').map(x => x.res).at(0);
 			if (!quote) {
 				if (results.some(x => x.status === 'temperror')) {
-					throw new Error(`quote resolve failed: ${entryUri}`);
+					throw new Error(`failed to resolve quote for ${entryUri}`);
 				}
 			}
 		}
@@ -542,7 +542,7 @@ export class ApNoteService {
 			quote = results.filter((x): x is { status: 'ok', res: MiNote } => x.status === 'ok').map(x => x.res).at(0);
 			if (!quote) {
 				if (results.some(x => x.status === 'temperror')) {
-					throw new Error(`quote resolve failed: ${noteUri}`);
+					throw new Error(`failed to resolve quote for ${noteUri}`);
 				}
 			}
 		}

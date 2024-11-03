@@ -297,7 +297,7 @@ export class ApInboxService {
 
 		const target = await resolver.resolve(activityObject).catch(e => {
 			this.logger.error(`Resolution failed: ${e}`);
-			return e;
+			throw e;
 		});
 
 		if (isPost(target)) return await this.announceNote(actor, activity, target);

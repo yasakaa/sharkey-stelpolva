@@ -341,7 +341,7 @@ export class ApInboxService {
 				// 対象が4xxならスキップ
 				if (err instanceof StatusError) {
 					if (!err.isRetryable) {
-						return `Ignored announce target ${target.id} - ${err.statusCode}`;
+						return `skip: ignored announce target ${target.id} - ${err.statusCode}`;
 					}
 					return `Error in announce target ${target.id} - ${err.statusCode}`;
 				}
@@ -461,7 +461,7 @@ export class ApInboxService {
 			return 'ok';
 		} catch (err) {
 			if (err instanceof StatusError && !err.isRetryable) {
-				return `skip ${err.statusCode}`;
+				return `skip: ${err.statusCode}`;
 			} else {
 				throw err;
 			}

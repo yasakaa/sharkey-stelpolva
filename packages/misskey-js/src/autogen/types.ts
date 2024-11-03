@@ -24475,8 +24475,6 @@ export type operations = {
            */
           reactionAcceptance?: null | 'likeOnly' | 'likeOnlyForRemote' | 'nonSensitiveOnly' | 'nonSensitiveOnlyForLocalLikeOnlyForRemote';
           /** @default false */
-          disableRightClick?: boolean;
-          /** @default false */
           noExtractMentions?: boolean;
           /** @default false */
           noExtractHashtags?: boolean;
@@ -24494,12 +24492,6 @@ export type operations = {
             multiple?: boolean;
             expiresAt?: number | null;
             expiredAfter?: number | null;
-          }) | null;
-          event?: ({
-            title?: string;
-            start?: number;
-            end?: number | null;
-            metadata?: Record<string, never>;
           }) | null;
           scheduleNote: {
             scheduledAt?: number;

@@ -687,7 +687,7 @@ export class ApInboxService {
 		if (isAnnounce(object)) return await this.undoAnnounce(actor, object);
 		if (isAccept(object)) return await this.undoAccept(actor, object);
 
-		return `skip: unknown object type ${getApType(object)}`;
+		return `skip: unknown activity type ${getApType(object)}`;
 	}
 
 	@bindThis

@@ -200,7 +200,10 @@ export class ApInboxService {
 	private async like(actor: MiRemoteUser, activity: ILike): Promise<string> {
 		const targetUri = getApId(activity.object);
 
-		const note = await this.apNoteService.fetchNote(targetUri);
+		const object = fromTuple(activity.object);
+		if (!object) return 'skip: activity has no object property';
+
+		const note = await this.apNoteService.resolveNote(object);
 		if (!note) return `skip: target note not found ${targetUri}`;
 
 		await this.apNoteService.extractEmojis(activity.tag ?? [], actor.host).catch(() => null);

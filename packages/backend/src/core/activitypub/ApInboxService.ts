@@ -272,7 +272,7 @@ export class ApInboxService {
 
 		if (activity.target === actor.featured) {
 			const activityObject = fromTuple(activity.object);
-			if (isApObject(activityObject) && !isNote(activityObject)) {
+			if (isApObject(activityObject) && !isPost(activityObject)) {
 				return 'unsupported featured object type';
 			}
 
@@ -646,7 +646,7 @@ export class ApInboxService {
 
 		if (activity.target === actor.featured) {
 			const activityObject = fromTuple(activity.object);
-			if (isApObject(activityObject) && !isNote(activityObject)) {
+			if (isApObject(activityObject) && !isPost(activityObject)) {
 				return 'unsupported featured object type';
 			}
 

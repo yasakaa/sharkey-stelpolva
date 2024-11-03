@@ -6947,6 +6947,10 @@ export interface Locale extends ILocale {
              * Can import notes
              */
             "canImportNotes": string;
+            /**
+             * Maximum number of scheduled notes
+             */
+            "scheduleNoteMax": string;
         };
         "_condition": {
             /**
@@ -8141,14 +8145,6 @@ export interface Locale extends ILocale {
          */
         "write:notes": string;
         /**
-         * 予約投稿を見る
-         */
-        "read:notes-schedule": string;
-        /**
-         * 予約投稿を作成・削除する
-         */
-        "write:notes-schedule": string;
-        /**
          * 通知を見る
          */
         "read:notifications": string;
@@ -8424,6 +8420,14 @@ export interface Locale extends ILocale {
          * 違反を報告する
          */
         "write:report-abuse": string;
+        /**
+         * View your list of scheduled notes
+         */
+        "read:notes-schedule": string;
+        /**
+         * Compose or delete scheduled notes
+         */
+        "write:notes-schedule": string;
     };
     "_auth": {
         /**
@@ -11436,6 +11440,14 @@ export interface Locale extends ILocale {
      * Select a follow relationship...
      */
     "selectFollowRelationship": string;
+		/**
+     * Schedule a note
+     */
+    "schedulePost": string;
+    /**
+     * List of scheduled notes
+     */
+    "schedulePostList": string;
 }
 declare const locales: {
     [lang: string]: Locale;

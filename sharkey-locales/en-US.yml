@@ -225,6 +225,7 @@ _role:
     btlAvailable: "Can view the bubble timeline"
     canImportNotes: "Can import notes"
     canUpdateBioMedia: "Allow users to edit their avatar or banner"
+    scheduleNoteMax: "Maximum number of scheduled notes"
   _condition:
     isLocked: "Private account"
     isExplorable: "Account is discoverable"
@@ -414,3 +415,10 @@ _deck:
     following: "Following"
 
 selectFollowRelationship: "Select a follow relationship..."
+
+schedulePost: "Schedule a note"
+schedulePostList: "List of scheduled notes"
+
+_permissions:
+  "read:notes-schedule": "View your list of scheduled notes"
+  "write:notes-schedule": "Compose or delete scheduled notes"

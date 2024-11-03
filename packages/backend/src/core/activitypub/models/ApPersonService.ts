@@ -674,7 +674,7 @@ export class ApPersonService implements OnModuleInit {
 				});
 		}
 
-		return 'skip';
+		return 'skip: too soon to migrate accounts';
 	}
 
 	/**

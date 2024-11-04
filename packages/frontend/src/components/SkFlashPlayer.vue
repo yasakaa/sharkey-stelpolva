@@ -4,51 +4,55 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-<div v-if="hide" :class="$style.flash_player_disabled" @click="toggleVisible()">
-	<div>
-		<b><i class="ph-eye ph-bold ph-lg"></i> {{ i18n.ts.sensitive }}</b>
-		<span>{{ i18n.ts.clickToShow }}</span>
-	</div>
-</div>
-
-<div v-else :class="$style.flash_player_enabled">
-	<div :class="$style.flash_display">
-		<div v-if="playerHide" :class="$style.player_hide" @click="dismissWarning()">
-			<b><i class="ph-eye ph-bold ph-lg"></i> {{ i18n.ts._flash.contentHidden }}</b>
-			<span>{{ i18n.ts._flash.poweredByRuffle }}</span>
-			<span>{{ i18n.ts._flash.arbitraryCodeExecutionWarning }}</span>
+<div :class="$style.flash_player_container">
+	<canvas :class="$style.ratio" height="300" width="300"></canvas>
+	
+	<div v-if="hide" :class="$style.flash_player_disabled" @click="toggleVisible()">
+		<div>
+			<b><i class="ph-eye ph-bold ph-lg"></i> {{ i18n.ts.sensitive }}</b>
 			<span>{{ i18n.ts.clickToShow }}</span>
 		</div>
-		<div v-if="ruffleError" :class="$style.player_hide">
-			<b><i class="ph-warning ph-bold ph-lg"></i> {{ i18n.ts._flash.failedToLoad }}</b>
-			<code>{{ ruffleError }}</code>
-		</div>
-		<div v-else-if="loadingStatus" :class="$style.player_hide">
-			<b>{{ i18n.ts._flash.isLoading }}<MkEllipsis/></b>
-			<MkLoading/>
-			<p>{{ loadingStatus }}</p>
-		</div>
-		<div ref="ruffleContainer" :class="$style.container"></div>
 	</div>
-	<div :class="$style.controls">
-		<button :key="playPauseButtonKey" @click="playPause()">
-			<i v-if="player?.isPlaying" class="ph-pause ph-bold ph-lg"></i>
-			<i v-else class="ph-play ph-bold ph-lg"></i>
-		</button>
-		<button :disabled="playerHide" @click="stop()">
-			<i class="ph-stop ph-bold ph-lg"></i>
-		</button>
-		<input v-if="player && !playerHide" v-model="player.volume" type="range" min="0" max="1" step="0.1"/>
-		<input v-else type="range" min="0" max="1" value="1" disabled/>
-		<a :title="i18n.ts.download" :href="flashFile.url" target="_blank">
-			<i class="ph-download ph-bold ph-lg"></i>
-		</a>
-		<button :class="$style.fullscreen" :disabled="playerHide" @click="fullscreen()">
-			<i class="ph-arrows-out ph-bold ph-lg"></i>
-		</button>
+	
+	<div v-else :class="$style.flash_player_enabled">
+		<div :class="$style.flash_display">
+			<div v-if="playerHide" :class="$style.player_hide" @click="dismissWarning()">
+				<b><i class="ph-eye ph-bold ph-lg"></i> {{ i18n.ts._flash.contentHidden }}</b>
+				<span>{{ i18n.ts._flash.poweredByRuffle }}</span>
+				<span>{{ i18n.ts._flash.arbitraryCodeExecutionWarning }}</span>
+				<span>{{ i18n.ts.clickToShow }}</span>
+			</div>
+			<div v-if="ruffleError" :class="$style.player_hide">
+				<b><i class="ph-warning ph-bold ph-lg"></i> {{ i18n.ts._flash.failedToLoad }}</b>
+				<code>{{ ruffleError }}</code>
+			</div>
+			<div v-else-if="loadingStatus" :class="$style.player_hide">
+				<b>{{ i18n.ts._flash.isLoading }}<MkEllipsis/></b>
+				<MkLoading/>
+				<p>{{ loadingStatus }}</p>
+			</div>
+			<div ref="ruffleContainer" :class="$style.container"></div>
+		</div>
+		<div :class="$style.controls">
+			<button :key="playPauseButtonKey" @click="playPause()">
+				<i v-if="player?.isPlaying" class="ph-pause ph-bold ph-lg"></i>
+				<i v-else class="ph-play ph-bold ph-lg"></i>
+			</button>
+			<button :disabled="playerHide" @click="stop()">
+				<i class="ph-stop ph-bold ph-lg"></i>
+			</button>
+			<input v-if="player && !playerHide" v-model="player.volume" type="range" min="0" max="1" step="0.1"/>
+			<input v-else type="range" min="0" max="1" value="1" disabled/>
+			<a :title="i18n.ts.download" :href="flashFile.url" target="_blank">
+				<i class="ph-download ph-bold ph-lg"></i>
+			</a>
+			<button :class="$style.fullscreen" :disabled="playerHide" @click="fullscreen()">
+				<i class="ph-arrows-out ph-bold ph-lg"></i>
+			</button>
+		</div>
+		<div v-if="comment" :class="$style.alt" :title="comment">ALT</div>
+		<i :class="$style.hide" class="ph-eye-slash ph-bold ph-lg" @click="toggleVisible()"></i>
 	</div>
-	<div v-if="comment" :class="$style.alt" :title="comment">ALT</div>
-	<i :class="$style.hide" class="ph-eye-slash ph-bold ph-lg" @click="toggleVisible()"></i>
 </div>
 </template>
 
@@ -230,6 +234,15 @@ onDeactivated(() => {
 
 <style lang="scss" module>
 
+.flash_player_container {
+	position: relative;
+	min-height: 0;
+}
+
+.ratio {
+	width: 100%;
+}
+
 .hide {
 	border-radius: var(--radius-sm) !important;
 	background-color: black !important;
@@ -238,12 +251,11 @@ onDeactivated(() => {
 }
 
 .flash_player_enabled {
-	position: relative;
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
-	height: 100vh;
-	max-height: inherit;
+	position: absolute;
+	inset: 0;
 
 	> i {
 		display: block;
@@ -465,8 +477,8 @@ onDeactivated(() => {
 	align-items: center;
 	background: #111;
 	color: #fff;
-	height: 100vh;
-	max-height: inherit;
+	position: absolute;
+	inset: 0;
 
 	> div {
 		display: table-cell;

@@ -36,6 +36,7 @@ export const notificationTypes = [
 	'achievementEarned',
 	'exportCompleted',
 	'scheduledNoteFailed',
+	'scheduledNotePosted',
 	'app',
 	'test',
 ] as const;

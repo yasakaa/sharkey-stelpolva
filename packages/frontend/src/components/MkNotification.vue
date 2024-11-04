@@ -6,7 +6,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 <template>
 <div :class="$style.root">
 	<div :class="$style.head">
-		<MkAvatar v-if="['pollEnded', 'note', 'edited'].includes(notification.type) && 'note' in notification" :class="$style.icon" :user="notification.note.user" link preview/>
+		<MkAvatar v-if="['pollEnded', 'note', 'edited', 'scheduledNotePosted'].includes(notification.type) && 'note' in notification" :class="$style.icon" :user="notification.note.user" link preview/>
 		<MkAvatar v-else-if="['roleAssigned', 'achievementEarned', 'scheduledNoteFailed'].includes(notification.type)" :class="$style.icon" :user="$i" link preview/>
 		<div v-else-if="notification.type === 'reaction:grouped' && notification.note.reactionAcceptance === 'likeOnly'" :class="[$style.icon, $style.icon_reactionGroup]"><i class="ph-smiley ph-bold ph-lg" style="line-height: 1;"></i></div>
 		<div v-else-if="notification.type === 'reaction:grouped'" :class="[$style.icon, $style.icon_reactionGroup]"><i class="ph-smiley ph-bold ph-lg" style="line-height: 1;"></i></div>
@@ -30,6 +30,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				[$style.t_roleAssigned]: notification.type === 'roleAssigned' && notification.role.iconUrl == null,
 				[$style.t_pollEnded]: notification.type === 'edited',
 				[$style.t_roleAssigned]: notification.type === 'scheduledNoteFailed',
+				[$style.t_pollEnded]: notification.type === 'scheduledNotePosted',
 			}]"
 		> <!-- we re-use t_pollEnded for "edited" instead of making an identical style -->
 			<i v-if="notification.type === 'follow'" class="ti ti-plus"></i>
@@ -48,6 +49,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			</template>
 			<i v-else-if="notification.type === 'edited'" class="ph-pencil ph-bold ph-lg"></i>
 			<i v-else-if="notification.type === 'scheduledNoteFailed'" class="ti ti-calendar-event"></i>
+			<i v-else-if="notification.type === 'scheduledNotePosted'" class="ti ti-calendar-event"></i>
 			<!-- notification.reaction が null になることはまずないが、ここでoptional chaining使うと一部ブラウザで刺さるので念の為 -->
 			<MkReactionIcon
 				v-else-if="notification.type === 'reaction'"
@@ -73,6 +75,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<span v-else-if="notification.type === 'app'">{{ notification.header }}</span>
 			<span v-else-if="notification.type === 'edited'">{{ i18n.ts._notification.edited }}</span>
 			<span v-else-if="notification.type === 'scheduledNoteFailed'">{{ i18n.ts._notification.scheduledNoteFailed }}</span>
+			<span v-else-if="notification.type === 'scheduledNotePosted'">{{ i18n.ts._notification.scheduledNotePosted }}</span>
 			<MkTime v-if="withTime" :time="notification.createdAt" :class="$style.headerTime"/>
 		</header>
 		<div>
@@ -158,6 +161,12 @@ SPDX-License-Identifier: AGPL-3.0-only
 			</div>
 
 			<MkA v-else-if="notification.type === 'edited'" :class="$style.text" :to="notePage(notification.note)" :title="getNoteSummary(notification.note)">
+				<i class="ph-quotes ph-bold ph-lg" :class="$style.quote"></i>
+				<Mfm :text="getNoteSummary(notification.note)" :isBlock="true" :plain="true" :nowrap="true" :author="notification.note.user"/>
+				<i class="ph-quotes ph-bold ph-lg" :class="$style.quote"></i>
+			</MkA>
+
+			<MkA v-else-if="notification.type === 'scheduledNotePosted'" :class="$style.text" :to="notePage(notification.note)" :title="getNoteSummary(notification.note)">
 				<i class="ph-quotes ph-bold ph-lg" :class="$style.quote"></i>
 				<Mfm :text="getNoteSummary(notification.note)" :isBlock="true" :plain="true" :nowrap="true" :author="notification.note.user"/>
 				<i class="ph-quotes ph-bold ph-lg" :class="$style.quote"></i>

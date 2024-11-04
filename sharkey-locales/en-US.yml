@@ -278,6 +278,7 @@ _notification:
   renotedBySomeUsers: "Boosted by {n} users"
   edited: "Note got edited"
   scheduledNoteFailed: "Posting scheduled note failed"
+  scheduledNotePosted: "Scheduled Note was posted"
   _types:
     renote: "Boosts"
     edited: "Edits"

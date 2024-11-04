@@ -74,7 +74,7 @@ const props = defineProps<{
 const isSensitive = computed(() => { return props.flashFile.isSensitive; });
 const url = computed(() => { return props.flashFile.url; });
 const comment = computed(() => { return props.flashFile.comment ?? ''; });
-let hide = ref((defaultStore.state.nsfw === 'force') ? true : isSensitive.value && (defaultStore.state.nsfw !== 'ignore'));
+let hide = ref((defaultStore.state.nsfw === 'force') || isSensitive.value && (defaultStore.state.nsfw !== 'ignore'));
 let playerHide = ref(true);
 let ruffleContainer = ref<HTMLDivElement>();
 let playPauseButtonKey = ref<number>(0);

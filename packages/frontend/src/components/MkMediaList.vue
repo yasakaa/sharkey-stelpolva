@@ -22,7 +22,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<XVideo v-if="media.type.startsWith('video')" :key="`video:${media.id}`" :class="$style.media" :video="media"/>
 				<XImage v-else-if="media.type.startsWith('image')" :key="`image:${media.id}`" :class="$style.media" class="image" :data-id="media.id" :image="media" :raw="raw"/>
 				<XModPlayer v-else-if="isModule(media)" :key="`module:${media.id}`" :class="$style.media" :module="media"/>
-				<XFlashPlayer v-else-if="isFlash(media)" :key="media.id" :class="$style.media" :flashFile="media"/>
+				<XFlashPlayer v-else-if="isFlash(media)" :key="`flash:${media.id}`" :class="$style.media" :flashFile="media"/>
 			</template>
 		</div>
 	</div>

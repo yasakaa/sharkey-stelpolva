@@ -242,7 +242,8 @@ onDeactivated(() => {
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
-	height: 100%; // ?????? Works somehow???
+	height: 100vh;
+	max-height: inherit;
 
 	> i {
 		display: block;
@@ -464,7 +465,8 @@ onDeactivated(() => {
 	align-items: center;
 	background: #111;
 	color: #fff;
-	height: 100%; // ?????? Works somehow???
+	height: 100vh;
+	max-height: inherit;
 
 	> div {
 		display: table-cell;

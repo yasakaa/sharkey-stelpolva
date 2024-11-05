@@ -65,7 +65,10 @@ SPDX-License-Identifier: AGPL-3.0-only
 		</div>
 	</div>
 	<MkInfo v-if="hasNotSpecifiedMentions" warn :class="$style.hasNotSpecifiedMentions">{{ i18n.ts.notSpecifiedMentionWarning }} - <button class="_textButton" @click="addMissingMention()">{{ i18n.ts.add }}</button></MkInfo>
-	<textarea v-show="useCw" ref="cwInputEl" v-model="cw" :class="$style.cw" :placeholder="i18n.ts.annotation" @keydown="onKeydown"/>
+	<div v-show="useCw" :class="$style.cwFrame">
+		<textarea ref="cwInputEl" v-model="cw" :class="$style.cw" :placeholder="i18n.ts.annotation" @keydown="onKeydown"/>
+		<div v-if="maxCwLength - cwLength < 100" :class="['_acrylic', $style.textCount, { [$style.textOver]: cwLength > maxCwLength }]">{{ maxCwLength - cwLength }}</div>
+	</div>
 	<div :class="[$style.textOuter, { [$style.withCw]: useCw }]">
 		<div v-if="channel" :class="$style.colorBar" :style="{ background: channel.color }"></div>
 		<textarea v-if="stpvAdvancedPostForm" v-model="prefixText" :class="[$style.presuftext]" :disabled="posting || posted" :readonly="textAreaReadOnly" :placeholder="i18n.ts.stpvPFprefix" dir="auto" @keydown="onKeydown"/>
@@ -254,12 +257,15 @@ const submitText = computed((): string => {
 });
 
 const textLength = computed((): number => {
-	return (text.value + imeText.value).length + (cw.value?.length ?? 0);
+	return (text.value + imeText.value).length;
 });
 
 const maxTextLength = computed((): number => {
 	return instance ? instance.maxNoteTextLength : 1000;
 });
+
+const cwLength = computed(() => cw.value?.length ?? 0);
+const maxCwLength = computed(() => instance.maxCwLength);
 
 const canPost = computed((): boolean => {
 	return !props.mock && !posting.value && !posted.value &&
@@ -271,6 +277,7 @@ const canPost = computed((): boolean => {
 			quoteId.value != null
 		) &&
 		(textLength.value <= maxTextLength.value) &&
+		(cwLength.value <= maxCwLength.value) &&
 		(!poll.value || poll.value.choices.length >= 2);
 });
 
@@ -1281,14 +1288,6 @@ defineExpose({
 	background-size: auto auto;
 }
 
-html[data-color-scheme=dark] .preview {
-	background-image: repeating-linear-gradient(135deg, transparent, transparent 5px, #0004 5px, #0004 10px);
-}
-
-html[data-color-scheme=light] .preview {
-	background-image: repeating-linear-gradient(135deg, transparent, transparent 5px, #00000005 5px, #00000005 10px);
-}
-
 .targetNote {
 	padding: 0 20px 16px 20px;
 }
@@ -1352,12 +1351,13 @@ html[data-color-scheme=light] .preview {
 	height: 1rem;
 }
 
-.cw {
+.cwFrame {
 	z-index: 1;
 	padding-bottom: 8px;
 	border-bottom: solid 0.5px var(--divider);
-	resize: vertical;
-	min-height: 2rem;
+
+	width: 100%;
+	position: relative;
 }
 
 .hashtags {

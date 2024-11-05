@@ -5,11 +5,14 @@
 
 import { markRaw, ref } from 'vue';
 import * as Misskey from 'misskey-js';
+import { hemisphere } from '@@/js/intl-const.js';
+import lightTheme from '@@/themes/l-cherry.json5';
+import darkTheme from '@@/themes/d-ice.json5';
 import { miLocalStorage } from './local-storage.js';
 import { searchEngineMap } from './scripts/search-engine-map.js';
 import type { SoundType } from '@/scripts/sound.js';
+import type { FollowingFeedTab } from '@/scripts/following-feed-utils.js';
 import { Storage } from '@/pizzax.js';
-import { hemisphere } from '@/scripts/intl-const.js';
 
 interface PostFormAction {
 	title: string,
@@ -165,6 +168,14 @@ export const defaultStore = markRaw(new Storage('base', {
 		where: 'account',
 		default: 'public' as 'public' | 'home' | 'followers',
 	},
+	trustedDomains: {
+		where: 'account',
+		default: [] as string[],
+	},
+	warnExternalUrl: {
+		where: 'account',
+		default: true,
+	},
 
 	menu: {
 		where: 'deviceAccount',
@@ -231,6 +242,18 @@ export const defaultStore = markRaw(new Storage('base', {
 		where: 'deviceAccount',
 		default: [] as Misskey.entities.UserList[],
 	},
+	followingFeed: {
+		where: 'account',
+		default: {
+			withNonPublic: false,
+			withQuotes: false,
+			withBots: true,
+			withReplies: false,
+			onlyFiles: false,
+			userList: 'following' as FollowingFeedTab,
+			remoteWarningDismissed: false,
+		},
+	},
 
 	overridedDeviceKind: {
 		where: 'device',
@@ -288,13 +311,17 @@ export const defaultStore = markRaw(new Storage('base', {
 		where: 'device',
 		default: window.matchMedia('(prefers-reduced-motion)').matches,
 	},
+	disableCatSpeak: {
+		where: 'account',
+		default: false,
+	},
 	emojiStyle: {
 		where: 'device',
 		default: 'twemoji', // twemoji / fluentEmoji / native
 	},
-	disableDrawer: {
+	menuStyle: {
 		where: 'device',
-		default: false,
+		default: 'auto' as 'auto' | 'popup' | 'drawer',
 	},
 	useBlurEffectForModal: {
 		where: 'device',
@@ -356,9 +383,9 @@ export const defaultStore = markRaw(new Storage('base', {
 		where: 'device',
 		default: 2,
 	},
-	emojiPickerUseDrawerForMobile: {
+	emojiPickerStyle: {
 		where: 'device',
-		default: true,
+		default: 'auto' as 'auto' | 'popup' | 'drawer',
 	},
 	recentlyUsedEmojis: {
 		where: 'device',
@@ -456,9 +483,13 @@ export const defaultStore = markRaw(new Storage('base', {
 		where: 'device',
 		default: 'horizontal' as 'vertical' | 'horizontal',
 	},
-	enableCondensedLineForAcct: {
+	notificationClickable: {
 		where: 'device',
 		default: false,
+	},
+	enableCondensedLine: {
+		where: 'device',
+		default: true,
 	},
 	additionalUnicodeEmojiIndexes: {
 		where: 'device',
@@ -524,10 +555,10 @@ export const defaultStore = markRaw(new Storage('base', {
 		where: 'device',
 		default: false,
 	},
-  contextMenu: {
+	contextMenu: {
 		where: 'device',
 		default: 'app' as 'app' | 'appWithShift' | 'native',
-  },
+	},
 
 	sound_masterVolume: {
 		where: 'device',
@@ -586,8 +617,6 @@ interface Watcher {
 /**
  * 常にメモリにロードしておく必要がないような設定情報を保管するストレージ(非リアクティブ)
  */
-import lightTheme from '@/themes/l-cherry.json5';
-import darkTheme from '@/themes/d-ice.json5';
 
 export class ColdDeviceStorage {
 	public static default = {
@@ -624,7 +653,7 @@ export class ColdDeviceStorage {
 	public static set<T extends keyof typeof ColdDeviceStorage.default>(key: T, value: typeof ColdDeviceStorage.default[T]): void {
 		// 呼び出し側のバグ等で undefined が来ることがある
 		// undefined を文字列として miLocalStorage に入れると参照する際の JSON.parse でコケて不具合の元になるため無視
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
 		if (value === undefined) {
 			console.error(`attempt to store undefined value for key '${key}'`);
 			return;

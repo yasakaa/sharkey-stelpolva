@@ -24,6 +24,7 @@ import { misskeyApi } from '@/scripts/misskey-api.js';
 import * as os from '@/os.js';
 import { useRouter } from '@/router/supplier.js';
 import { GetFormResultType } from '@/scripts/form.js';
+import { notesSearchAvailable } from '@/scripts/check-permissions.js';
 
 const name = 'search';
 
@@ -71,7 +72,7 @@ function options(ev) {
 			{
 				type: 'button',
 				icon: 'ph-image ph-bold ph-lg',
-				text: 'With Images',
+				text: `With Images ${filetype.value === 'image' ? '✔' : ''}`,
 				action: () => {
 					filetype.value = 'image';
 				},
@@ -79,7 +80,7 @@ function options(ev) {
 			{
 				type: 'button',
 				icon: 'ph-music-notes-simple ph-bold ph-lg',
-				text: 'With Audios',
+				text: `With Audios ${filetype.value === 'audio' ? '✔' : ''}`,
 				action: () => {
 					filetype.value = 'audio';
 				},
@@ -87,12 +88,19 @@ function options(ev) {
 			{
 				type: 'button',
 				icon: 'ph-video ph-bold ph-lg',
-				text: 'With Videos',
+				text: `With Videos ${filetype.value === 'video' ? '✔' : ''}`,
 				action: () => {
 					filetype.value = 'video';
 				},
 			}],
-	}], ev.currentTarget ?? ev.target);
+	},
+	...(filetype.value ? [{
+			text: 'Clear Filter',
+			icon: 'ti ti-trash',
+			action: () => {
+				filetype.value = null;
+			},
+	}] : [])], ev.currentTarget ?? ev.target);
 }
 
 async function search() {
@@ -125,6 +133,14 @@ async function search() {
 
 	if (query.startsWith('#')) {
 		router.push(`/tags/${encodeURIComponent(query.substring(1))}`);
+		return;
+	}
+
+	if (!notesSearchAvailable) {
+		os.alert({
+			type: 'warning',
+			text: i18n.ts.notesSearchNotAvailable,
+		});
 		return;
 	}
 

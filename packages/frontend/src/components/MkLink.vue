@@ -8,6 +8,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 	:is="self ? 'MkA' : 'a'" ref="el" style="word-break: break-all;" class="_link" :[attr]="self ? url.substring(local.length) : url" :rel="rel ?? 'nofollow noopener'" :target="target"
 	:behavior="props.navigationBehavior"
 	:title="url"
+	@click.prevent="self ? true : warningExternalWebsite(url)"
 	@click.stop
 >
 	<slot></slot>
@@ -17,11 +18,12 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 <script lang="ts" setup>
 import { defineAsyncComponent, ref } from 'vue';
-import { url as local } from '@/config.js';
+import { url as local } from '@@/js/config.js';
 import { useTooltip } from '@/scripts/use-tooltip.js';
 import * as os from '@/os.js';
 import { isEnabledUrlPreview } from '@/instance.js';
 import { MkABehavior } from '@/components/global/MkA.vue';
+import { warningExternalWebsite } from '@/scripts/warning-external-website.js';
 
 const props = withDefaults(defineProps<{
 	url: string;

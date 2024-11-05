@@ -7,7 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 <div class="_gaps_m">
 	<div :class="$style.banner" :style="{ backgroundImage: `url(${ instance.bannerUrl })` }">
 		<div style="overflow: clip;">
-			<img :src="instance.iconUrl ?? instance.faviconUrl ?? '/favicon.ico'" alt="" :class="$style.bannerIcon"/>
+			<img :src="instance.sidebarLogoUrl ?? instance.iconUrl ?? instance.faviconUrl ?? '/favicon.ico'" alt="" :class="$style.bannerIcon"/>
 			<div :class="$style.bannerName">
 				<b>{{ instance.name ?? host }}</b>
 			</div>
@@ -116,6 +116,22 @@ SPDX-License-Identifier: AGPL-3.0-only
 		</FormSection>
 	</FormSuspense>
 
+	<FormSection v-if="sponsors[0].length > 0">
+		<template #label>Our lovely Sponsors</template>
+		<div :class="$style.contributors">
+			<span
+				v-for="sponsor in sponsors[0]"
+				:key="sponsor"
+				style="margin-bottom: 0.5rem;"
+			>
+				<a :href="sponsor.website || sponsor.profile" target="_blank" :class="$style.contributor">
+					<img :src="sponsor.image || `https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=${sponsor.name}`" :class="$style.contributorAvatar">
+					<span :class="$style.contributorUsername">{{ sponsor.name }}</span>
+				</a>
+			</span>
+		</div>
+	</FormSection>
+
 	<FormSection>
 		<template #label>Well-known resources</template>
 		<div class="_gaps_s">
@@ -130,8 +146,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue';
 import sanitizeHtml from '@/scripts/sanitize-html.js';
-import { host, version } from '@/config.js';
+import { host, version } from '@@/js/config.js';
 import { i18n } from '@/i18n.js';
 import { instance } from '@/instance.js';
 import number from '@/filters/number.js';
@@ -144,7 +161,10 @@ import MkFolder from '@/components/MkFolder.vue';
 import MkKeyValue from '@/components/MkKeyValue.vue';
 import MkLink from '@/components/MkLink.vue';
 
+const sponsors = ref([]);
+
 const initStats = () => misskeyApi('stats', {});
+await misskeyApi('sponsors', { instance: true }).then((res) => sponsors.value.push(res.sponsor_data));
 </script>
 
 <style lang="scss" module>
@@ -160,7 +180,7 @@ const initStats = () => misskeyApi('stats', {});
 .bannerIcon {
 	display: block;
 	margin: 16px auto 0 auto;
-	height: 64px;
+	max-height: 96px;
 	border-radius: var(--radius-sm);;
 }
 
@@ -206,5 +226,38 @@ const initStats = () => misskeyApi('stats', {});
 
 .ruleText {
 	padding-top: 6px;
+}
+
+.contributors {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	grid-gap: 12px;
+}
+
+.contributor {
+	display: flex;
+	align-items: center;
+	padding: 12px;
+	background: var(--buttonBg);
+	border-radius: var(--radius-sm);
+
+	&:hover {
+		text-decoration: none;
+		background: var(--buttonHoverBg);
+	}
+
+	&.active {
+		color: var(--accent);
+		background: var(--buttonHoverBg);
+	}
+}
+
+.contributorAvatar {
+	width: 30px;
+	border-radius: var(--radius-full);
+}
+
+.contributorUsername {
+	margin-left: 12px;
 }
 </style>

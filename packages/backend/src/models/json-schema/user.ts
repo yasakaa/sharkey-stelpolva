@@ -104,6 +104,10 @@ export const packedUserLiteSchema = {
 						type: 'number',
 						nullable: false, optional: true,
 					},
+					showBelow: {
+						type: 'boolean',
+						nullable: false, optional: true,
+					},
 				},
 			},
 		},
@@ -117,9 +121,10 @@ export const packedUserLiteSchema = {
 			nullable: false, optional: true,
 			default: false,
 		},
-		isSilenced: {
+		isSystem: {
 			type: 'boolean',
-			nullable: false, optional: false,
+			nullable: false, optional: true,
+			default: false,
 		},
 		noindex: {
 			type: 'boolean',
@@ -136,6 +141,10 @@ export const packedUserLiteSchema = {
 		speakAsCat: {
 			type: 'boolean',
 			nullable: false, optional: true,
+		},
+		isSilenced: {
+			type: 'boolean',
+			nullable: false, optional: false,
 		},
 		instance: {
 			type: 'object',
@@ -268,6 +277,10 @@ export const packedUserDetailedNotMeOnlySchema = {
 			type: 'boolean',
 			nullable: false, optional: false,
 		},
+		isSilenced: {
+			type: 'boolean',
+			nullable: false, optional: false,
+		},
 		isSuspended: {
 			type: 'boolean',
 			nullable: false, optional: false,
@@ -287,7 +300,7 @@ export const packedUserDetailedNotMeOnlySchema = {
 			nullable: true, optional: false,
 			example: '2018-03-12',
 		},
-		ListenBrainz: {
+		listenbrainz: {
 			type: 'string',
 			nullable: true,
 			optional: false,
@@ -403,6 +416,10 @@ export const packedUserDetailedNotMeOnlySchema = {
 				ref: 'RoleLite',
 			},
 		},
+		followedMessage: {
+			type: 'string',
+			nullable: true, optional: true,
+		},
 		memo: {
 			type: 'string',
 			nullable: true, optional: false,
@@ -475,6 +492,10 @@ export const packedMeDetailedOnlySchema = {
 			nullable: true, optional: false,
 			format: 'id',
 		},
+		followedMessage: {
+			type: 'string',
+			nullable: true, optional: false,
+		},
 		isModerator: {
 			type: 'boolean',
 			nullable: true, optional: false,
@@ -492,6 +513,10 @@ export const packedMeDetailedOnlySchema = {
 			nullable: false, optional: false,
 		},
 		alwaysMarkNsfw: {
+			type: 'boolean',
+			nullable: false, optional: false,
+		},
+		defaultSensitive: {
 			type: 'boolean',
 			nullable: false, optional: false,
 		},
@@ -566,6 +591,10 @@ export const packedMeDetailedOnlySchema = {
 			nullable: false, optional: false,
 		},
 		hasPendingReceivedFollowRequest: {
+			type: 'boolean',
+			nullable: false, optional: false,
+		},
+		hasPendingSentFollowRequest: {
 			type: 'boolean',
 			nullable: false, optional: false,
 		},

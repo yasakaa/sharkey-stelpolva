@@ -23,10 +23,15 @@ SPDX-License-Identifier: AGPL-3.0-only
 					'markSensitiveDriveFile',
 					'resetPassword',
 					'suspendRemoteInstance',
+					'setRemoteInstanceNSFW',
+					'unsetRemoteInstanceNSFW',
+					'rejectRemoteInstanceReports',
+					'acceptRemoteInstanceReports',
 				].includes(log.type),
 				[$style.logRed]: [
 					'suspend',
 					'approve',
+					'decline',
 					'deleteRole',
 					'deleteGlobalAnnouncement',
 					'deleteUserAnnouncement',
@@ -47,6 +52,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<span v-if="log.type === 'updateUserNote'">: @{{ log.info.userUsername }}{{ log.info.userHost ? '@' + log.info.userHost : '' }}</span>
 		<span v-else-if="log.type === 'suspend'">: @{{ log.info.userUsername }}{{ log.info.userHost ? '@' + log.info.userHost : '' }}</span>
 		<span v-else-if="log.type === 'approve'">: @{{ log.info.userUsername }}{{ log.info.userHost ? '@' + log.info.userHost : '' }}</span>
+		<span v-else-if="log.type === 'decline'">: @{{ log.info.userUsername }}{{ log.info.userHost ? '@' + log.info.userHost : '' }}</span>
 		<span v-else-if="log.type === 'unsuspend'">: @{{ log.info.userUsername }}{{ log.info.userHost ? '@' + log.info.userHost : '' }}</span>
 		<span v-else-if="log.type === 'resetPassword'">: @{{ log.info.userUsername }}{{ log.info.userHost ? '@' + log.info.userHost : '' }}</span>
 		<span v-else-if="log.type === 'assignRole'">: @{{ log.info.userUsername }}{{ log.info.userHost ? '@' + log.info.userHost : '' }} <i class="ti ti-arrow-right"></i> {{ log.info.roleName }}</span>
@@ -61,6 +67,10 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<span v-else-if="log.type === 'unmarkSensitiveDriveFile'">: @{{ log.info.fileUserUsername }}{{ log.info.fileUserHost ? '@' + log.info.fileUserHost : '' }}</span>
 		<span v-else-if="log.type === 'suspendRemoteInstance'">: {{ log.info.host }}</span>
 		<span v-else-if="log.type === 'unsuspendRemoteInstance'">: {{ log.info.host }}</span>
+		<span v-else-if="log.type === 'setRemoteInstanceNSFW'">: {{ log.info.host }}</span>
+		<span v-else-if="log.type === 'unsetRemoteInstanceNSFW'">: {{ log.info.host }}</span>
+		<span v-else-if="log.type === 'rejectRemoteInstanceReports'">: {{ log.info.host }}</span>
+		<span v-else-if="log.type === 'acceptRemoteInstanceReports'">: {{ log.info.host }}</span>
 		<span v-else-if="log.type === 'createGlobalAnnouncement'">: {{ log.info.announcement.title }}</span>
 		<span v-else-if="log.type === 'updateGlobalAnnouncement'">: {{ log.info.before.title }}</span>
 		<span v-else-if="log.type === 'deleteGlobalAnnouncement'">: {{ log.info.announcement.title }}</span>

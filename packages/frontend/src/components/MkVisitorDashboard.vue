@@ -6,7 +6,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 <template>
 <div v-if="instance" :class="$style.root">
 	<div :class="[$style.main, $style.panel]">
-		<img :src="instance.iconUrl || '/apple-touch-icon.png'" alt="" :class="$style.mainIcon"/>
+		<img :src="instance.sidebarLogoUrl || instance.iconUrl || '/apple-touch-icon.png'" alt="" :class="instance.sidebarLogoUrl ? $style.wideIcon : $style.mainIcon"/>
 		<button class="_button _acrylic" :class="$style.mainMenu" @click="showMenu"><i class="ti ti-dots"></i></button>
 		<div :class="$style.mainFg">
 			<h1 :class="$style.mainTitle">
@@ -62,7 +62,7 @@ import XSignupDialog from '@/components/MkSignupDialog.vue';
 import MkButton from '@/components/MkButton.vue';
 import MkTimeline from '@/components/MkTimeline.vue';
 import MkInfo from '@/components/MkInfo.vue';
-import { instanceName } from '@/config.js';
+import { instanceName } from '@@/js/config.js';
 import * as os from '@/os.js';
 import { misskeyApi } from '@/scripts/misskey-api.js';
 import { i18n } from '@/i18n.js';
@@ -126,6 +126,14 @@ function showMenu(ev: MouseEvent) {
 	filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
 }
 
+.wideIcon {
+	min-width: 85px;
+	max-width: 60%;
+	margin-top: -47px;
+	vertical-align: bottom;
+	filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
+}
+
 .mainMenu {
 	position: absolute;
 	top: 16px;
@@ -134,6 +142,7 @@ function showMenu(ev: MouseEvent) {
 	height: 32px;
 	border-radius: var(--radius-sm);
 	font-size: 18px;
+	z-index: 50;
 }
 
 .mainFg {

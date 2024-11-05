@@ -5,17 +5,16 @@
 
 import { Inject, Injectable } from '@nestjs/common';
 import { DI } from '@/di-symbols.js';
-import type { DriveFilesRepository } from '@/models/_.js';
+import type { DriveFilesRepository, MiMeta } from '@/models/_.js';
 import type { MiRemoteUser } from '@/models/User.js';
 import type { MiDriveFile } from '@/models/DriveFile.js';
-import { MetaService } from '@/core/MetaService.js';
 import { truncate } from '@/misc/truncate.js';
-import { DB_MAX_IMAGE_COMMENT_LENGTH } from '@/const.js';
 import { DriveService } from '@/core/DriveService.js';
 import type Logger from '@/logger.js';
 import { bindThis } from '@/decorators.js';
 import { checkHttps } from '@/misc/check-https.js';
 import { FederatedInstanceService } from '@/core/FederatedInstanceService.js';
+import type { Config } from '@/config.js';
 import { ApResolverService } from '../ApResolverService.js';
 import { ApLoggerService } from '../ApLoggerService.js';
 import { isDocument, type IObject } from '../type.js';
@@ -25,10 +24,14 @@ export class ApImageService {
 	private logger: Logger;
 
 	constructor(
+		@Inject(DI.meta)
+		private meta: MiMeta,
+
 		@Inject(DI.driveFilesRepository)
 		private driveFilesRepository: DriveFilesRepository,
+		@Inject(DI.config)
+		private config: Config,
 
-		private metaService: MetaService,
 		private apResolverService: ApResolverService,
 		private driveService: DriveService,
 		private apLoggerService: ApLoggerService,
@@ -65,12 +68,10 @@ export class ApImageService {
 
 		this.logger.info(`Creating the Image: ${image.url}`);
 
-		const instance = await this.metaService.fetch();
-
 		// Cache if remote file cache is on AND either
 		// 1. remote sensitive file is also on
 		// 2. or the image is not sensitive
-		const shouldBeCached = instance.cacheRemoteFiles && (instance.cacheRemoteSensitiveFiles || !image.sensitive);
+		const shouldBeCached = this.meta.cacheRemoteFiles && (this.meta.cacheRemoteSensitiveFiles || !image.sensitive);
 
 		await this.federatedInstanceService.fetch(actor.host).then(async i => {
 			if (i.isNSFW) {
@@ -84,7 +85,7 @@ export class ApImageService {
 			uri: image.url,
 			sensitive: !!(image.sensitive),
 			isLink: !shouldBeCached,
-			comment: truncate(image.name ?? undefined, DB_MAX_IMAGE_COMMENT_LENGTH),
+			comment: truncate(image.name ?? undefined, this.config.maxRemoteAltTextLength),
 		});
 		if (!file.isLink || file.url === image.url) return file;
 

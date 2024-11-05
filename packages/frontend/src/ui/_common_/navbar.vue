@@ -9,7 +9,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<div :class="$style.top">
 			<div :class="$style.banner" :style="{ backgroundImage: `url(${ instance.bannerUrl })` }"></div>
 			<button v-tooltip.noDelay.right="instance.name ?? i18n.ts.instance" class="_button" :class="$style.instance" @click="openInstanceMenu">
-				<img :src="instance.iconUrl || instance.faviconUrl || '/favicon.ico'" alt="" :class="$style.instanceIcon"/>
+				<img :src="instance.sidebarLogoUrl && !iconOnly ? instance.sidebarLogoUrl : instance.iconUrl || '/apple-touch-icon.png'" alt="" :class="instance.sidebarLogoUrl && !iconOnly ? $style.wideInstanceIcon : $style.instanceIcon"/>
 			</button>
 		</div>
 		<div :class="$style.middle">
@@ -111,6 +111,7 @@ function more(ev: MouseEvent) {
 .root {
 	--nav-width: 250px;
 	--nav-icon-only-width: 80px;
+	--nav-bg-transparent: color(from var(--navBg) srgb r g b / 0.5);
 
 	flex: 0 0 var(--nav-width);
 	width: var(--nav-width);
@@ -144,7 +145,7 @@ function more(ev: MouseEvent) {
 		top: 0;
 		z-index: 1;
 		padding: 20px 0;
-		background: var(--X14);
+		background: var(--nav-bg-transparent);
 		-webkit-backdrop-filter: var(--blur, blur(8px));
 		backdrop-filter: var(--blur, blur(8px));
 	}
@@ -183,11 +184,18 @@ function more(ev: MouseEvent) {
 		aspect-ratio: 1;
 	}
 
+	.wideInstanceIcon {
+		display: inline-block;
+		min-width: 38px;
+		max-width: 100%;
+		max-height: 80px;
+	}
+
 	.bottom {
 		position: sticky;
 		bottom: 0;
 		padding-top: 20px;
-		background: var(--X14);
+		background: var(--nav-bg-transparent);
 		-webkit-backdrop-filter: var(--blur, blur(8px));
 		backdrop-filter: var(--blur, blur(8px));
 	}
@@ -378,7 +386,7 @@ function more(ev: MouseEvent) {
 		top: 0;
 		z-index: 1;
 		padding: 20px 0;
-		background: var(--X14);
+		background: var(--nav-bg-transparent);
 		-webkit-backdrop-filter: var(--blur, blur(8px));
 		backdrop-filter: var(--blur, blur(8px));
 	}
@@ -408,7 +416,7 @@ function more(ev: MouseEvent) {
 		position: sticky;
 		bottom: 0;
 		padding-top: 20px;
-		background: var(--X14);
+		background: var(--nav-bg-transparent);
 		-webkit-backdrop-filter: var(--blur, blur(8px));
 		backdrop-filter: var(--blur, blur(8px));
 	}

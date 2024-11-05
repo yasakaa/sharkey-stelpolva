@@ -55,6 +55,7 @@ export const paramDef = {
 		iconUrl: { type: 'string', nullable: true },
 		app192IconUrl: { type: 'string', nullable: true },
 		app512IconUrl: { type: 'string', nullable: true },
+		sidebarLogoUrl: { type: 'string', nullable: true },
 		backgroundImageUrl: { type: 'string', nullable: true },
 		logoImageUrl: { type: 'string', nullable: true },
 		name: { type: 'string', nullable: true },
@@ -80,6 +81,9 @@ export const paramDef = {
 		enableTurnstile: { type: 'boolean' },
 		turnstileSiteKey: { type: 'string', nullable: true },
 		turnstileSecretKey: { type: 'string', nullable: true },
+		enableFC: { type: 'boolean' },
+		fcSiteKey: { type: 'string', nullable: true },
+		fcSecretKey: { type: 'string', nullable: true },
 		sensitiveMediaDetection: { type: 'string', enum: ['none', 'all', 'local', 'remote'] },
 		sensitiveMediaDetectionSensitivity: { type: 'string', enum: ['medium', 'low', 'high', 'veryLow', 'veryHigh'] },
 		setSensitiveFlagAutomatically: { type: 'boolean' },
@@ -150,6 +154,7 @@ export const paramDef = {
 		perRemoteUserUserTimelineCacheMax: { type: 'integer' },
 		perUserHomeTimelineCacheMax: { type: 'integer' },
 		perUserListTimelineCacheMax: { type: 'integer' },
+		enableReactionsBuffering: { type: 'boolean' },
 		notesPerOneAd: { type: 'integer' },
 		silencedHosts: {
 			type: 'array',
@@ -175,6 +180,21 @@ export const paramDef = {
 		urlPreviewRequireContentLength: { type: 'boolean' },
 		urlPreviewUserAgent: { type: 'string', nullable: true },
 		urlPreviewSummaryProxyUrl: { type: 'string', nullable: true },
+		trustedLinkUrlPatterns: {
+			type: 'array', nullable: true, items: {
+				type: 'string',
+			},
+		},
+		federation: {
+			type: 'string',
+			enum: ['all', 'none', 'specified'],
+		},
+		federationHosts: {
+			type: 'array',
+			items: {
+				type: 'string',
+			},
+		},
 	},
 	required: [],
 } as const;
@@ -248,6 +268,10 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 
 			if (ps.app512IconUrl !== undefined) {
 				set.app512IconUrl = ps.app512IconUrl;
+			}
+
+			if (ps.sidebarLogoUrl !== undefined) {
+				set.sidebarLogoUrl = ps.sidebarLogoUrl;
 			}
 
 			if (ps.serverErrorImageUrl !== undefined) {
@@ -360,6 +384,18 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 
 			if (ps.turnstileSecretKey !== undefined) {
 				set.turnstileSecretKey = ps.turnstileSecretKey;
+			}
+
+			if (ps.enableFC !== undefined) {
+				set.enableFC = ps.enableFC;
+			}
+
+			if (ps.fcSiteKey !== undefined) {
+				set.fcSiteKey = ps.fcSiteKey;
+			}
+
+			if (ps.fcSecretKey !== undefined) {
+				set.fcSecretKey = ps.fcSecretKey;
 			}
 
 			if (ps.enableBotTrending !== undefined) {
@@ -626,6 +662,10 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				set.perUserListTimelineCacheMax = ps.perUserListTimelineCacheMax;
 			}
 
+			if (ps.enableReactionsBuffering !== undefined) {
+				set.enableReactionsBuffering = ps.enableReactionsBuffering;
+			}
+
 			if (ps.notesPerOneAd !== undefined) {
 				set.notesPerOneAd = ps.notesPerOneAd;
 			}
@@ -658,6 +698,18 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 			if (ps.summalyProxy !== undefined || ps.urlPreviewSummaryProxyUrl !== undefined) {
 				const value = ((ps.urlPreviewSummaryProxyUrl ?? ps.summalyProxy) ?? '').trim();
 				set.urlPreviewSummaryProxyUrl = value === '' ? null : value;
+			}
+
+			if (Array.isArray(ps.trustedLinkUrlPatterns)) {
+				set.trustedLinkUrlPatterns = ps.trustedLinkUrlPatterns.filter(Boolean);
+			}
+
+			if (ps.federation !== undefined) {
+				set.federation = ps.federation;
+			}
+
+			if (Array.isArray(ps.federationHosts)) {
+				set.blockedHosts = ps.federationHosts.filter(Boolean).map(x => x.toLowerCase());
 			}
 
 			const before = await this.metaService.fetch(true);

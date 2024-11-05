@@ -73,6 +73,14 @@ export const meta = {
 				type: 'string',
 				optional: false, nullable: true,
 			},
+			enableFC: {
+				type: 'boolean',
+				optional: false, nullable: false,
+			},
+			fcSiteKey: {
+				type: 'string',
+				optional: false, nullable: true,
+			},
 			swPublickey: {
 				type: 'string',
 				optional: false, nullable: true,
@@ -110,6 +118,10 @@ export const meta = {
 				type: 'string',
 				optional: false, nullable: true,
 			},
+			sidebarLogoUrl: {
+				type: 'string',
+				optional: false, nullable: true,
+			},
 			enableEmail: {
 				type: 'boolean',
 				optional: false, nullable: false,
@@ -124,7 +136,7 @@ export const meta = {
 			},
 			silencedHosts: {
 				type: 'array',
-				optional: true,
+				optional: false,
 				nullable: false,
 				items: {
 					type: 'string',
@@ -212,6 +224,10 @@ export const meta = {
 				optional: false, nullable: true,
 			},
 			turnstileSecretKey: {
+				type: 'string',
+				optional: false, nullable: true,
+			},
+			fcSecretKey: {
 				type: 'string',
 				optional: false, nullable: true,
 			},
@@ -396,6 +412,10 @@ export const meta = {
 				type: 'number',
 				optional: false, nullable: false,
 			},
+			enableReactionsBuffering: {
+				type: 'boolean',
+				optional: false, nullable: false,
+			},
 			notesPerOneAd: {
 				type: 'number',
 				optional: false, nullable: false,
@@ -522,6 +542,26 @@ export const meta = {
 				type: 'string',
 				optional: false, nullable: true,
 			},
+			trustedLinkUrlPatterns: {
+				type: 'array',
+				optional: false, nullable: false,
+				items: {
+					type: 'string',
+					optional: false, nullable: false,
+				},
+			},
+			federation: {
+				type: 'string',
+				optional: false, nullable: false,
+			},
+			federationHosts: {
+				type: 'array',
+				optional: false, nullable: false,
+				items: {
+					type: 'string',
+					optional: false, nullable: false,
+				},
+			},
 		},
 	},
 } as const;
@@ -572,6 +612,8 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				recaptchaSiteKey: instance.recaptchaSiteKey,
 				enableTurnstile: instance.enableTurnstile,
 				turnstileSiteKey: instance.turnstileSiteKey,
+				enableFC: instance.enableFC,
+				fcSiteKey: instance.fcSiteKey,
 				swPublickey: instance.swPublicKey,
 				themeColor: instance.themeColor,
 				mascotImageUrl: instance.mascotImageUrl,
@@ -582,6 +624,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				iconUrl: instance.iconUrl,
 				app192IconUrl: instance.app192IconUrl,
 				app512IconUrl: instance.app512IconUrl,
+				sidebarLogoUrl: instance.sidebarLogoUrl,
 				backgroundImageUrl: instance.backgroundImageUrl,
 				logoImageUrl: instance.logoImageUrl,
 				defaultLightTheme: instance.defaultLightTheme,
@@ -605,6 +648,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				mcaptchaSecretKey: instance.mcaptchaSecretKey,
 				recaptchaSecretKey: instance.recaptchaSecretKey,
 				turnstileSecretKey: instance.turnstileSecretKey,
+				fcSecretKey: instance.fcSecretKey,
 				sensitiveMediaDetection: instance.sensitiveMediaDetection,
 				sensitiveMediaDetectionSensitivity: instance.sensitiveMediaDetectionSensitivity,
 				setSensitiveFlagAutomatically: instance.setSensitiveFlagAutomatically,
@@ -656,6 +700,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				perRemoteUserUserTimelineCacheMax: instance.perRemoteUserUserTimelineCacheMax,
 				perUserHomeTimelineCacheMax: instance.perUserHomeTimelineCacheMax,
 				perUserListTimelineCacheMax: instance.perUserListTimelineCacheMax,
+				enableReactionsBuffering: instance.enableReactionsBuffering,
 				notesPerOneAd: instance.notesPerOneAd,
 				summalyProxy: instance.urlPreviewSummaryProxyUrl,
 				urlPreviewEnabled: instance.urlPreviewEnabled,
@@ -664,6 +709,9 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				urlPreviewRequireContentLength: instance.urlPreviewRequireContentLength,
 				urlPreviewUserAgent: instance.urlPreviewUserAgent,
 				urlPreviewSummaryProxyUrl: instance.urlPreviewSummaryProxyUrl,
+				trustedLinkUrlPatterns: instance.trustedLinkUrlPatterns,
+				federation: instance.federation,
+				federationHosts: instance.federationHosts,
 			};
 		});
 	}

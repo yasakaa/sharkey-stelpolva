@@ -13,9 +13,8 @@ import { extractHashtags } from '@/misc/extract-hashtags.js';
 import * as Acct from '@/misc/acct.js';
 import type { UsersRepository, DriveFilesRepository, UserProfilesRepository, PagesRepository } from '@/models/_.js';
 import type { MiLocalUser, MiUser } from '@/models/User.js';
-import { birthdaySchema, listenbrainzSchema, descriptionSchema, locationSchema, nameSchema } from '@/models/User.js';
+import { birthdaySchema, listenbrainzSchema, descriptionSchema, followedMessageSchema, locationSchema, nameSchema } from '@/models/User.js';
 import type { MiUserProfile } from '@/models/UserProfile.js';
-import { notificationTypes } from '@/types.js';
 import { normalizeForSearch } from '@/misc/normalize-for-search.js';
 import { langmap } from '@/misc/langmap.js';
 import { Endpoint } from '@/server/api/endpoint-base.js';
@@ -146,6 +145,7 @@ export const paramDef = {
 	properties: {
 		name: { ...nameSchema, nullable: true },
 		description: { ...descriptionSchema, nullable: true },
+		followedMessage: { ...followedMessageSchema, nullable: true },
 		location: { ...locationSchema, nullable: true },
 		birthday: { ...birthdaySchema, nullable: true },
 		listenbrainz: { ...listenbrainzSchema, nullable: true },
@@ -159,6 +159,7 @@ export const paramDef = {
 				flipH: { type: 'boolean', nullable: true },
 				offsetX: { type: 'number', nullable: true, maximum: 0.25, minimum: -0.25 },
 				offsetY: { type: 'number', nullable: true, maximum: 0.25, minimum: -0.25 },
+				showBelow: { type: 'boolean', nullable: true },
 			},
 			required: ['id'],
 		} },
@@ -192,6 +193,7 @@ export const paramDef = {
 		injectFeaturedNote: { type: 'boolean' },
 		receiveAnnouncementEmail: { type: 'boolean' },
 		alwaysMarkNsfw: { type: 'boolean' },
+		defaultSensitive: { type: 'boolean' },
 		autoSensitive: { type: 'boolean' },
 		followingVisibility: { type: 'string', enum: ['public', 'followers', 'private'] },
 		followersVisibility: { type: 'string', enum: ['public', 'followers', 'private'] },
@@ -283,6 +285,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				}
 			}
 			if (ps.description !== undefined) profileUpdates.description = ps.description;
+			if (ps.followedMessage !== undefined) profileUpdates.followedMessage = ps.followedMessage;
 			if (ps.lang !== undefined) profileUpdates.lang = ps.lang;
 			if (ps.location !== undefined) profileUpdates.location = ps.location;
 			if (ps.birthday !== undefined) profileUpdates.birthday = ps.birthday;
@@ -347,6 +350,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				if (policies.alwaysMarkNsfw) throw new ApiError(meta.errors.restrictedByRole);
 				profileUpdates.alwaysMarkNsfw = ps.alwaysMarkNsfw;
 			}
+			if (typeof ps.defaultSensitive === 'boolean') profileUpdates.defaultSensitive = ps.defaultSensitive;
 			if (ps.emailNotificationTypes !== undefined) profileUpdates.emailNotificationTypes = ps.emailNotificationTypes;
 
 			if (ps.avatarId) {
@@ -399,7 +403,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				updates.backgroundUrl = null;
 				updates.backgroundBlurhash = null;
 			}
-			
+
 			if (ps.avatarDecorations) {
 				policies ??= await this.roleService.getUserPolicies(user.id);
 				const decorations = await this.avatarDecorationService.getAll(true);
@@ -417,6 +421,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 					flipH: d.flipH ?? false,
 					offsetX: d.offsetX ?? 0,
 					offsetY: d.offsetY ?? 0,
+					showBelow: d.showBelow ?? false,
 				}));
 			}
 

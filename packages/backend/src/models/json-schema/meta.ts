@@ -127,6 +127,14 @@ export const packedMetaLiteSchema = {
 			type: 'string',
 			optional: false, nullable: true,
 		},
+		enableFC: {
+			type: 'boolean',
+			optional: false, nullable: false,
+		},
+		fcSiteKey: {
+			type: 'string',
+			optional: false, nullable: true,
+		},
 		enableAchievements: {
 			type: 'boolean',
 			optional: false, nullable: true,
@@ -160,7 +168,31 @@ export const packedMetaLiteSchema = {
 			type: 'string',
 			optional: false, nullable: true,
 		},
+		sidebarLogoUrl: {
+			type: 'string',
+			optional: false, nullable: true,
+		},
 		maxNoteTextLength: {
+			type: 'number',
+			optional: false, nullable: false,
+		},
+		maxRemoteNoteTextLength: {
+			type: 'number',
+			optional: false, nullable: false,
+		},
+		maxCwLength: {
+			type: 'number',
+			optional: false, nullable: false,
+		},
+		maxRemoteCwLength: {
+			type: 'number',
+			optional: false, nullable: false,
+		},
+		maxAltTextLength: {
+			type: 'number',
+			optional: false, nullable: false,
+		},
+		maxRemoteAltTextLength: {
 			type: 'number',
 			optional: false, nullable: false,
 		},
@@ -268,6 +300,18 @@ export const packedMetaLiteSchema = {
 			enum: ['local', 'global'],
 			optional: false, nullable: false,
 			default: 'local',
+		},
+		trustedLinkUrlPatterns: {
+			type: 'array',
+			optional: false, nullable: false,
+			items: {
+				type: 'string',
+				optional: false, nullable: false,
+			},
+		},
+		maxFileSize: {
+			type: 'number',
+			optional: false, nullable: false,
 		},
 	},
 } as const;

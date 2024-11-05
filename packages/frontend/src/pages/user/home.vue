@@ -30,7 +30,15 @@ SPDX-License-Identifier: AGPL-3.0-only
 								</button>
 							</div>
 						</div>
-						<span v-if="$i && $i.id != user.id && user.isFollowed" class="followed">{{ i18n.ts.followsYou }}</span>
+						<ul v-if="$i && $i.id != user.id" :class="$style.infoBadges">
+							<li v-if="user.isFollowed && user.isFollowing">{{ i18n.ts.mutuals }}</li>
+							<li v-else-if="user.isFollowing">{{ i18n.ts.following }}</li>
+							<li v-else-if="user.isFollowed">{{ i18n.ts.followsYou }}</li>
+							<li v-if="user.isMuted">{{ i18n.ts.muted }}</li>
+							<li v-if="user.isRenoteMuted">{{ i18n.ts.renoteMuted }}</li>
+							<li v-if="user.isBlocking">{{ i18n.ts.blocked }}</li>
+							<li v-if="user.isBlocked && $i.isModerator">{{ i18n.ts.blockingYou }}</li>
+						</ul>
 						<div class="actions">
 							<button class="menu _button" @click="menu"><i class="ti ti-dots"></i></button>
 							<MkFollowButton v-if="$i?.id != user.id" v-model:user="user" :inline="true" :transparent="false" :full="true" class="koudoku"/>
@@ -44,6 +52,11 @@ SPDX-License-Identifier: AGPL-3.0-only
 							<span v-if="user.isAdmin" :title="i18n.ts.isAdmin" style="color: var(--badge);"><i class="ti ti-shield"></i></span>
 							<span v-if="user.isLocked" :title="i18n.ts.isLocked"><i class="ti ti-lock"></i></span>
 							<span v-if="user.isBot" :title="i18n.ts.isBot"><i class="ti ti-robot"></i></span>
+						</div>
+					</div>
+					<div v-if="user.followedMessage != null" class="followedMessage">
+						<div style="border: solid 1px var(--love); border-radius: 6px; background: color-mix(in srgb, var(--love), transparent 90%); padding: 6px 8px;">
+							<Mfm :text="user.followedMessage" :author="user"/>
 						</div>
 					</div>
 					<div v-if="user.roles.length > 0" class="roles">
@@ -120,19 +133,16 @@ SPDX-License-Identifier: AGPL-3.0-only
 			</div>
 
 			<div class="contents _gaps">
-				<div v-if="user.pinnedNotes.length > 0" class="_gaps">
-					<MkNote v-for="note in user.pinnedNotes" :key="note.id" class="note _panel" :note="note" :pinned="true"/>
-				</div>
-				<MkInfo v-else-if="$i && $i.id === user.id">{{ i18n.ts.userPagePinTip }}</MkInfo>
+				<MkInfo v-if="user.pinnedNotes.length === 0 && $i?.id === user.id">{{ i18n.ts.userPagePinTip }}</MkInfo>
 				<template v-if="narrow">
 					<MkLazy>
-						<XFiles :key="user.id" :user="user"/>
+						<XFiles :key="user.id" :user="user" :collapsed="true"/>
 					</MkLazy>
 					<MkLazy>
-						<XActivity :key="user.id" :user="user"/>
+						<XActivity :key="user.id" :user="user" :collapsed="true"/>
 					</MkLazy>
 					<MkLazy>
-						<XListenBrainz v-if="user.listenbrainz && listenbrainzdata" :key="user.id" :user="user"/>
+						<XListenBrainz v-if="user.listenbrainz && listenbrainzdata" :key="user.id" :user="user" :collapsed="true"/>
 					</MkLazy>
 				</template>
 				<!-- <div v-if="!disableNotes">
@@ -142,14 +152,27 @@ SPDX-License-Identifier: AGPL-3.0-only
 				</div> -->
 				<MkStickyContainer>
 					<template #header>
+						<!-- You can't use v-if on these, as MkTab first *deletes* and replaces all children with native HTML elements. -->
+						<!-- Instead, we add a "no notes" placeholder and default to null (all notes) if there's nothing pinned. -->
+						<!-- It also converts all comments into text! -->
 						<MkTab v-model="noteview" :class="$style.tab">
+							<option value="pinned">{{ i18n.ts.pinnedOnly }}</option>
 							<option :value="null">{{ i18n.ts.notes }}</option>
 							<option value="all">{{ i18n.ts.all }}</option>
 							<option value="files">{{ i18n.ts.withFiles }}</option>
 						</MkTab>
 					</template>
 					<MkLazy>
-						<MkNotes :class="$style.tl" :noGap="true" :pagination="AllPagination"/>
+						<div v-if="noteview === 'pinned'" class="_gaps">
+							<div v-if="user.pinnedNotes.length < 1" class="_fullinfo">
+								<img :src="infoImageUrl" class="_ghost" aria-hidden="true" :alt="i18n.ts.noNotes"/>
+								<div>{{ i18n.ts.noNotes }}</div>
+							</div>
+							<div v-else class="_panel">
+								<MkNote v-for="note of user.pinnedNotes" :key="note.id" class="note" :class="$style.pinnedNote" :note="note" :pinned="true"/>
+							</div>
+						</div>
+						<MkNotes v-else :class="$style.tl" :noGap="true" :pagination="AllPagination"/>
 					</MkLazy>
 				</MkStickyContainer>
 			</div>
@@ -175,7 +198,7 @@ import MkRemoteCaution from '@/components/MkRemoteCaution.vue';
 import MkTextarea from '@/components/MkTextarea.vue';
 import MkInfo from '@/components/MkInfo.vue';
 import MkButton from '@/components/MkButton.vue';
-import { getScrollPosition } from '@/scripts/scroll.js';
+import { getScrollPosition } from '@@/js/scroll.js';
 import { getUserMenu } from '@/scripts/get-user-menu.js';
 import number from '@/filters/number.js';
 import { userPage } from '@/filters/user.js';
@@ -189,11 +212,12 @@ import { misskeyApi } from '@/scripts/misskey-api.js';
 import { isFollowingVisibleForMe, isFollowersVisibleForMe } from '@/scripts/isFfVisibleForMe.js';
 import { useRouter } from '@/router/supplier.js';
 import { getStaticImageUrl } from '@/scripts/media-proxy.js';
+import { infoImageUrl } from '@/instance.js';
 
 const MkNote = defineAsyncComponent(() =>
-	(defaultStore.state.noteDesign === 'misskey') ? import('@/components/MkNote.vue') :
-	(defaultStore.state.noteDesign === 'sharkey') ? import('@/components/SkNote.vue') :
-	null
+	defaultStore.state.noteDesign === 'sharkey'
+		? import('@/components/SkNote.vue')
+		: import('@/components/MkNote.vue'),
 );
 
 function calcAge(birthdate: string): number {
@@ -213,7 +237,7 @@ function calcAge(birthdate: string): number {
 
 const XFiles = defineAsyncComponent(() => import('./index.files.vue'));
 const XActivity = defineAsyncComponent(() => import('./index.activity.vue'));
-const XListenBrainz = defineAsyncComponent(() => import("./index.listenbrainz.vue"));
+const XListenBrainz = defineAsyncComponent(() => import('./index.listenbrainz.vue'));
 //const XTimeline = defineAsyncComponent(() => import('./index.timeline.vue'));
 
 const props = withDefaults(defineProps<{
@@ -245,7 +269,7 @@ if (props.user.listenbrainz) {
 			const response = await fetch(`https://api.listenbrainz.org/1/user/${props.user.listenbrainz}/playing-now`, {
 				method: 'GET',
 				headers: {
-					'Content-Type': 'application/json'
+					'Content-Type': 'application/json',
 				},
 			});
 			const data = await response.json();
@@ -262,11 +286,11 @@ const background = computed(() => {
 	if (props.user.backgroundUrl == null) return {};
 	if (defaultStore.state.disableShowingAnimatedImages) {
 		return {
-			'--backgroundImageStatic': `url('${getStaticImageUrl(props.user.backgroundUrl)}')`
+			'--backgroundImageStatic': `url('${getStaticImageUrl(props.user.backgroundUrl)}')`,
 		};
 	} else {
 		return {
-			'--backgroundImageStatic': `url('${props.user.backgroundUrl}')`
+			'--backgroundImageStatic': `url('${props.user.backgroundUrl}')`,
 		};
 	}
 });
@@ -279,7 +303,7 @@ const pagination = {
 	endpoint: 'users/featured-notes' as const,
 	limit: 10,
 	params: computed(() => ({
-		userId: props.user.id
+		userId: props.user.id,
 	})),
 };
 
@@ -445,17 +469,6 @@ onUnmounted(() => {
 						background: linear-gradient(transparent, rgba(#000, 0.7));
 					}
 
-					> .followed {
-						position: absolute;
-						top: 12px;
-						left: 12px;
-						padding: 4px 8px;
-						color: #fff;
-						background: rgba(0, 0, 0, 0.7);
-						font-size: 0.7em;
-						border-radius: var(--radius-sm);
-					}
-
 					> .actions {
 						position: absolute;
 						top: 12px;
@@ -550,6 +563,11 @@ onUnmounted(() => {
 					width: 120px;
 					height: 120px;
 					filter: drop-shadow(1px 1px 3px rgba(#000, 0.2));
+				}
+
+				> .followedMessage {
+					padding: 24px 24px 0 154px;
+					font-size: 0.9em;
 				}
 
 				> .roles {
@@ -734,6 +752,10 @@ onUnmounted(() => {
 					margin: auto;
 				}
 
+				> .followedMessage {
+					padding: 16px 16px 0 16px;
+				}
+
 				> .roles {
 					padding: 16px 16px 0 16px;
 					justify-content: center;
@@ -780,7 +802,7 @@ onUnmounted(() => {
 }
 
 .tab {
-	margin: calc(var(--margin) / 2) 0;
+	margin-bottom: calc(var(--margin) / 2);
 	padding: calc(var(--margin) / 2) 0;
 	background: color-mix(in srgb, var(--bg) 65%, transparent);
 	backdrop-filter: var(--blur, blur(15px));
@@ -796,5 +818,35 @@ onUnmounted(() => {
 .verifiedLink {
 	margin-left: 4px;
 	color: var(--success);
+}
+
+.pinnedNote:not(:last-child) {
+	border-bottom: solid 0.5px var(--divider);
+}
+
+.infoBadges {
+	position: absolute;
+	top: 12px;
+	left: 12px;
+
+	display: flex;
+	flex-direction: row;
+
+	padding: 0;
+	margin: 0;
+
+	> * {
+		padding: 4px 8px;
+		color: #fff;
+		background: rgba(0, 0, 0, 0.7);
+		font-size: 0.7em;
+		border-radius: var(--radius-sm);
+		list-style-type: none;
+		margin-left: 0;
+	}
+
+	> :not(:first-child) {
+		margin-left: 8px;
+	}
 }
 </style>

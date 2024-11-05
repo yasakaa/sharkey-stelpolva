@@ -23,11 +23,10 @@ import { MfmService } from '@/core/MfmService.js';
 import { UserEntityService } from '@/core/entities/UserEntityService.js';
 import { DriveFileEntityService } from '@/core/entities/DriveFileEntityService.js';
 import type { MiUserKeypair } from '@/models/UserKeypair.js';
-import type { UsersRepository, UserProfilesRepository, NotesRepository, DriveFilesRepository, PollsRepository, InstancesRepository } from '@/models/_.js';
+import type { UsersRepository, UserProfilesRepository, NotesRepository, DriveFilesRepository, PollsRepository, InstancesRepository, MiMeta } from '@/models/_.js';
 import { bindThis } from '@/decorators.js';
 import { CustomEmojiService } from '@/core/CustomEmojiService.js';
 import { IdService } from '@/core/IdService.js';
-import { MetaService } from '../MetaService.js';
 import { JsonLdService } from './JsonLdService.js';
 import { ApMfmService } from './ApMfmService.js';
 import { CONTEXT } from './misc/contexts.js';
@@ -38,6 +37,9 @@ export class ApRendererService {
 	constructor(
 		@Inject(DI.config)
 		private config: Config,
+
+		@Inject(DI.meta)
+		private meta: MiMeta,
 
 		@Inject(DI.usersRepository)
 		private usersRepository: UsersRepository,
@@ -65,7 +67,6 @@ export class ApRendererService {
 		private apMfmService: ApMfmService,
 		private mfmService: MfmService,
 		private idService: IdService,
-		private metaService: MetaService,
 	) {
 	}
 
@@ -199,7 +200,8 @@ export class ApRendererService {
 			type: 'Flag',
 			actor: this.userEntityService.genLocalUserUri(user.id),
 			content,
-			object,
+			// This MUST be an array for Pleroma compatibility: https://activitypub.software/TransFem-org/Sharkey/-/issues/641#note_7301
+			object: [object],
 		};
 	}
 
@@ -272,10 +274,9 @@ export class ApRendererService {
 	@bindThis
 	public async renderLike(noteReaction: MiNoteReaction, note: { uri: string | null }): Promise<ILike> {
 		const reaction = noteReaction.reaction;
-		const meta = await this.metaService.fetch(true);
 		let isMastodon = false;
 
-		if (meta.defaultLike && reaction.replaceAll(':', '') === meta.defaultLike.replaceAll(':', '')) {
+		if (this.meta.defaultLike && reaction.replaceAll(':', '') === this.meta.defaultLike.replaceAll(':', '')) {
 			const note = await this.notesRepository.findOneBy({ id: noteReaction.noteId });
 
 			if (note && note.userHost) {
@@ -419,7 +420,7 @@ export class ApRendererService {
 
 		const summary = note.cw === '' ? String.fromCharCode(0x200B) : note.cw;
 
-		const { content, noMisskeyContent } = this.apMfmService.getNoteHtml(note, apAppend);
+		const { content } = this.apMfmService.getNoteHtml(note, apAppend);
 
 		const emojis = await this.getEmojis(note.emojis);
 		const apemojis = emojis.filter(emoji => !emoji.localOnly).map(emoji => this.renderEmoji(emoji));
@@ -449,13 +450,11 @@ export class ApRendererService {
 			attributedTo,
 			summary: summary ?? undefined,
 			content: content ?? undefined,
-			...(noMisskeyContent ? {} : {
-				_misskey_content: text,
-				source: {
-					content: text,
-					mediaType: 'text/x.misskeymarkdown',
-				},
-			}),
+			_misskey_content: text,
+			source: {
+				content: text,
+				mediaType: 'text/x.misskeymarkdown',
+			},
 			_misskey_quote: quote,
 			quoteUrl: quote,
 			quoteUri: quote,
@@ -517,6 +516,7 @@ export class ApRendererService {
 			name: user.name,
 			summary: profile.description ? this.mfmService.toHtml(mfm.parse(profile.description)) : null,
 			_misskey_summary: profile.description,
+			_misskey_followedMessage: profile.followedMessage,
 			icon: avatar ? this.renderImage(avatar) : null,
 			image: banner ? this.renderImage(banner) : null,
 			backgroundUrl: background ? this.renderImage(background) : null,
@@ -526,6 +526,7 @@ export class ApRendererService {
 			publicKey: this.renderKey(user, keypair, '#main-key'),
 			isCat: user.isCat,
 			noindex: user.noindex,
+			indexable: !user.noindex,
 			speakAsCat: user.speakAsCat,
 			attachment: attachment.length ? attachment : undefined,
 		};
@@ -710,7 +711,7 @@ export class ApRendererService {
 
 		const summary = note.cw === '' ? String.fromCharCode(0x200B) : note.cw;
 
-		const { content, noMisskeyContent } = this.apMfmService.getNoteHtml(note, apAppend);
+		const { content } = this.apMfmService.getNoteHtml(note, apAppend);
 
 		const emojis = await this.getEmojis(note.emojis);
 		const apemojis = emojis.filter(emoji => !emoji.localOnly).map(emoji => this.renderEmoji(emoji));
@@ -741,13 +742,11 @@ export class ApRendererService {
 			summary: summary ?? undefined,
 			content: content ?? undefined,
 			updated: note.updatedAt?.toISOString(),
-			...(noMisskeyContent ? {} : {
-				_misskey_content: text,
-				source: {
-					content: text,
-					mediaType: 'text/x.misskeymarkdown',
-				},
-			}),
+			_misskey_content: text,
+			source: {
+				content: text,
+				mediaType: 'text/x.misskeymarkdown',
+			},
 			_misskey_quote: quote,
 			quoteUrl: quote,
 			quoteUri: quote,

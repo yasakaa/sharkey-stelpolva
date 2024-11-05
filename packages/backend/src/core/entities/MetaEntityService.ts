@@ -9,7 +9,6 @@ import JSON5 from 'json5';
 import type { Packed } from '@/misc/json-schema.js';
 import type { MiMeta } from '@/models/Meta.js';
 import type { AdsRepository } from '@/models/_.js';
-import { MetaService } from '@/core/MetaService.js';
 import { bindThis } from '@/decorators.js';
 import { UserEntityService } from '@/core/entities/UserEntityService.js';
 import { InstanceActorService } from '@/core/InstanceActorService.js';
@@ -23,11 +22,13 @@ export class MetaEntityService {
 		@Inject(DI.config)
 		private config: Config,
 
+		@Inject(DI.meta)
+		private meta: MiMeta,
+
 		@Inject(DI.adsRepository)
 		private adsRepository: AdsRepository,
 
 		private userEntityService: UserEntityService,
-		private metaService: MetaService,
 		private instanceActorService: InstanceActorService,
 	) { }
 
@@ -36,7 +37,7 @@ export class MetaEntityService {
 		let instance = meta;
 
 		if (!instance) {
-			instance = await this.metaService.fetch();
+			instance = this.meta;
 		}
 
 		const ads = await this.adsRepository.createQueryBuilder('ads')
@@ -97,6 +98,8 @@ export class MetaEntityService {
 			recaptchaSiteKey: instance.recaptchaSiteKey,
 			enableTurnstile: instance.enableTurnstile,
 			turnstileSiteKey: instance.turnstileSiteKey,
+			enableFC: instance.enableFC,
+			fcSiteKey: instance.fcSiteKey,
 			swPublickey: instance.swPublicKey,
 			themeColor: instance.themeColor,
 			mascotImageUrl: instance.mascotImageUrl ?? '/assets/ai.png',
@@ -105,9 +108,15 @@ export class MetaEntityService {
 			serverErrorImageUrl: instance.serverErrorImageUrl,
 			notFoundImageUrl: instance.notFoundImageUrl,
 			iconUrl: instance.iconUrl,
+			sidebarLogoUrl: instance.sidebarLogoUrl,
 			backgroundImageUrl: instance.backgroundImageUrl,
 			logoImageUrl: instance.logoImageUrl,
 			maxNoteTextLength: this.config.maxNoteLength,
+			maxRemoteNoteTextLength: this.config.maxRemoteNoteLength,
+			maxCwLength: this.config.maxCwLength,
+			maxRemoteCwLength: this.config.maxRemoteCwLength,
+			maxAltTextLength: this.config.maxAltTextLength,
+			maxRemoteAltTextLength: this.config.maxRemoteAltTextLength,
 			defaultLightTheme,
 			defaultDarkTheme,
 			defaultLike: instance.defaultLike,
@@ -119,6 +128,7 @@ export class MetaEntityService {
 				imageUrl: ad.imageUrl,
 				dayOfWeek: ad.dayOfWeek,
 			})),
+			trustedLinkUrlPatterns: instance.trustedLinkUrlPatterns,
 			notesPerOneAd: instance.notesPerOneAd,
 			enableEmail: instance.enableEmail,
 			enableServiceWorker: instance.enableServiceWorker,
@@ -132,6 +142,7 @@ export class MetaEntityService {
 			mediaProxy: this.config.mediaProxy,
 			enableUrlPreview: instance.urlPreviewEnabled,
 			noteSearchableScope: (this.config.meilisearch == null || this.config.meilisearch.scope !== 'local') ? 'global' : 'local',
+			maxFileSize: this.config.maxFileSize,
 		};
 
 		return packed;
@@ -142,7 +153,7 @@ export class MetaEntityService {
 		let instance = meta;
 
 		if (!instance) {
-			instance = await this.metaService.fetch();
+			instance = this.meta;
 		}
 
 		const packed = await this.pack(instance);

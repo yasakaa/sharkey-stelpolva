@@ -529,7 +529,8 @@ enumの列挙の内容の削除は、その値をもつレコードを全て削�
 ### Migration作成方法
 packages/backendで:
 ```sh
-pnpm dlx typeorm migration:generate -d ormconfig.js -o <migration name>
+pnpm run build
+pnpm dlx typeorm migration:generate -d ormconfig.js -o migration/<migration name>
 ```
 
 - 生成後、ファイルをmigration下に移してください
@@ -573,6 +574,26 @@ marginはそのコンポーネントを使う側が設定する
 ### indexというファイル名を使うな
 ESMではディレクトリインポートは廃止されているのと、ディレクトリインポートせずともファイル名が index だと何故か一部のライブラリ？でディレクトリインポートだと見做されてエラーになる
 
+## CSS Recipe
+
+### Lighten CSS vars
+
+``` css
+color: hsl(from var(--accent) h s calc(l + 10));
+```
+
+### Darken CSS vars
+
+``` css
+color: hsl(from var(--accent) h s calc(l - 10));
+```
+
+### Add alpha to CSS vars
+
+``` css
+color: color(from var(--accent) srgb r g b / 0.5);
+```
+
 ## Merging from Misskey into Sharkey
 
 Make sure you have both remotes in the same clone (`git remote add misskey
@@ -590,15 +611,11 @@ seems to do a decent job)
 *after that commit*, do all the extra work, on the same branch:
 
 * copy all changes (commit after each step):
-  * in `packages/backend/src/core/NoteCreateService.ts`, from `create` to
-    `import` (and vice versa if `git` got confused!)
   * in
     `packages/backend/src/core/activitypub/models/ApNoteService.ts`,
     from `createNote` to `updateNote`
   * from `packages/backend/src/core/NoteCreateService.ts` to
     `packages/backend/src/core/NoteEditService.vue`
-  * in `packages/backend/src/core/activitypub/models/ApNoteService.ts`,
-    from `createNote` to `updateNote`
   * from `packages/backend/src/server/api/endpoints/notes/create.ts`
     to `packages/backend/src/server/api/endpoints/notes/edit.ts`
   * from `packages/frontend/src/components/MkNote*.vue` to
@@ -614,9 +631,9 @@ seems to do a decent job)
 * check the changes against our `develop` (`git diff develop`) and
   against Misskey (`git diff misskey/develop`)
 * re-generate `misskey-js` (`pnpm build-misskey-js-with-types`) and commit
-* build the frontend: `rm -rf built/; NODE_ENV=development pnpm --filter=frontend
-  build` (the `development` tells it to keep some of the original
-  filenames in the built files)
+* build the frontend: `rm -rf built/; NODE_ENV=development pnpm
+  --filter=frontend --filter=frontend-embed build` (the `development`
+  tells it to keep some of the original filenames in the built files)
 * make sure there aren't any new `ti-*` classes (Tabler Icons), and
   replace them with appropriate `ph-*` ones (Phosphor Icons):
   `grep -rP '["'\'']ti[ -](?!fw)' -- built/` should show you what to change.

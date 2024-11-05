@@ -12,7 +12,7 @@ import { openInstanceMenu } from '@/ui/_common_/common.js';
 import { lookup } from '@/scripts/lookup.js';
 import * as os from '@/os.js';
 import { i18n } from '@/i18n.js';
-import { ui } from '@/config.js';
+import { ui } from '@@/js/config.js';
 import { unisonReload } from '@/scripts/unison-reload.js';
 
 export const navbarItemDef = reactive({
@@ -41,7 +41,7 @@ export const navbarItemDef = reactive({
 	followRequests: {
 		title: i18n.ts.followRequests,
 		icon: 'ti ti-user-plus',
-		show: computed(() => $i != null && $i.isLocked),
+		show: computed(() => $i != null && ($i.isLocked || $i.hasPendingReceivedFollowRequest || $i.hasPendingSentFollowRequest)),
 		indicated: computed(() => $i != null && $i.hasPendingReceivedFollowRequest),
 		to: '/my/follow-requests',
 	},
@@ -67,6 +67,12 @@ export const navbarItemDef = reactive({
 		action: (ev) => {
 			lookup();
 		},
+	},
+	following: {
+		title: i18n.ts.following,
+		icon: 'ph-user-check ph-bold ph-lg',
+		show: computed(() => $i != null && !$i.movedTo),
+		to: '/following-feed',
 	},
 	lists: {
 		title: i18n.ts.lists,
@@ -126,7 +132,7 @@ export const navbarItemDef = reactive({
 	ui: {
 		title: i18n.ts.switchUi,
 		icon: 'ti ti-devices',
-		action: (ev) => {
+		action: (ev: MouseEvent) => {
 			os.popupMenu([{
 				text: i18n.ts.default,
 				active: ui === 'default' || ui === null,

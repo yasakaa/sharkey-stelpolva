@@ -11570,7 +11570,7 @@ export interface Locale extends ILocale {
      */
     "stpvPFprefix": string;
     /**
-     * ...尾缀
+     * ...后缀
      */
     "stpvPFsuffix": string;
 }

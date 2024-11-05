@@ -6,6 +6,7 @@
 import * as http from 'node:http';
 import * as https from 'node:https';
 import * as net from 'node:net';
+import ipaddr from 'ipaddr.js';
 import CacheableLookup from 'cacheable-lookup';
 import fetch from 'node-fetch';
 import { HttpProxyAgent, HttpsProxyAgent } from 'hpagent';
@@ -24,6 +25,91 @@ export type HttpRequestSendOptions = {
 	throwErrorWhenResponseNotOk: boolean;
 	validators?: ((res: Response) => void)[];
 };
+
+@Injectable()
+class HttpRequestServiceAgent extends http.Agent {
+	constructor(
+		@Inject(DI.config)
+		private config: Config,
+
+		options?: Object
+	) {
+		super(options);
+	}
+
+	@bindThis
+	public createConnection(options: Object, callback?: Function): net.Socket {
+		const socket = super.createConnection(options, callback)
+		.on('connect', ()=>{
+			const address = socket.remoteAddress;
+			if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
+				if (address && ipaddr.isValid(address)) {
+					if (this.isPrivateIp(address)) {
+						socket.destroy(new Error(`Blocked address: ${address}`));
+					}
+				}
+			}
+		});
+		return socket;
+	};
+
+	@bindThis
+	private isPrivateIp(ip: string): boolean {
+		const parsedIp = ipaddr.parse(ip);
+	
+		for (const net of this.config.allowedPrivateNetworks ?? []) {
+			const cidr = ipaddr.parseCIDR(net);
+			if (cidr[0].kind() === parsedIp.kind() && parsedIp.match(ipaddr.parseCIDR(net))) {
+				return false;
+			}
+		}
+	
+		return parsedIp.range() !== 'unicast';
+	}
+}
+
+@Injectable()
+class HttpsRequestServiceAgent extends https.Agent {
+	constructor(
+		@Inject(DI.config)
+		private config: Config,
+
+		options?: Object
+	) {
+		super(options);
+	}
+
+	@bindThis
+	public createConnection(options: Object, callback?: Function): net.Socket {
+		const socket = super.createConnection(options, callback)
+		.on('connect', ()=>{
+			const address = socket.remoteAddress;
+			if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
+				if (address && ipaddr.isValid(address)) {
+					if (this.isPrivateIp(address)) {
+						socket.destroy(new Error(`Blocked address: ${address}`));
+					}
+				}
+			}
+		});
+		return socket;
+	};
+
+	@bindThis
+	private isPrivateIp(ip: string): boolean {
+		const parsedIp = ipaddr.parse(ip);
+	
+		for (const net of this.config.allowedPrivateNetworks ?? []) {
+			const cidr = ipaddr.parseCIDR(net);
+			if (cidr[0].kind() === parsedIp.kind() && parsedIp.match(ipaddr.parseCIDR(net))) {
+				return false;
+			}
+		}
+	
+		return parsedIp.range() !== 'unicast';
+	}
+}
+
 
 @Injectable()
 export class HttpRequestService {
@@ -57,14 +143,14 @@ export class HttpRequestService {
 			lookup: false,	// nativeのdns.lookupにfallbackしない
 		});
 
-		this.http = new http.Agent({
+		this.http = new HttpRequestServiceAgent(config, {
 			keepAlive: true,
 			keepAliveMsecs: 30 * 1000,
 			lookup: cache.lookup as unknown as net.LookupFunction,
 			localAddress: config.outgoingAddress,
 		});
 
-		this.https = new https.Agent({
+		this.https = new HttpsRequestServiceAgent(config, {
 			keepAlive: true,
 			keepAliveMsecs: 30 * 1000,
 			lookup: cache.lookup as unknown as net.LookupFunction,

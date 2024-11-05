@@ -42,7 +42,7 @@ class HttpRequestServiceAgent extends http.Agent {
 		const socket = super.createConnection(options, callback)
 		.on('connect', ()=>{
 			const address = socket.remoteAddress;
-			if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
+			if (process.env.NODE_ENV === 'production') {
 				if (address && ipaddr.isValid(address)) {
 					if (this.isPrivateIp(address)) {
 						socket.destroy(new Error(`Blocked address: ${address}`));
@@ -84,7 +84,7 @@ class HttpsRequestServiceAgent extends https.Agent {
 		const socket = super.createConnection(options, callback)
 		.on('connect', ()=>{
 			const address = socket.remoteAddress;
-			if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
+			if (process.env.NODE_ENV === 'production') {
 				if (address && ipaddr.isValid(address)) {
 					if (this.isPrivateIp(address)) {
 						socket.destroy(new Error(`Blocked address: ${address}`));

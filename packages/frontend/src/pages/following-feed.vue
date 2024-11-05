@@ -61,6 +61,7 @@ import { useScrollPositionManager } from '@/nirax.js';
 import MkPagination, { Paging } from '@/components/MkPagination.vue';
 import MkInfo from '@/components/MkInfo.vue';
 import { createModel, createOptions, followersTab, followingTab, mutualsTab } from '@/scripts/following-feed-utils.js';
+import { defaultStore } from '@/store';
 
 const {
 	userList,

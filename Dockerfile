@@ -40,6 +40,7 @@ RUN apk add ffmpeg tini jemalloc \
 	&& corepack enable \
 	&& addgroup -g "${GID}" sharkey \
 	&& adduser -D -u "${UID}" -G sharkey -h /sharkey sharkey \
+	&& mkdir /sharkey/files \
 	&& find / -type d -path /sys -prune -o -type d -path /proc -prune -o -type f -perm /u+s -exec chmod u-s {} \; \
 	&& find / -type d -path /sys -prune -o -type d -path /proc -prune -o -type f -perm /g+s -exec chmod g-s {} \;
 

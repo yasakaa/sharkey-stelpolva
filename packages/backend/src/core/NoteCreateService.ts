@@ -411,7 +411,7 @@ export class NoteCreateService implements OnApplicationShutdown {
 		}
 
 		if (user.host && !data.cw) {
-			await this.federatedInstanceService.fetch(user.host).then(async i => {
+			await this.federatedInstanceService.fetchOrRegister(user.host).then(async i => {
 				if (i.isNSFW) {
 					data.cw = 'Instance is marked as NSFW';
 				}

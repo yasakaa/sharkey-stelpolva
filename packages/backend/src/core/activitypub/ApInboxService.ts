@@ -538,7 +538,7 @@ export class ApInboxService {
 	@bindThis
 	private async flag(actor: MiRemoteUser, activity: IFlag): Promise<string> {
 		// Make sure the source instance is allowed to send reports.
-		const instance = await this.federatedInstanceService.fetch(actor.host);
+		const instance = await this.federatedInstanceService.fetchOrRegister(actor.host);
 		if (instance.rejectReports) {
 			throw new Bull.UnrecoverableError(`Rejecting report from instance: ${actor.host}`);
 		}

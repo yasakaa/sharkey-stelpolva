@@ -441,7 +441,7 @@ export class NoteEditService implements OnApplicationShutdown {
 		}
 
 		if (user.host && !data.cw) {
-			await this.federatedInstanceService.fetch(user.host).then(async i => {
+			await this.federatedInstanceService.fetchOrRegister(user.host).then(async i => {
 				if (i.isNSFW) {
 					data.cw = 'Instance is marked as NSFW';
 				}
@@ -593,7 +593,7 @@ export class NoteEditService implements OnApplicationShutdown {
 		// Register host
 		if (this.meta.enableStatsForFederatedInstances) {
 			if (this.userEntityService.isRemoteUser(user)) {
-				this.federatedInstanceService.fetch(user.host).then(async i => {
+				this.federatedInstanceService.fetchOrRegister(user.host).then(async i => {
 					if (note.renote && note.text || !note.renote) {
 						this.updateNotesCountQueue.enqueue(i.id, 1);
 					}

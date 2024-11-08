@@ -664,10 +664,11 @@ seems to do a decent job)
 * double-check the new migration, that they won't conflict with our db
   changes: `git diff develop -- packages/backend/migration/`
 * `pnpm clean; pnpm build`
-* run tests `pnpm --filter='!megalodon' test` (requires a test
-  database, [see above](#testing)) and fix as much as you can
+* run tests `pnpm --filter='!megalodon' test; pnpm --filter backend
+  test:e2e` (requires a test database, [see above](#testing)) and fix
+  as much as you can
   * right now `megalodon` doesn't pass its tests, so we skip them
 * run lint `pnpm --filter=backend lint` + `pnpm --filter=frontend
-  eslint` and fix as much as you can
+  --filter=frontend-embed eslint` and fix as much as you can
 
 Then push and open a Merge Request.

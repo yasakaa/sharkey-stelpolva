@@ -647,8 +647,9 @@ seems to do a decent job)
   against Misskey (`git diff misskey/develop`)
 * re-generate `misskey-js` (`pnpm build-misskey-js-with-types`) and commit
 * build the frontend: `rm -rf built/; NODE_ENV=development pnpm
-  --filter=frontend --filter=frontend-embed build` (the `development`
-  tells it to keep some of the original filenames in the built files)
+  --filter=frontend --filter=frontend-embed --filter=frontend-shared
+  build` (the `development` tells it to keep some of the original
+  filenames in the built files)
 * make sure there aren't any new `ti-*` classes (Tabler Icons), and
   replace them with appropriate `ph-*` ones (Phosphor Icons):
   `grep -rP '["'\'']ti[ -](?!fw)' -- built/` should show you what to change.
@@ -656,7 +657,8 @@ seems to do a decent job)
   alone
 
   after every change, re-build the frontend and check again, until
-  there are no more `ti-*` classes in the built files
+  there are no more `ti-*` classes in the built files (you can ignore
+  the source maps)
 
   commit!
 * double-check the new migration, that they won't conflict with our db

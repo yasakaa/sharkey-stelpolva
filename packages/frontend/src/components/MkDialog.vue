@@ -186,7 +186,7 @@ function onInputKeydown(evt: KeyboardEvent) {
 	box-sizing: border-box;
 	text-align: center;
 	background: var(--MI_THEME-panel);
-	border-radius: var(--radius-md);
+	border-radius: var(--MI-radius-md);
 }
 
 .icon {

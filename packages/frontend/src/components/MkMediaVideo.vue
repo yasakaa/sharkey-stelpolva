@@ -539,7 +539,7 @@ onDeactivated(() => {
 .hide {
 	display: block;
 	position: absolute;
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 	background-color: black;
 	color: var(--MI_THEME-accentLighten);
 	font-size: 12px;
@@ -728,10 +728,10 @@ onDeactivated(() => {
 }
 
 .indicator {
-	/* Hardcode to black because either --bg or --fg makes it hard to read in dark/light mode */
+	/* Hardcode to black because either --MI_THEME-bg or --MI_THEME-fg makes it hard to read in dark/light mode */
 	background-color: black;
-	border-radius: var(--radius-sm);
-	color: var(--accentLighten);
+	border-radius: var(--MI-radius-sm);
+	color: var(--MI_THEME-accentLighten);
 	display: inline-block;
 	font-weight: bold;
 	font-size: 0.8em;

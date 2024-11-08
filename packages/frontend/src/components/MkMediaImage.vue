@@ -186,7 +186,7 @@ function showMenu(ev: MouseEvent) {
 .hide {
 	display: block;
 	position: absolute;
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 	background-color: black;
 	color: var(--MI_THEME-accentLighten);
 	font-size: 12px;
@@ -225,7 +225,7 @@ html[data-color-scheme=light] .visible {
 .menu {
 	display: block;
 	position: absolute;
-	border-radius: var(--radius-ellipse);
+	border-radius: var(--MI-radius-ellipse);
 	background-color: rgba(0, 0, 0, 0.3);
 	-webkit-backdrop-filter: var(--MI-blur, blur(15px));
 	backdrop-filter: var(--MI-blur, blur(15px));
@@ -261,7 +261,7 @@ html[data-color-scheme=light] .visible {
 .indicator {
 	/* Hardcode to black because either --MI_THEME-bg or --MI_THEME-fg makes it hard to read in dark/light mode */
 	background-color: black;
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 	color: var(--MI_THEME-accentLighten);
 	display: inline-block;
 	font-weight: bold;

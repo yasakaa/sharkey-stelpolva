@@ -18,7 +18,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<p v-if="!readOnly" :class="$style.info">
 		<span>{{ i18n.tsx._poll.totalVotes({ n: total }) }}</span>
 		<span v-if="poll.multiple"> · </span>
-		<span v-if="poll.multiple" style="color: var(--accent); font-weight: bolder;">{{ i18n.ts._poll.multiple }}</span>
+		<span v-if="poll.multiple" style="color: var(--MI_THEME-accent); font-weight: bolder;">{{ i18n.ts._poll.multiple }}</span>
 		<span> · </span>
 		<a v-if="!closed && !isVoted" style="color: inherit;" @click="showResult = !showResult">{{ showResult ? i18n.ts._poll.vote : i18n.ts._poll.showResult }}</a>
 		<span v-if="isVoted">{{ i18n.ts._poll.voted }}</span>
@@ -141,7 +141,7 @@ const refreshVotes = async () => {
 	padding: 4px;
 	//border: solid 0.5px var(--MI_THEME-divider);
 	background: var(--MI_THEME-accentedBg);
-	border-radius: var(--radius-xs);
+	border-radius: var(--MI-radius-xs);
 	overflow: clip;
 	cursor: pointer;
 }
@@ -161,7 +161,7 @@ const refreshVotes = async () => {
 	display: inline-block;
 	padding: 3px 5px;
 	background: var(--MI_THEME-panel);
-	border-radius: var(--radius-xs);
+	border-radius: var(--MI-radius-xs);
 }
 
 .info {

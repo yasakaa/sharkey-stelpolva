@@ -267,7 +267,7 @@ function getActualReactedUsersCount(notification: Misskey.entities.Notification)
 	width: 80%;
 	height: 80%;
 	font-size: 15px;
-	border-radius: var(--radius-full);
+	border-radius: var(--MI-radius-full);
 	color: #fff;
 }
 
@@ -284,7 +284,7 @@ function getActualReactedUsersCount(notification: Misskey.entities.Notification)
 }
 
 .icon_app {
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 }
 
 .subIcon {
@@ -295,7 +295,7 @@ function getActualReactedUsersCount(notification: Misskey.entities.Notification)
 	width: 20px;
 	height: 20px;
 	box-sizing: border-box;
-	border-radius: var(--radius-full);
+	border-radius: var(--MI-radius-full);
 	background: var(--MI_THEME-panel);
 	box-shadow: 0 0 0 3px var(--MI_THEME-panel);
 	font-size: 11px;
@@ -448,7 +448,7 @@ function getActualReactedUsersCount(notification: Misskey.entities.Notification)
 	width: 20px;
 	height: 20px;
 	box-sizing: border-box;
-	border-radius: var(--radius-full);
+	border-radius: var(--MI-radius-full);
 	background: var(--MI_THEME-panel);
 	box-shadow: 0 0 0 3px var(--MI_THEME-panel);
 	font-size: 11px;

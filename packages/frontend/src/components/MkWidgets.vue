@@ -158,7 +158,7 @@ function onContextmenu(widget: Widget, ev: MouseEvent) {
 		height: 32px;
 		color: #fff;
 		background: rgba(#000, 0.7);
-		border-radius: var(--radius-xs);
+		border-radius: var(--MI-radius-xs);
 	}
 
 	&Config {

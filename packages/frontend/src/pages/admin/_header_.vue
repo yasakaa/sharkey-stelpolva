@@ -182,7 +182,7 @@ onUnmounted(() => {
 			width: calc(var(--height) - (var(--margin) * 2));
 			box-sizing: border-box;
 			position: relative;
-			border-radius: var(--radius-xs);
+			border-radius: var(--MI-radius-xs);
 
 			&:hover {
 				background: rgba(0, 0, 0, 0.05);
@@ -287,7 +287,7 @@ onUnmounted(() => {
 			bottom: 0;
 			height: 3px;
 			background: var(--MI_THEME-accent);
-			border-radius: var(--radius-ellipse);
+			border-radius: var(--MI-radius-ellipse);
 			transition: all 0.2s ease;
 			pointer-events: none;
 		}

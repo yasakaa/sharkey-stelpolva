@@ -59,7 +59,7 @@ function menu(ev) {
 	padding: 12px;
 	text-align: left;
 	background: var(--MI_THEME-panel);
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 
 	&:hover {
 		border-color: var(--MI_THEME-accent);

@@ -116,7 +116,7 @@ const exampleCWNote = reactive<Misskey.entities.Note>({
 		left: 0;
 		right: 0;
 		bottom: 0;
-		border-radius: var(--radius-ellipse);
+		border-radius: var(--MI-radius-ellipse);
 		background: linear-gradient(90deg, var(--MI_THEME-buttonGradateA), var(--MI_THEME-buttonGradateB));
 	}
 

@@ -15,16 +15,15 @@
  */
 
 :root {
-	--radius-xs: 5px;
-	--radius-sm: 5px;
-	--radius: 5px;
-	--radius-md: 5px;
-	--radius-lg: 5px;
-	--radius-xl: 5px;
-	--radius-ellipse: 5px;
-	--radius-full: 5px;
+	--MI-radius-xs: 5px;
+	--MI-radius-sm: 5px;
+	--MI-radius: 5px;
+	--MI-radius-md: 5px;
+	--MI-radius-lg: 5px;
+	--MI-radius-xl: 5px;
+	--MI-radius-ellipse: 5px;
+	--MI-radius-full: 5px;
 
-	--MI-radius: 12px;
 	--MI-marginFull: 16px;
 	--MI-marginHalf: 10px;
 
@@ -38,19 +37,19 @@
 		--MI-margin: var(--MI-marginHalf);
 	}
 
-	--avatar: 48px;
-	--thread-width: 2px;
+	--MI-avatar: 48px;
+	--MI-thread-width: 2px;
 }
 
 html.radius-misskey {
-	--radius-xs: 4px;
-	--radius-sm: 8px;
-	--radius: 12px;
-	--radius-md: 16px;
-	--radius-lg: 24px;
-	--radius-xl: 32px;
-	--radius-ellipse: 999px;
-	--radius-full: 100%;
+	--MI-radius-xs: 4px;
+	--MI-radius-sm: 8px;
+	--MI-radius: 12px;
+	--MI-radius-md: 16px;
+	--MI-radius-lg: 24px;
+	--MI-radius-xl: 32px;
+	--MI-radius-ellipse: 999px;
+	--MI-radius-full: 100%;
 }
 
 ::selection {
@@ -197,7 +196,7 @@ rt {
 	display: inline-block;
 	width: 1em;
 	height: 1em;
-	border-radius: var(--radius-full);
+	border-radius: var(--MI-radius-full);
 	background: currentColor;
 }
 
@@ -210,7 +209,7 @@ rt {
 	min-width: 1em;
 	align-items: center;
 	justify-content: center;
-	border-radius: var(--radius-ellipse);
+	border-radius: var(--MI-radius-ellipse);
 	padding: 0.3em 0.5em;
 }
 
@@ -400,7 +399,7 @@ rt {
 	padding: 2px 3px;
 	color: var(--MI_THEME-accent);
 	border: solid 1px var(--MI_THEME-accent);
-	border-radius: var(--radius-xs);
+	border-radius: var(--MI-radius-xs);
 	vertical-align: top;
 }
 
@@ -450,7 +449,7 @@ rt {
 		vertical-align: bottom;
 		height: 128px;
 		margin-bottom: 16px;
-		border-radius: var(--radius-md);
+		border-radius: var(--MI-radius-md);
 	}
 }
 

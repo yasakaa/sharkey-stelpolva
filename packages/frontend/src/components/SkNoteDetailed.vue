@@ -913,7 +913,7 @@ onUnmounted(() => {
 	width: 28px;
 	height: 28px;
 	margin: 0 8px 0 0;
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 }
 
 .renoteText {
@@ -985,8 +985,8 @@ onUnmounted(() => {
 .noteHeaderAvatar {
 	display: block;
 	flex-shrink: 0;
-	width: var(--avatar);
-	height: var(--avatar);
+	width: var(--MI-avatar);
+	height: var(--MI-avatar);
 }
 
 .noteHeaderBody {
@@ -1010,7 +1010,7 @@ onUnmounted(() => {
 	font-size: 80%;
 	line-height: 1;
 	border: solid 0.5px var(--MI_THEME-divider);
-	border-radius: var(--radius-xs);
+	border-radius: var(--MI-radius-xs);
 }
 
 .noteHeaderInfo {
@@ -1077,7 +1077,7 @@ onUnmounted(() => {
 .quoteNote {
 	padding: 16px;
 	border: solid 1px var(--MI_THEME-renote);
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 	overflow: clip;
 }
 
@@ -1162,7 +1162,7 @@ onUnmounted(() => {
 .reactionTab {
 	padding: 4px 6px;
 	border: solid 1px var(--MI_THEME-divider);
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 }
 
 .reactionTabActive {
@@ -1221,7 +1221,7 @@ onUnmounted(() => {
 	margin: 0 10px 0 0 !important;
 	width: 40px !important;
 	height: 40px !important;
-	border-radius: var(--radius-sm) !important;
+	border-radius: var(--MI-radius-sm) !important;
 }
 
 .muted {

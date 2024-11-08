@@ -426,7 +426,7 @@ if (props.detail) {
 	padding: 28px 32px;
 	position: relative;
 
-	--reply-indent: calc(.5 * var(--avatar));
+	--reply-indent: calc(.5 * var(--MI-avatar));
 
 	&.children {
 		padding: 10px 0 0 8px;
@@ -434,16 +434,16 @@ if (props.detail) {
 
 	&.isReply {
 		/* @link https://utopia.fyi/clamp/calculator?a=450,580,26—36 */
-		--avatar: clamp(26px, -8.6154px + 7.6923cqi, 36px);
+		--MI-avatar: clamp(26px, -8.6154px + 7.6923cqi, 36px);
 	}
 }
 
 .line {
 	position: absolute;
-	left: calc(32px + .5 * var(--avatar));
+	left: calc(32px + .5 * var(--MI-avatar));
 	// using solid instead of dotted, stylelistic choice
-	border-left: var(--thread-width) solid var(--MI_THEME-thread);
-	top: calc(28px + var(--avatar)); // 28px of .root padding, plus 58px of avatar height (see SkNote)
+	border-left: var(--MI-thread-width) solid var(--MI_THEME-thread);
+	top: calc(28px + var(--MI-avatar)); // 28px of .root padding, plus 58px of avatar height (see SkNote)
 	bottom: -28px;
 }
 
@@ -487,7 +487,7 @@ if (props.detail) {
 	left: 8px;
 	width: 5px;
 	height: calc(100% - 8px);
-	border-radius: var(--radius-ellipse);
+	border-radius: var(--MI-radius-ellipse);
 	pointer-events: none;
 }
 
@@ -495,9 +495,9 @@ if (props.detail) {
 	flex-shrink: 0;
 	display: block;
 	margin: 0 14px 0 0;
-	width: var(--avatar);
-	height: var(--avatar);
-	border-radius: var(--radius-sm);
+	width: var(--MI-avatar);
+	height: var(--MI-avatar);
+	border-radius: var(--MI-radius-sm);
 }
 
 .body {
@@ -541,11 +541,11 @@ if (props.detail) {
 @container (max-width: 580px) {
 	.root {
 		padding: 28px 26px 0;
-		--avatar: 46px;
+		--MI-avatar: 46px;
 	}
 
 	.line {
-		left: calc(26px + .5 * var(--avatar));
+		left: calc(26px + .5 * var(--MI-avatar));
 	}
 }
 
@@ -555,8 +555,8 @@ if (props.detail) {
 	}
 
 	.line {
-		top: calc(23px + var(--avatar));
-		left: calc(25px + .5 * var(--avatar));
+		top: calc(23px + var(--MI-avatar));
+		left: calc(25px + .5 * var(--MI-avatar));
 	}
 }
 
@@ -605,14 +605,14 @@ if (props.detail) {
 	}
 
 	.line {
-		top: calc(22px + var(--avatar));
-		left: calc(24px + .5 * var(--avatar));
+		top: calc(22px + var(--MI-avatar));
+		left: calc(24px + .5 * var(--MI-avatar));
 	}
 }
 
 @container (max-width: 450px) {
 	.root {
-		--avatar: 44px;
+		--MI-avatar: 44px;
 	}
 }
 
@@ -621,7 +621,7 @@ if (props.detail) {
 	padding: 8px !important;
 	border: 1px solid var(--MI_THEME-divider);
 	margin: 8px 8px 0 8px;
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 }
 
 // avatar container with line
@@ -633,7 +633,7 @@ if (props.detail) {
 .threadLine {
 	width: 0;
 	flex-grow: 1;
-	border-left: var(--thread-width) solid var(--MI_THEME-thread);
+	border-left: var(--MI-thread-width) solid var(--MI_THEME-thread);
 	margin-left: var(--reply-indent);
 }
 
@@ -642,10 +642,10 @@ if (props.detail) {
 }
 
 .reply:not(:last-child) {
-	border-left: var(--thread-width) solid var(--MI_THEME-thread);
+	border-left: var(--MI-thread-width) solid var(--MI_THEME-thread);
 
 	&::before {
-		left: calc(-1 * var(--thread-width));
+		left: calc(-1 * var(--MI-thread-width));
 	}
 }
 
@@ -654,10 +654,10 @@ if (props.detail) {
 	content: '';
 	left: 0px;
 	top: -10px;
-	height: calc(10px + 10px + .5 * var(--avatar));
+	height: calc(10px + 10px + .5 * var(--MI-avatar));
 	width: 15px;
-	border-left: var(--thread-width) solid var(--MI_THEME-thread);
-	border-bottom: var(--thread-width) solid var(--MI_THEME-thread);
+	border-left: var(--MI-thread-width) solid var(--MI_THEME-thread);
+	border-bottom: var(--MI-thread-width) solid var(--MI_THEME-thread);
 	border-bottom-left-radius: 15px;
 }
 

@@ -441,7 +441,7 @@ body {
 	width: 100%;
 	max-width: 60px;
 	margin: auto;
-	border-radius: var(--radius-lg);
+	border-radius: var(--MI-radius-lg);
 	background: transparent;
 	color: var(--MI_THEME-fg);
 
@@ -467,7 +467,7 @@ body {
 
 	&:active {
 		background: linear-gradient(90deg, hsl(from var(--MI_THEME-accent) h s calc(l + 5)), hsl(from var(--MI_THEME-accent) h s calc(l + 5)));
-		color: var(--fgOnAccent);
+		color: var(--MI_THEME-fgOnAccent);
 	}
 }
 

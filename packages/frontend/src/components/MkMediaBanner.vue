@@ -53,7 +53,7 @@ async function show() {
 <style lang="scss" module>
 .root {
 	width: 100%;
-	border-radius: var(--radius-xs);
+	border-radius: var(--MI-radius-xs);
 	margin-top: 4px;
 	overflow: clip;
 }
@@ -76,7 +76,7 @@ async function show() {
 }
 
 .audio {
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 	overflow: clip;
 }
 </style>

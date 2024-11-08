@@ -362,7 +362,7 @@ export default function (props: MfmProps, { emit }: { emit: SetupContext<MfmEven
 						const child = token.children[0];
 						const unixtime = parseInt(child.type === 'text' ? child.props.text : '');
 						return h('span', {
-							style: 'display: inline-block; font-size: 90%; border: solid 1px var(--MI_THEME-divider); border-radius: var(--radius-ellipse); padding: 4px 10px 4px 6px;',
+							style: 'display: inline-block; font-size: 90%; border: solid 1px var(--MI_THEME-divider); border-radius: var(--MI-radius-ellipse); padding: 4px 10px 4px 6px;',
 						}, [
 							h('i', {
 								class: 'ti ti-clock',

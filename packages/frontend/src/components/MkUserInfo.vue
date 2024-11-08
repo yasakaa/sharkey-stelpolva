@@ -75,8 +75,8 @@ defineProps<{
 	top: 62px;
 	left: 13px;
 	z-index: 2;
-	width: var(--avatar);
-	height: var(--avatar);
+	width: var(--MI-avatar);
+	height: var(--MI-avatar);
 	border: solid 4px var(--MI_THEME-panel);
 }
 
@@ -110,7 +110,7 @@ defineProps<{
 	color: #fff;
 	background: rgba(0, 0, 0, 0.7);
 	font-size: 0.7em;
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 }
 
 .description {
@@ -169,7 +169,7 @@ defineProps<{
 		color: #fff;
 		background: rgba(0, 0, 0, 0.7);
 		font-size: 0.7em;
-		border-radius: var(--radius-sm);
+		border-radius: var(--MI-radius-sm);
 		list-style-type: none;
 		margin-left: 0;
 	}

@@ -117,7 +117,7 @@ watch(() => props.expandAllCws, (expandAllCws) => {
 				background: var(--MI_THEME-panel);
 				padding: 6px 10px;
 				font-size: 0.8em;
-				border-radius: var(--radius-ellipse);
+				border-radius: var(--MI-radius-ellipse);
 				box-shadow: 0 2px 6px rgb(0 0 0 / 20%);
 			}
 
@@ -142,8 +142,8 @@ watch(() => props.expandAllCws, (expandAllCws) => {
 }
 
 .translation {
-	border: solid 0.5px var(--divider);
-	border-radius: var(--radius);
+	border: solid 0.5px var(--MI_THEME-divider);
+	border-radius: var(--MI-radius);
 	padding: 12px;
 	margin-top: 8px;
 }
@@ -164,7 +164,7 @@ watch(() => props.expandAllCws, (expandAllCws) => {
 	background: var(--MI_THEME-popup);
 	padding: 6px 10px;
 	font-size: 0.8em;
-	border-radius: var(--radius-ellipse);
+	border-radius: var(--MI-radius-ellipse);
 	box-shadow: 0 2px 6px rgb(0 0 0 / 20%);
 }
 

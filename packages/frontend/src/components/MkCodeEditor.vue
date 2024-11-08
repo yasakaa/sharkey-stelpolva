@@ -158,7 +158,7 @@ watch(v, newValue => {
 	overflow-y: hidden;
 	box-sizing: border-box;
 	margin: 0;
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 	padding: 0;
 	color: var(--MI_THEME-fg);
 	border: solid 1px var(--MI_THEME-panel);
@@ -171,7 +171,7 @@ watch(v, newValue => {
 
 .focused.codeEditorRoot {
 	border-color: var(--MI_THEME-accent) !important;
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 }
 
 .codeEditorScroller {
@@ -199,7 +199,7 @@ watch(v, newValue => {
 	caret-color: var(--MI_THEME-fg);
 	background-color: transparent;
 	border: 0;
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 	box-sizing: border-box;
 	outline: 0;
 	min-width: calc(100% - 24px);

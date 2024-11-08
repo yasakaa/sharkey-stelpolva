@@ -281,7 +281,7 @@ defineExpose({
 				padding: 10px;
 				box-sizing: border-box;
 				text-align: center;
-				border-radius: var(--radius-ellipse);
+				border-radius: var(--MI-radius-ellipse);
 
 				&._button {
 					background: var(--MI_THEME-panel);

@@ -138,7 +138,7 @@ const bannerStyle = computed(() => {
 			padding: 8px 12px;
 			font-size: 80%;
 			background: rgba(0, 0, 0, 0.7);
-			border-radius: var(--radius-sm);
+			border-radius: var(--MI-radius-sm);
 			color: #fff;
 		}
 
@@ -149,7 +149,7 @@ const bannerStyle = computed(() => {
 			left: 16px;
 			background: rgba(0, 0, 0, 0.7);
 			color: var(--MI_THEME-warn);
-			border-radius: var(--radius-sm);
+			border-radius: var(--MI-radius-sm);
 			font-weight: bold;
 			font-size: 1em;
 			padding: 4px 7px;
@@ -215,7 +215,7 @@ const bannerStyle = computed(() => {
 	transform: translate(25%, -25%);
 	background-color: var(--MI_THEME-accent);
 	border: solid var(--MI_THEME-bg) 4px;
-	border-radius: var(--radius-full);
+	border-radius: var(--MI-radius-full);
 	width: 1.5rem;
 	height: 1.5rem;
 	aspect-ratio: 1 / 1;

@@ -324,7 +324,7 @@ defineExpose({
 
 .media {
 	overflow: hidden; // clipにするとバグる
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 }
 
 :global(.pswp) {

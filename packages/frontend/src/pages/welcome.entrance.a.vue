@@ -167,7 +167,7 @@ misskeyApiGet('federation/instances', {
 		background: var(--MI_THEME-acrylicPanel);
 		-webkit-backdrop-filter: var(--MI-blur, blur(15px));
 		backdrop-filter: var(--MI-blur, blur(15px));
-		border-radius: var(--radius-ellipse);
+		border-radius: var(--MI-radius-ellipse);
 		overflow: clip;
 		width: 800px;
 		padding: 8px 0;
@@ -187,14 +187,14 @@ misskeyApiGet('federation/instances', {
 	padding: 6px 12px 6px 6px;
 	margin: 0 10px 0 0;
 	background: var(--MI_THEME-panel);
-	border-radius: var(--radius-ellipse);
+	border-radius: var(--MI-radius-ellipse);
 
 	> :global(.icon) {
 		display: inline-block;
 		width: 20px;
 		height: 20px;
 		margin-right: 5px;
-		border-radius: var(--radius-ellipse);
+		border-radius: var(--MI-radius-ellipse);
 	}
 }
 </style>

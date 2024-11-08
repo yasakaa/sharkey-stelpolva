@@ -377,7 +377,7 @@ definePageMetadata(() => ({
 	display: block;
 	margin: var(--MI-margin) auto 0 auto;
 	padding: 8px 16px;
-	border-radius: var(--radius-xl);
+	border-radius: var(--MI-radius-xl);
 }
 
 .postForm {

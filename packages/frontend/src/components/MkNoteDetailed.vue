@@ -135,7 +135,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				ref="renoteButton"
 				class="_button"
 				:class="$style.noteFooterButton"
-				:style="renoted ? 'color: var(--accent) !important;' : ''"
+				:style="renoted ? 'color: var(--MI_THEME-accent) !important;' : ''"
 				@mousedown.prevent="renoted ? undoRenote() : boostVisibility()"
 			>
 				<i class="ti ti-repeat"></i>
@@ -883,7 +883,7 @@ function animatedMFM() {
 	width: 28px;
 	height: 28px;
 	margin: 0 8px 0 0;
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 }
 
 .renoteText {
@@ -932,8 +932,8 @@ function animatedMFM() {
 .noteHeaderAvatar {
 	display: block;
 	flex-shrink: 0;
-	width: var(--avatar);
-	height: var(--avatar);
+	width: var(--MI-avatar);
+	height: var(--MI-avatar);
 }
 
 .noteHeaderBody {
@@ -957,7 +957,7 @@ function animatedMFM() {
 	font-size: 80%;
 	line-height: 1;
 	border: solid 0.5px var(--MI_THEME-divider);
-	border-radius: var(--radius-xs);
+	border-radius: var(--MI-radius-xs);
 }
 
 .noteHeaderInfo {
@@ -1017,7 +1017,7 @@ function animatedMFM() {
 .quoteNote {
 	padding: 16px;
 	border: dashed 1px var(--MI_THEME-renote);
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 	overflow: clip;
 }
 
@@ -1095,7 +1095,7 @@ function animatedMFM() {
 .reactionTab {
 	padding: 4px 6px;
 	border: solid 1px var(--MI_THEME-divider);
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 }
 
 .reactionTabActive {

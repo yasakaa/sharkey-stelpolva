@@ -287,7 +287,7 @@ function onDrop(ev) {
 	height: 100%;
 	overflow: clip;
 	contain: strict;
-	border-radius: var(--radius);
+	border-radius: var(--MI-radius);
 
 	&.draghover {
 		&::after {
@@ -388,7 +388,7 @@ function onDrop(ev) {
 	width: 3px;
 	height: calc(100% - 24px);
 	background: var(--MI_THEME-accent);
-	border-radius: var(--radius-ellipse);
+	border-radius: var(--MI-radius-ellipse);
 }
 
 .tabShape {

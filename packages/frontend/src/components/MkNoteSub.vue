@@ -30,7 +30,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 					ref="renoteButton"
 					class="_button"
 					:class="$style.noteFooterButton"
-					:style="renoted ? 'color: var(--accent) !important;' : ''"
+					:style="renoted ? 'color: var(--MI_THEME-accent) !important;' : ''"
 					@mousedown="renoted ? undoRenote() : boostVisibility()"
 				>
 					<i class="ph-rocket-launch ph-bold ph-lg"></i>
@@ -438,7 +438,7 @@ if (props.detail) {
 	left: 8px;
 	width: 5px;
 	height: calc(100% - 8px);
-	border-radius: var(--radius-ellipse);
+	border-radius: var(--MI-radius-ellipse);
 	pointer-events: none;
 }
 
@@ -448,7 +448,7 @@ if (props.detail) {
 	margin: 0 8px 0 0;
 	width: 38px;
 	height: 38px;
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 }
 
 .body {
@@ -475,7 +475,7 @@ if (props.detail) {
 	}
 
 	&:hover {
-		color: var(--fgHighlighted);
+		color: var(--MI_THEME-fgHighlighted);
 	}
 }
 
@@ -493,7 +493,7 @@ if (props.detail) {
 	opacity: 0.7;
 
 	&.reacted {
-		color: var(--accent);
+		color: var(--MI_THEME-accent);
 	}
 }
 
@@ -533,6 +533,6 @@ if (props.detail) {
 	padding: 8px !important;
 	border: 1px solid var(--MI_THEME-divider);
 	margin: 8px 8px 0 8px;
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 }
 </style>

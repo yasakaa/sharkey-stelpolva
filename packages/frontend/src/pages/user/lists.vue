@@ -45,7 +45,7 @@ const pagination = {
 	display: block;
 	padding: 16px;
 	border: solid 1px var(--MI_THEME-divider);
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 	margin-bottom: 8px;
 
 	&:hover {

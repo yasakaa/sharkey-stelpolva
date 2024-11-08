@@ -59,8 +59,8 @@ async function follow() {
 	top: 30px;
 	left: 13px;
 	z-index: 2;
-	width: var(--avatar);
-	height: var(--avatar);
+	width: var(--MI-avatar);
+	height: var(--MI-avatar);
 	border: solid 4px var(--MI_THEME-panel);
 }
 

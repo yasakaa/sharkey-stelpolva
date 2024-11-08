@@ -47,14 +47,14 @@ function getInstanceIcon(instance): string {
 	align-items: center;
 	padding: 16px;
 	background: var(--MI_THEME-panel);
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 
 	> :global(.icon) {
 		display: block;
 		width: ($bodyTitleHieght + $bodyInfoHieght);
 		height: ($bodyTitleHieght + $bodyInfoHieght);
 		object-fit: cover;
-		border-radius: var(--radius-xs);
+		border-radius: var(--MI-radius-xs);
 		margin-right: 10px;
 	}
 

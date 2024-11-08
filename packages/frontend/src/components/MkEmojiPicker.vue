@@ -722,7 +722,7 @@ defineExpose({
 					width: var(--eachSize);
 					height: var(--eachSize);
 					contain: strict;
-					border-radius: var(--radius-xs);
+					border-radius: var(--MI-radius-xs);
 					font-size: 24px;
 
 					&:hover {

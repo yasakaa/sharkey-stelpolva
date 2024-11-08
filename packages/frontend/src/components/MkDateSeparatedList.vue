@@ -190,7 +190,7 @@ export default defineComponent({
 }
 
 .date-separated-list-nogap {
-	border-radius: var(--radius);
+	border-radius: var(--MI-radius);
 
 	> * {
 		margin: 0 !important;

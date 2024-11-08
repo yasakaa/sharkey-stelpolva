@@ -219,7 +219,7 @@ onUnmounted(() => {
 
 	&.active {
 		opacity: 1;
-		color: var(--accent);
+		color: var(--MI_THEME-accent);
 	}
 
 	&.animate {
@@ -249,7 +249,7 @@ onUnmounted(() => {
 	bottom: 0;
 	height: 3px;
 	background: var(--MI_THEME-accent);
-	border-radius: var(--radius-ellipse);
+	border-radius: var(--MI-radius-ellipse);
 	transition: none;
 	pointer-events: none;
 

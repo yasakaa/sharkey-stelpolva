@@ -160,7 +160,7 @@ onMounted(() => {
 	color: #fff;
 	background: rgba(0, 0, 0, 0.7);
 	font-size: 0.7em;
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 }
 
 .locked:first-child {
@@ -171,7 +171,7 @@ onMounted(() => {
 	color: #fff;
 	background: rgba(0, 0, 0, 0.7);
 	font-size: 0.7em;
-	border-radius: var(--radius-xs);
+	border-radius: var(--MI-radius-xs);
 }
 
 .locked:not(:first-child) {
@@ -182,7 +182,7 @@ onMounted(() => {
 	color: #fff;
 	background: rgba(0, 0, 0, 0.7);
 	font-size: 0.7em;
-	border-radius: var(--radius-xs);
+	border-radius: var(--MI-radius-xs);
 }
 
 .avatarBack {
@@ -202,8 +202,8 @@ onMounted(() => {
 	right: 0;
 	margin: 0 auto;
 	z-index: 2;
-	width: var(--avatar);
-	height: var(--avatar);
+	width: var(--MI-avatar);
+	height: var(--MI-avatar);
 }
 
 .title {
@@ -238,8 +238,8 @@ onMounted(() => {
 .fields {
 	font-size: 0.8em;
 	padding: 16px;
-	border-top: solid 1px var(--divider);
-	border-bottom: solid 1px var(--divider);
+	border-top: solid 1px var(--MI_THEME-divider);
+	border-bottom: solid 1px var(--MI_THEME-divider);
 }
 
 .field {
@@ -305,7 +305,7 @@ onMounted(() => {
 	right: 44px;
 	padding: 6px;
 	background: var(--MI_THEME-panel);
-	border-radius: var(--radius-ellipse);
+	border-radius: var(--MI-radius-ellipse);
 }
 
 .follow {

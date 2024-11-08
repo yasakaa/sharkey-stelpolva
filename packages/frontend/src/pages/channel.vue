@@ -352,7 +352,7 @@ definePageMetadata(() => ({
 	padding: 8px 12px;
 	font-size: 80%;
 	background: rgba(0, 0, 0, 0.7);
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 	color: #fff;
 }
 
@@ -367,7 +367,7 @@ definePageMetadata(() => ({
 	left: 16px;
 	background: rgba(0, 0, 0, 0.7);
 	color: var(--MI_THEME-warn);
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 	font-weight: bold;
 	font-size: 1em;
 	padding: 4px 7px;

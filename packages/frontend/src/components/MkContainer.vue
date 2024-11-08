@@ -138,7 +138,7 @@ onUnmounted(() => {
 	position: relative;
 	overflow: clip;
 	contain: content;
-	background: color-mix(in srgb, var(--panel) 65%, transparent);
+	background: color-mix(in srgb, var(--MI_THEME-panel) 65%, transparent);
 	&.naked {
 		background: transparent !important;
 		box-shadow: none !important;
@@ -172,7 +172,7 @@ onUnmounted(() => {
 	border-bottom: solid 0.5px var(--MI_THEME-panelHeaderDivider);
 	z-index: 2;
 	line-height: 1.4em;
-	background: color-mix(in srgb, var(--panelHeaderBg) 35%, transparent);
+	background: color-mix(in srgb, var(--MI_THEME-panelHeaderBg) 35%, transparent);
 }
 
 .title {
@@ -224,7 +224,7 @@ onUnmounted(() => {
 				background: var(--MI_THEME-panel);
 				padding: 6px 10px;
 				font-size: 0.8em;
-				border-radius: var(--radius-ellipse);
+				border-radius: var(--MI-radius-ellipse);
 				box-shadow: 0 2px 6px rgb(0 0 0 / 20%);
 			}
 

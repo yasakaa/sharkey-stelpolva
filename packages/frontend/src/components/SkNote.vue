@@ -158,7 +158,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				</button>
 				<button ref="reactButton" :class="$style.footerButton" class="_button" @click="toggleReact()" @click.stop>
 					<i v-if="appearNote.reactionAcceptance === 'likeOnly' && appearNote.myReaction != null" class="ti ti-heart-filled" style="color: var(--love);"></i>
-					<i v-else-if="appearNote.myReaction != null" class="ti ti-minus" style="color: var(--accent);"></i>
+					<i v-else-if="appearNote.myReaction != null" class="ti ti-minus" style="color: var(--MI_THEME-accent);"></i>
 					<i v-else-if="appearNote.reactionAcceptance === 'likeOnly'" class="ti ti-heart"></i>
 					<i v-else class="ph-smiley ph-bold ph-lg"></i>
 					<p v-if="(appearNote.reactionAcceptance === 'likeOnly' || defaultStore.state.showReactionsCount) && appearNote.reactionCount > 0" :class="$style.footerButtonCount">{{ number(appearNote.reactionCount) }}</p>
@@ -930,7 +930,7 @@ function emitUpdReaction(emoji: string, delta: number) {
 			padding: 0 4px;
 			margin-bottom: 0 !important;
 			background: var(--MI_THEME-popup);
-			border-radius: var(--radius-sm);
+			border-radius: var(--MI-radius-sm);
 			box-shadow: 0px 4px 32px var(--MI_THEME-shadow);
 		}
 
@@ -977,7 +977,7 @@ function emitUpdReaction(emoji: string, delta: number) {
 	position: relative;
 	display: flex;
 	align-items: center;
-	padding: 24px 32px 0 calc(32px + var(--avatar) + 14px);
+	padding: 24px 32px 0 calc(32px + var(--MI-avatar) + 14px);
 	line-height: 28px;
 	white-space: pre;
 	color: var(--MI_THEME-renote);
@@ -986,9 +986,9 @@ function emitUpdReaction(emoji: string, delta: number) {
 		content: '';
 		position: absolute;
 		top: 0;
-		left: calc(32px + .5 * var(--avatar));
+		left: calc(32px + .5 * var(--MI-avatar));
 		bottom: -8px;
-		border-left: var(--thread-width) solid var(--MI_THEME-thread);
+		border-left: var(--MI-thread-width) solid var(--MI_THEME-thread);
 	}
 
 	&:first-child {
@@ -1077,9 +1077,9 @@ function emitUpdReaction(emoji: string, delta: number) {
 
 .collapsedInReplyToLine {
 	position: absolute;
-	left: calc(32px + .5 * var(--avatar));
+	left: calc(32px + .5 * var(--MI-avatar));
 	// using solid instead of dotted, stylelistic choice
-	border-left: var(--thread-width) solid var(--MI_THEME-thread);
+	border-left: var(--MI-thread-width) solid var(--MI_THEME-thread);
 	top: calc(28px + 28px); // 28px of .root padding, plus 28px of avatar height (see SkNote)
 	height: 28px;
 }
@@ -1095,7 +1095,7 @@ function emitUpdReaction(emoji: string, delta: number) {
 	left: 8px;
 	width: 5px;
 	height: calc(100% - 16px);
-	border-radius: var(--radius-ellipse);
+	border-radius: var(--MI-radius-ellipse);
 	pointer-events: none;
 }
 
@@ -1104,8 +1104,8 @@ function emitUpdReaction(emoji: string, delta: number) {
 	display: block !important;
 	position: sticky !important;
 	margin: 0 14px 0 0;
-	width: var(--avatar);
-	height: var(--avatar);
+	width: var(--MI-avatar);
+	height: var(--MI-avatar);
 	position: sticky !important;
 	top: calc(22px + var(--MI-stickyTop, 0px));
 	left: 0;
@@ -1141,7 +1141,7 @@ function emitUpdReaction(emoji: string, delta: number) {
 	background: var(--MI_THEME-popup);
 	padding: 6px 10px;
 	font-size: 0.8em;
-	border-radius: var(--radius-ellipse);
+	border-radius: var(--MI-radius-ellipse);
 	box-shadow: 0 2px 6px rgb(0 0 0 / 20%);
 }
 
@@ -1171,7 +1171,7 @@ function emitUpdReaction(emoji: string, delta: number) {
 	background: var(--MI_THEME-panel);
 	padding: 6px 10px;
 	font-size: 0.8em;
-	border-radius: var(--radius-ellipse);
+	border-radius: var(--MI-radius-ellipse);
 	box-shadow: 0 2px 6px rgb(0 0 0 / 20%);
 }
 
@@ -1211,7 +1211,7 @@ function emitUpdReaction(emoji: string, delta: number) {
 	padding: 16px;
 	// Made border solid, stylistic choice
 	border: solid 1px var(--MI_THEME-renote);
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 	overflow: clip;
 }
 
@@ -1247,14 +1247,14 @@ function emitUpdReaction(emoji: string, delta: number) {
 @container (max-width: 580px) {
 	.root {
 		font-size: 0.95em;
-		--avatar: 46px;
+		--MI-avatar: 46px;
 	}
 
 	.renote {
-		padding: 24px 26px 0 calc(26px + var(--avatar) + 14px);
+		padding: 24px 26px 0 calc(26px + var(--MI-avatar) + 14px);
 
 		&::before {
-			left: calc(26px + .5 * var(--avatar));
+			left: calc(26px + .5 * var(--MI-avatar));
 		}
 	}
 
@@ -1267,7 +1267,7 @@ function emitUpdReaction(emoji: string, delta: number) {
 	}
 
 	.collapsedInReplyToLine {
-		left: calc(26px + .5 * var(--avatar));
+		left: calc(26px + .5 * var(--MI-avatar));
 	}
 
 	.article {
@@ -1289,26 +1289,26 @@ function emitUpdReaction(emoji: string, delta: number) {
 	}
 
 	.collapsedInReplyToLine {
-		left: calc(25px + .5 * var(--avatar));
+		left: calc(25px + .5 * var(--MI-avatar));
 	}
 }
 
 @container (max-width: 500px) {
 	.renote {
-		padding: 23px 25px 0 calc(25px + var(--avatar) + 14px);
+		padding: 23px 25px 0 calc(25px + var(--MI-avatar) + 14px);
 
 		&::before {
-			left: calc(25px + .5 * var(--avatar));
+			left: calc(25px + .5 * var(--MI-avatar));
 		}
 	}
 }
 
 @container (max-width: 480px) {
 	.renote {
-		padding: 22px 24px 0 calc(24px + var(--avatar) + 14px);
+		padding: 22px 24px 0 calc(24px + var(--MI-avatar) + 14px);
 
 		&::before {
-			left: calc(24px + .5 * var(--avatar));
+			left: calc(24px + .5 * var(--MI-avatar));
 		}
 	}
 
@@ -1326,7 +1326,7 @@ function emitUpdReaction(emoji: string, delta: number) {
 	}
 
 	.collapsedInReplyToLine {
-		left: calc(24px + .5 * var(--avatar));
+		left: calc(24px + .5 * var(--MI-avatar));
 		top: calc(22px + 28px); // 22px of .root padding, plus 28px of avatar height
 	}
 
@@ -1337,7 +1337,7 @@ function emitUpdReaction(emoji: string, delta: number) {
 
 @container (max-width: 450px) {
 	.root {
-		--avatar: 44px;
+		--MI-avatar: 44px;
 	}
 
 	.avatar {

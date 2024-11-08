@@ -62,7 +62,7 @@ function remove() {
 	overflow: hidden;
 	background: var(--MI_THEME-panel);
 	border: solid 2px var(--MI_THEME-X12);
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 
 	&:hover {
 		border: solid 2px var(--MI_THEME-X13);

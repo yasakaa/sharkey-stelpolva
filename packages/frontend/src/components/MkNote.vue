@@ -132,7 +132,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 					ref="renoteButton"
 					:class="$style.footerButton"
 					class="_button"
-					:style="renoted ? 'color: var(--accent) !important;' : ''"
+					:style="renoted ? 'color: var(--MI_THEME-accent) !important;' : ''"
 					@click.stop
 					@mousedown.prevent="renoted ? undoRenote(appearNote) : boostVisibility()"
 				>
@@ -922,7 +922,7 @@ function emitUpdReaction(emoji: string, delta: number) {
 			padding: 0 4px;
 			margin-bottom: 0 !important;
 			background: var(--MI_THEME-popup);
-			border-radius: var(--radius-sm);
+			border-radius: var(--MI-radius-sm);
 			box-shadow: 0px 4px 32px var(--MI_THEME-shadow);
 		}
 
@@ -1067,7 +1067,7 @@ function emitUpdReaction(emoji: string, delta: number) {
 	left: 8px;
 	width: 5px;
 	height: calc(100% - 16px);
-	border-radius: var(--radius-ellipse);
+	border-radius: var(--MI-radius-ellipse);
 	pointer-events: none;
 }
 
@@ -1075,8 +1075,8 @@ function emitUpdReaction(emoji: string, delta: number) {
 	flex-shrink: 0;
 	display: block !important;
 	margin: 0 14px 0 0;
-	width: var(--avatar);
-	height: var(--avatar);
+	width: var(--MI-avatar);
+	height: var(--MI-avatar);
 	position: sticky !important;
 	top: calc(22px + var(--MI-stickyTop, 0px));
 	left: 0;
@@ -1106,7 +1106,7 @@ function emitUpdReaction(emoji: string, delta: number) {
 	background: var(--MI_THEME-popup);
 	padding: 6px 10px;
 	font-size: 0.8em;
-	border-radius: var(--radius-ellipse);
+	border-radius: var(--MI-radius-ellipse);
 	box-shadow: 0 2px 6px rgb(0 0 0 / 20%);
 }
 
@@ -1136,7 +1136,7 @@ function emitUpdReaction(emoji: string, delta: number) {
 	background: var(--MI_THEME-panel);
 	padding: 6px 10px;
 	font-size: 0.8em;
-	border-radius: var(--radius-ellipse);
+	border-radius: var(--MI-radius-ellipse);
 	box-shadow: 0 2px 6px rgb(0 0 0 / 20%);
 }
 
@@ -1176,7 +1176,7 @@ function emitUpdReaction(emoji: string, delta: number) {
 .quoteNote {
 	padding: 16px;
 	border: dashed 1px var(--MI_THEME-renote);
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 	overflow: clip;
 }
 

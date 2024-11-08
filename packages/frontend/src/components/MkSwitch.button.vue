@@ -54,7 +54,7 @@ const toggle = () => {
 	background: var(--MI_THEME-switchOffBg);
 	background-clip: content-box;
 	border: solid 1px var(--MI_THEME-switchOffBg);
-	border-radius: var(--radius-ellipse);
+	border-radius: var(--MI-radius-ellipse);
 	cursor: pointer;
 	transition: inherit;
 	user-select: none;
@@ -75,7 +75,7 @@ const toggle = () => {
 	top: 3px;
 	width: calc(var(--height) - 6px);
 	height: calc(var(--height) - 6px);
-	border-radius: var(--radius-ellipse);
+	border-radius: var(--MI-radius-ellipse);
 	transition: all 0.2s ease;
 
 	&:not(.knobChecked) {

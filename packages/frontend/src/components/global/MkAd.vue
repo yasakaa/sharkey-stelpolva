@@ -175,7 +175,7 @@ function reduceFrequency(): void {
 	display: block;
 	object-fit: contain;
 	margin: auto;
-	border-radius: var(--radius-xs);
+	border-radius: var(--MI-radius-xs);
 }
 
 .i {
@@ -185,7 +185,7 @@ function reduceFrequency(): void {
 	display: grid;
 	place-content: center;
 	background: var(--MI_THEME-panel);
-	border-radius: var(--radius-full);
+	border-radius: var(--MI-radius-full);
 	padding: 2px;
 }
 

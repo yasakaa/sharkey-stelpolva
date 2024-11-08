@@ -197,7 +197,7 @@ definePageMetadata(() => ({
 	height: 12px;
 	background: rgba(0, 0, 0, 0.1);
 	overflow: clip;
-	border-radius: var(--radius-ellipse);
+	border-radius: var(--MI-radius-ellipse);
 }
 
 .meterValue {

@@ -259,7 +259,7 @@ function show() {
 	color: var(--MI_THEME-fg);
 	background: var(--MI_THEME-panel);
 	border: solid 1px var(--MI_THEME-panel);
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 	outline: none;
 	box-shadow: none;
 	box-sizing: border-box;

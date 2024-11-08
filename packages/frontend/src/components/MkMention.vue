@@ -46,7 +46,7 @@ const avatarUrl = computed(() => defaultStore.state.disableShowingAnimatedImages
 .root {
 	display: inline-block;
 	padding: 4px 8px 4px 4px;
-	border-radius: var(--radius-ellipse);
+	border-radius: var(--MI-radius-ellipse);
 	color: var(--MI_THEME-mention);
 	background: color(from var(--MI_THEME-mention) srgb r g b / 0.1);
 	white-space: nowrap;
@@ -63,7 +63,7 @@ const avatarUrl = computed(() => defaultStore.state.disableShowingAnimatedImages
 	object-fit: cover;
 	margin: 0 0.2em 0 0;
 	vertical-align: bottom;
-	border-radius: var(--radius-full);
+	border-radius: var(--MI-radius-full);
 }
 
 .host {

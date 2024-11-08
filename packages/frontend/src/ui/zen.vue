@@ -80,7 +80,7 @@ document.documentElement.style.overflowY = 'scroll';
 	width: 100%;
 	max-width: 60px;
 	margin: auto;
-	border-radius: var(--radius-full);
+	border-radius: var(--MI-radius-full);
 	background: var(--MI_THEME-panel);
 	color: var(--MI_THEME-fg);
 	right: var(--MI-margin);

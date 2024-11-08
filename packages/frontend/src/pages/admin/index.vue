@@ -366,7 +366,7 @@ defineExpose({
 					display: block;
 					margin: auto;
 					height: 42px;
-					border-radius: var(--radius-sm);
+					border-radius: var(--MI-radius-sm);
 				}
 			}
 		}

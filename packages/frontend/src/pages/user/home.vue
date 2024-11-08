@@ -423,7 +423,7 @@ onUnmounted(() => {
 	background-size: cover;
 	background-position: center;
 	pointer-events: none;
-	filter: var(--blur, blur(10px)) opacity(0.6);
+	filter: var(--MI-blur, blur(10px)) opacity(0.6);
 	// Funny CSS schenanigans to make background escape container
 	left: -100%;
 	top: -5%;
@@ -446,7 +446,7 @@ onUnmounted(() => {
 			> .main {
 				position: relative;
 				overflow: clip;
-				background: color-mix(in srgb, var(--panel) 65%, transparent);
+				background: color-mix(in srgb, var(--MI_THEME-panel) 65%, transparent);
 
 				> .banner-container {
 					position: relative;
@@ -481,7 +481,7 @@ onUnmounted(() => {
 						backdrop-filter: var(--MI-blur, blur(8px));
 						background: rgba(0, 0, 0, 0.2);
 						padding: 8px;
-						border-radius: var(--radius-lg);
+						border-radius: var(--MI-radius-lg);
 
 						> .menu {
 							vertical-align: bottom;
@@ -534,7 +534,7 @@ onUnmounted(() => {
 								color: #fff;
 								-webkit-backdrop-filter: var(--MI-blur, blur(8px));
 								backdrop-filter: var(--MI-blur, blur(8px));
-								border-radius: var(--radius-lg);
+								border-radius: var(--MI-radius-lg);
 								padding: 4px 8px;
 								font-size: 80%;
 							}
@@ -594,7 +594,7 @@ onUnmounted(() => {
 
 					> .role {
 						border: solid 1px var(--color, var(--MI_THEME-divider));
-						border-radius: var(--radius-ellipse);
+						border-radius: var(--MI-radius-ellipse);
 						margin-right: 4px;
 						padding: 3px 8px;
 					}
@@ -609,7 +609,7 @@ onUnmounted(() => {
 					background: transparent;
 					color: var(--MI_THEME-fg);
 					border: 1px solid var(--MI_THEME-divider);
-					border-radius: var(--radius-sm);
+					border-radius: var(--MI-radius-sm);
 					padding: 8px;
 					line-height: 0;
 
@@ -819,12 +819,12 @@ onUnmounted(() => {
 .tab {
 	margin-bottom: calc(var(--margin) / 2);
 	padding: calc(var(--margin) / 2) 0;
-	background: color-mix(in srgb, var(--bg) 65%, transparent);
-	backdrop-filter: var(--blur, blur(15px));
-	border-radius: var(--radius-sm);
+	background: color-mix(in srgb, var(--MI_THEME-bg) 65%, transparent);
+	backdrop-filter: var(--MI-blur, blur(15px));
+	border-radius: var(--MI-radius-sm);
 
 	> button {
-		border-radius: var(--radius-sm);
+		border-radius: var(--MI-radius-sm);
 		margin-left: 0.4rem;
 		margin-right: 0.4rem;
 	}
@@ -836,7 +836,7 @@ onUnmounted(() => {
 }
 
 .pinnedNote:not(:last-child) {
-	border-bottom: solid 0.5px var(--divider);
+	border-bottom: solid 0.5px var(--MI_THEME-divider);
 }
 
 .infoBadges {
@@ -855,7 +855,7 @@ onUnmounted(() => {
 		color: #fff;
 		background: rgba(0, 0, 0, 0.7);
 		font-size: 0.7em;
-		border-radius: var(--radius-sm);
+		border-radius: var(--MI-radius-sm);
 		list-style-type: none;
 		margin-left: 0;
 	}

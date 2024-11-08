@@ -147,7 +147,7 @@ onMounted(() => {
 	background: var(--MI_THEME-folderHeaderBg);
 	-webkit-backdrop-filter: var(--MI-blur, blur(15px));
 	backdrop-filter: var(--MI-blur, blur(15px));
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 	transition: border-radius 0.3s;
 
 	&:hover {
@@ -165,7 +165,7 @@ onMounted(() => {
 	}
 
 	&.opened {
-		border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+		border-radius: var(--MI-radius-sm) var(--MI-radius-sm) 0 0;
 	}
 }
 
@@ -225,7 +225,7 @@ onMounted(() => {
 
 .body {
 	background: var(--MI_THEME-panel);
-	border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+	border-radius: 0 0 var(--MI-radius-sm) var(--MI-radius-sm);
 	container-type: inline-size;
 
 	&.bgSame {

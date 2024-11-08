@@ -73,7 +73,7 @@ function close() {
 
 <style lang="scss" module>
 .drawer {
-	border-radius: var(--radius-lg);
+	border-radius: var(--MI-radius-lg);
 	border-bottom-right-radius: 0;
 	border-bottom-left-radius: 0;
 }

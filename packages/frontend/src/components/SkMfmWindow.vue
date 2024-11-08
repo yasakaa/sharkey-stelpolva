@@ -494,8 +494,8 @@ const preview_fade = ref(`$[fade 🍮] $[fade.out 🍮] $[fade.speed=3s 🍮] $[
 			top: var(--stickyTop, 0px);
 			padding: 16px;
 			font-weight: bold;
-			-webkit-backdrop-filter: var(--blur, blur(10px));
-			backdrop-filter: var(--blur, blur(10px));
+			-webkit-backdrop-filter: var(--MI-blur, blur(10px));
+			backdrop-filter: var(--MI-blur, blur(10px));
 			background-color: var(--X16);
 		}
 
@@ -507,7 +507,7 @@ const preview_fade = ref(`$[fade 🍮] $[fade.out 🍮] $[fade.speed=3s 🍮] $[
 			}
 
 			> .preview {
-				border-top: solid 0.5px var(--divider);
+				border-top: solid 0.5px var(--MI_THEME-divider);
 				padding: 16px;
 			}
 		}

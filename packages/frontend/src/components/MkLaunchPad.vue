@@ -77,12 +77,12 @@ function close() {
 	overflow: auto;
 	overscroll-behavior: contain;
 	text-align: left;
-	border-radius: var(--radius-md);
+	border-radius: var(--MI-radius-md);
 
 	&.asDrawer {
 		width: 100%;
 		padding: 16px 16px max(env(safe-area-inset-bottom, 0px), 16px) 16px;
-		border-radius: var(--radius-lg);
+		border-radius: var(--MI-radius-lg);
 		border-bottom-right-radius: 0;
 		border-bottom-left-radius: 0;
 		text-align: center;
@@ -100,7 +100,7 @@ function close() {
 			justify-content: center;
 			vertical-align: bottom;
 			height: 100px;
-			border-radius: var(--radius);
+			border-radius: var(--MI-radius);
 			padding: 10px;
 			box-sizing: border-box;
 

@@ -212,7 +212,7 @@ async function del() {
 
 .imgContainer {
 	padding: 8px;
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 }
 
 .img {

@@ -61,7 +61,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<MkAcct :user="u"/>
 				<button class="_button" style="padding: 4px 8px;" @click="removeVisibleUser(u)"><i class="ti ti-x"></i></button>
 			</span>
-			<button class="_buttonPrimary" style="padding: 4px; border-radius: var(--radius-sm);" @click="addVisibleUser"><i class="ti ti-plus ti-fw"></i></button>
+			<button class="_buttonPrimary" style="padding: 4px; border-radius: var(--MI-radius-sm);" @click="addVisibleUser"><i class="ti ti-plus ti-fw"></i></button>
 		</div>
 	</div>
 	<MkInfo v-if="hasNotSpecifiedMentions" warn :class="$style.hasNotSpecifiedMentions">{{ i18n.ts.notSpecifiedMentionWarning }} - <button class="_textButton" @click="addMissingMention()">{{ i18n.ts.add }}</button></MkInfo>
@@ -1207,7 +1207,7 @@ defineExpose({
 	left: 12px;
 	width: 5px;
 	height: 100% ;
-	border-radius: var(--radius-ellipse);
+	border-radius: var(--MI-radius-ellipse);
 	pointer-events: none;
 }
 
@@ -1215,7 +1215,7 @@ defineExpose({
 	padding: 0 12px;
 	line-height: 34px;
 	font-weight: bold;
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 	min-width: 90px;
 	box-sizing: border-box;
 	color: var(--MI_THEME-fgOnAccent);
@@ -1225,7 +1225,7 @@ defineExpose({
 .headerRightItem {
 	margin: 0;
 	padding: 8px;
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 
 	&:hover {
 		background: var(--MI_THEME-X5);
@@ -1291,7 +1291,7 @@ defineExpose({
 .visibleUser {
 	margin-right: 14px;
 	padding: 8px 0 8px 8px;
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 	background: var(--MI_THEME-X4);
 }
 
@@ -1363,7 +1363,7 @@ defineExpose({
 	padding: 4px 6px;
 	font-size: .9em;
 	color: var(--MI_THEME-warn);
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 	min-width: 1.6em;
 	text-align: center;
 
@@ -1403,7 +1403,7 @@ defineExpose({
 	font-size: 1em;
 	width: auto;
 	height: 100%;
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 
 	&:hover {
 		background: var(--MI_THEME-X5);

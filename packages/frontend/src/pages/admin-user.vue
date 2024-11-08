@@ -605,7 +605,7 @@ definePageMetadata(() => ({
 			> .suspended, > .silenced, > .moderator {
 				display: inline-block;
 				border: solid 1px;
-				border-radius: var(--radius-sm);
+				border-radius: var(--MI-radius-sm);
 				padding: 2px 6px;
 				font-size: 85%;
 			}
@@ -644,13 +644,13 @@ definePageMetadata(() => ({
 
 .casdwq {
 	.silenced {
-		color: var(--warn);
-		border-color: var(--warn);
+		color: var(--MI_THEME-warn);
+		border-color: var(--MI_THEME-warn);
 	}
 
 	.moderator {
-		color: var(--success);
-		border-color: var(--success);
+		color: var(--MI_THEME-success);
+		border-color: var(--MI_THEME-success);
 	}
 }
 </style>
@@ -694,7 +694,7 @@ definePageMetadata(() => ({
 .announcementItem {
 	display: flex;
 	padding: 8px 12px;
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 	cursor: pointer;
 }
 </style>

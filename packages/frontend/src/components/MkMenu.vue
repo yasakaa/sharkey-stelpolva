@@ -454,7 +454,7 @@ onBeforeUnmount(() => {
 		> .menu {
 			padding: 12px 0 max(env(safe-area-inset-bottom, 0px), 12px) 0;
 			width: 100%;
-			border-radius: var(--radius-lg);
+			border-radius: var(--MI-radius-lg);
 			border-bottom-right-radius: 0;
 			border-bottom-left-radius: 0;
 
@@ -464,7 +464,7 @@ onBeforeUnmount(() => {
 
 				&::before {
 					width: calc(100% - 24px);
-					border-radius: var(--radius);
+					border-radius: var(--MI-radius);
 				}
 
 				> .icon {
@@ -520,7 +520,7 @@ onBeforeUnmount(() => {
 		margin: auto;
 		width: calc(100% - 16px);
 		height: 100%;
-		border-radius: var(--radius-sm);
+		border-radius: var(--MI-radius-sm);
 	}
 
 	&:focus-visible {

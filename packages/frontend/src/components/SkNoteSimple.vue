@@ -61,7 +61,7 @@ watch(() => props.expandAllCws, (expandAllCws) => {
 	margin: 0 10px 0 0;
 	width: 34px;
 	height: 34px;
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 	position: sticky !important;
 	top: calc(16px + var(--MI-stickyTop, 0px));
 	left: 0;

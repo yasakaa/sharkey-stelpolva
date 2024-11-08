@@ -92,7 +92,7 @@ onUpdated(() => {
 	padding: 16px;
 	margin: 0 0 0 auto;
 	max-width: max-content;
-	border-radius: var(--radius-md);
+	border-radius: var(--MI-radius-md);
 }
 
 .reactions {

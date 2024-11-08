@@ -70,7 +70,7 @@ const isThumbnailAvailable = computed(() => {
 	position: relative;
 	display: flex;
 	background: var(--MI_THEME-panel);
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 	overflow: clip;
 }
 

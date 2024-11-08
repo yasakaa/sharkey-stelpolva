@@ -226,7 +226,7 @@ function onMousedown(ev: MouseEvent | TouchEvent) {
 		padding: 7px 12px;
 		background: var(--MI_THEME-panel);
 		border: solid 1px var(--MI_THEME-panel);
-		border-radius: var(--radius-sm);
+		border-radius: var(--MI-radius-sm);
 
 		> .container {
 			position: relative;
@@ -242,7 +242,7 @@ function onMousedown(ev: MouseEvent | TouchEvent) {
 				width: calc(100% - #{$thumbWidth});
 				height: 3px;
 				background: rgba(0, 0, 0, 0.1);
-				border-radius: var(--radius-ellipse);
+				border-radius: var(--MI-radius-ellipse);
 				overflow: clip;
 
 				> .highlight {
@@ -273,7 +273,7 @@ function onMousedown(ev: MouseEvent | TouchEvent) {
 					height: 3px;
 					margin-left: - math.div($tickWidth, 2);
 					background: var(--MI_THEME-divider);
-					border-radius: var(--radius-ellipse);
+					border-radius: var(--MI-radius-ellipse);
 				}
 			}
 
@@ -283,7 +283,7 @@ function onMousedown(ev: MouseEvent | TouchEvent) {
 				height: $thumbHeight;
 				cursor: grab;
 				background: var(--MI_THEME-accent);
-				border-radius: var(--radius-ellipse);
+				border-radius: var(--MI-radius-ellipse);
 
 				&:hover {
 					background: var(--MI_THEME-accentLighten);

@@ -140,7 +140,7 @@ function showMenu(ev: MouseEvent) {
 	right: 16px;
 	width: 32px;
 	height: 32px;
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 	font-size: 18px;
 	z-index: 50;
 }

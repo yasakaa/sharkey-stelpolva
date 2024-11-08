@@ -241,7 +241,7 @@ onUnmounted(() => {
 	display: block;
 	font-size: 14px;
 	box-shadow: 0 0 0 1px var(--MI_THEME-divider);
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 	overflow: clip;
 
 	&:hover {

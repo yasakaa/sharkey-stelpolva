@@ -175,7 +175,7 @@ definePageMetadata(() => ({
 
 <style lang="scss" scoped>
 .rfqxtzch {
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 
 	> .toggle {
 		position: relative;
@@ -255,7 +255,7 @@ definePageMetadata(() => ({
 				background-color: #E8CDA5;
 				opacity: 0;
 				transition: opacity 200ms ease-in-out !important;
-				border-radius: var(--radius-full);
+				border-radius: var(--MI-radius-full);
 			}
 
 			.crater--1 {

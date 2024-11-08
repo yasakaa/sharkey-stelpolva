@@ -80,6 +80,10 @@ export const defaultStore = markRaw(new Storage('base', {
 			global: false,
 		},
 	},
+	abusesTutorial: {
+		where: 'account',
+		default: false,
+	},
 	keepCw: {
 		where: 'account',
 		default: true,
@@ -277,7 +281,7 @@ export const defaultStore = markRaw(new Storage('base', {
 	},
 	animatedMfm: {
 		where: 'device',
-		default: false,
+		default: !window.matchMedia('(prefers-reduced-motion)').matches,
 	},
 	advancedMfm: {
 		where: 'device',
@@ -558,6 +562,10 @@ export const defaultStore = markRaw(new Storage('base', {
 	contextMenu: {
 		where: 'device',
 		default: 'app' as 'app' | 'appWithShift' | 'native',
+	},
+	skipNoteRender: {
+		where: 'device',
+		default: true,
 	},
 
 	sound_masterVolume: {

@@ -182,11 +182,11 @@ definePageMetadata(() => ({
 }
 
 .loadNext {
-	margin-bottom: var(--margin);
+	margin-bottom: var(--MI-margin);
 }
 
 .loadPrev {
-	margin-top: var(--margin);
+	margin-top: var(--MI-margin);
 }
 
 .loadButton {
@@ -194,7 +194,7 @@ definePageMetadata(() => ({
 }
 
 .note {
-	border-radius: var(--radius);
-	background: var(--panel);
+	border-radius: var(--MI-radius);
+	background: var(--MI_THEME-panel);
 }
 </style>

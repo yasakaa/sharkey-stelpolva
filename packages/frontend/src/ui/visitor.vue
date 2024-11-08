@@ -189,7 +189,7 @@ defineExpose({
 		left: 0;
 		width: 500px;
 		height: 100vh;
-		background: var(--accent);
+		background: var(--MI_THEME-accent);
 		z-index: 1;
 
 		> .banner {
@@ -218,7 +218,7 @@ defineExpose({
 		min-width: 0;
 
 		> .header {
-			background: var(--panel);
+			background: var(--MI_THEME-panel);
 			position: relative;
 			z-index: 1;
 
@@ -255,7 +255,7 @@ defineExpose({
 		left: 0;
 		width: 240px;
 		height: 100vh;
-		background: var(--panel);
+		background: var(--MI_THEME-panel);
 
 		> .link {
 			display: block;
@@ -269,7 +269,7 @@ defineExpose({
 		> .divider {
 			margin: 8px auto;
 			width: calc(100% - 32px);
-			border-top: solid 0.5px var(--divider);
+			border-top: solid 0.5px var(--MI_THEME-divider);
 		}
 
 		> .action {
@@ -284,7 +284,7 @@ defineExpose({
 				border-radius: var(--radius-ellipse);
 
 				&._button {
-					background: var(--panel);
+					background: var(--MI_THEME-panel);
 				}
 
 				&:first-child {

@@ -9,7 +9,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<li v-for="(choice, i) in props.poll.choices" :key="i" :class="$style.choice" @click="vote(i)">
 			<div :class="$style.bg" :style="{ 'width': `${showResult ? (choice.votes / total * 100) : 0}%` }"></div>
 			<span :class="$style.fg">
-				<template v-if="choice.isVoted"><i class="ti ti-check" style="margin-right: 4px; color: var(--accent);"></i></template>
+				<template v-if="choice.isVoted"><i class="ti ti-check" style="margin-right: 4px; color: var(--MI_THEME-accent);"></i></template>
 				<Mfm :text="choice.text" :plain="true"/>
 				<span v-if="showResult" style="margin-left: 4px; opacity: 0.7;">({{ i18n.tsx._poll.votesCount({ n: choice.votes }) }})</span>
 			</span>
@@ -139,8 +139,8 @@ const refreshVotes = async () => {
 	position: relative;
 	margin: 4px 0;
 	padding: 4px;
-	//border: solid 0.5px var(--divider);
-	background: var(--accentedBg);
+	//border: solid 0.5px var(--MI_THEME-divider);
+	background: var(--MI_THEME-accentedBg);
 	border-radius: var(--radius-xs);
 	overflow: clip;
 	cursor: pointer;
@@ -151,8 +151,8 @@ const refreshVotes = async () => {
 	top: 0;
 	left: 0;
 	height: 100%;
-	background: var(--accent);
-	background: linear-gradient(90deg,var(--buttonGradateA),var(--buttonGradateB));
+	background: var(--MI_THEME-accent);
+	background: linear-gradient(90deg,var(--MI_THEME-buttonGradateA),var(--MI_THEME-buttonGradateB));
 	transition: width 1s ease;
 }
 
@@ -160,12 +160,12 @@ const refreshVotes = async () => {
 	position: relative;
 	display: inline-block;
 	padding: 3px 5px;
-	background: var(--panel);
+	background: var(--MI_THEME-panel);
 	border-radius: var(--radius-xs);
 }
 
 .info {
-	color: var(--fg);
+	color: var(--MI_THEME-fg);
 }
 
 .done {

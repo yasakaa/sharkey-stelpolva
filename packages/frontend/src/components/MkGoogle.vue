@@ -41,7 +41,7 @@ const search = () => {
 	width: 100%;
 	height: 40px;
 	font-size: 16px;
-	border: solid 1px var(--divider);
+	border: solid 1px var(--MI_THEME-divider);
 	border-radius: var(--radius-xs) 0 0 var(--radius-xs);
 	-webkit-appearance: textfield;
 }
@@ -50,7 +50,7 @@ const search = () => {
 	flex-shrink: 0;
 	margin: 0;
 	padding: 0 16px;
-	border: solid 1px var(--divider);
+	border: solid 1px var(--MI_THEME-divider);
 	border-left: none;
 	border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
 

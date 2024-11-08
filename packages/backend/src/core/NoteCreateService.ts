@@ -222,7 +222,7 @@ export class NoteCreateService implements OnApplicationShutdown {
 		private cacheService: CacheService,
 		private latestNoteService: LatestNoteService,
 	) {
-		this.updateNotesCountQueue = new CollapsedQueue(60 * 1000 * 5, this.collapseNotesCount, this.performUpdateNotesCount);
+		this.updateNotesCountQueue = new CollapsedQueue(process.env.NODE_ENV !== 'test' ? 60 * 1000 * 5 : 0, this.collapseNotesCount, this.performUpdateNotesCount);
 	}
 
 	@bindThis
@@ -563,17 +563,17 @@ export class NoteCreateService implements OnApplicationShutdown {
 		}
 
 		// Register host
-		if (this.userEntityService.isRemoteUser(user)) {
-			this.federatedInstanceService.fetch(user.host).then(async i => {
-				if (note.renote && note.text) {
-					this.updateNotesCountQueue.enqueue(i.id, 1);
-				} else if (!note.renote) {
-					this.updateNotesCountQueue.enqueue(i.id, 1);
-				}
-				if (this.meta.enableChartsForFederatedInstances) {
-					this.instanceChart.updateNote(i.host, note, true);
-				}
-			});
+		if (this.meta.enableStatsForFederatedInstances) {
+			if (this.userEntityService.isRemoteUser(user)) {
+				this.federatedInstanceService.fetchOrRegister(user.host).then(async i => {
+					if (note.renote && note.text || !note.renote) {
+						this.updateNotesCountQueue.enqueue(i.id, 1);
+					}
+					if (this.meta.enableChartsForFederatedInstances) {
+						this.instanceChart.updateNote(i.host, note, true);
+					}
+				});
+			}
 		}
 
 		// ハッシュタグ更新

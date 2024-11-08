@@ -64,17 +64,17 @@ defineExpose({
 		border-radius: var(--radius);
 
 		> .notes {
-			background: color-mix(in srgb, var(--panel) 65%, transparent);
+			background: color-mix(in srgb, var(--MI_THEME-panel) 65%, transparent);
 		}
 	}
 
 	&:not(.noGap) {
 		> .notes {
-			background: var(--bg);
+			background: var(--MI_THEME-bg);
 
 			.note {
-				background: color-mix(in srgb, var(--panel) 65%, transparent);
-				border-radius: var(--radius);
+				background: color-mix(in srgb, var(--MI_THEME-panel) 65%, transparent);
+				border-radius: var(--MI-radius);
 			}
 		}
 	}

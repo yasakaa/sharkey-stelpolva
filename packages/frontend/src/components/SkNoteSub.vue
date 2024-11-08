@@ -38,7 +38,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 					ref="renoteButton"
 					class="_button"
 					:class="$style.noteFooterButton"
-					:style="renoted ? 'color: var(--accent) !important;' : ''"
+					:style="renoted ? 'color: var(--MI_THEME-accent) !important;' : ''"
 					@mousedown="renoted ? undoRenote() : boostVisibility()"
 				>
 					<i class="ph-rocket-launch ph-bold ph-lg"></i>
@@ -442,7 +442,7 @@ if (props.detail) {
 	position: absolute;
 	left: calc(32px + .5 * var(--avatar));
 	// using solid instead of dotted, stylelistic choice
-	border-left: var(--thread-width) solid var(--thread);
+	border-left: var(--thread-width) solid var(--MI_THEME-thread);
 	top: calc(28px + var(--avatar)); // 28px of .root padding, plus 58px of avatar height (see SkNote)
 	bottom: -28px;
 }
@@ -468,8 +468,8 @@ if (props.detail) {
 		right: -12px;
 		left: -12px;
 		bottom: -12px;
-		background: var(--panelHighlight);
-		border-radius: var(--radius);
+		background: var(--MI_THEME-panelHighlight);
+		border-radius: var(--MI-radius);
 		opacity: 0;
 		transition: opacity .2s, background .2s;
 		z-index: -1;
@@ -525,12 +525,12 @@ if (props.detail) {
 	opacity: 0.7;
 
 	&:hover {
-		color: var(--fgHighlighted);
+		color: var(--MI_THEME-fgHighlighted);
 	}
 }
 // Responsible for Reply borders 448 and 508
 .reply, .more {
-	//border-left: solid 0.5px var(--divider);
+	//border-left: solid 0.5px var(--MI_THEME-divider);
 	margin-top: 10px;
 }
 
@@ -574,7 +574,7 @@ if (props.detail) {
 	opacity: 0.7;
 
 	&.reacted {
-		color: var(--accent);
+		color: var(--MI_THEME-accent);
 	}
 }
 
@@ -591,7 +591,7 @@ if (props.detail) {
 }
 
 .reply, .more {
-	//border-left: solid 0.5px var(--divider);
+	//border-left: solid 0.5px var(--MI_THEME-divider);
 	margin-top: 10px;
 }
 
@@ -619,7 +619,7 @@ if (props.detail) {
 .muted {
 	text-align: center;
 	padding: 8px !important;
-	border: 1px solid var(--divider);
+	border: 1px solid var(--MI_THEME-divider);
 	margin: 8px 8px 0 8px;
 	border-radius: var(--radius-sm);
 }
@@ -633,7 +633,7 @@ if (props.detail) {
 .threadLine {
 	width: 0;
 	flex-grow: 1;
-	border-left: var(--thread-width) solid var(--thread);
+	border-left: var(--thread-width) solid var(--MI_THEME-thread);
 	margin-left: var(--reply-indent);
 }
 
@@ -642,7 +642,7 @@ if (props.detail) {
 }
 
 .reply:not(:last-child) {
-	border-left: var(--thread-width) solid var(--thread);
+	border-left: var(--thread-width) solid var(--MI_THEME-thread);
 
 	&::before {
 		left: calc(-1 * var(--thread-width));
@@ -656,8 +656,8 @@ if (props.detail) {
 	top: -10px;
 	height: calc(10px + 10px + .5 * var(--avatar));
 	width: 15px;
-	border-left: var(--thread-width) solid var(--thread);
-	border-bottom: var(--thread-width) solid var(--thread);
+	border-left: var(--thread-width) solid var(--MI_THEME-thread);
+	border-bottom: var(--thread-width) solid var(--MI_THEME-thread);
 	border-bottom-left-radius: 15px;
 }
 

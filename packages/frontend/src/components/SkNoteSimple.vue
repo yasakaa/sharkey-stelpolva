@@ -50,7 +50,7 @@ watch(() => props.expandAllCws, (expandAllCws) => {
 	font-size: 0.95em;
 
 	&:hover, &:focus-within {
-		background: var(--panelHighlight);
+		background: var(--MI_THEME-panelHighlight);
 		transition: background .2s;
 	}
 }
@@ -63,7 +63,7 @@ watch(() => props.expandAllCws, (expandAllCws) => {
 	height: 34px;
 	border-radius: var(--radius-sm);
 	position: sticky !important;
-	top: calc(16px + var(--stickyTop, 0px));
+	top: calc(16px + var(--MI-stickyTop, 0px));
 	left: 0;
 }
 

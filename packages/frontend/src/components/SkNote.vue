@@ -9,7 +9,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 	v-show="!isDeleted"
 	ref="rootEl"
 	v-hotkey="keymap"
-	:class="[$style.root, { [$style.showActionsOnlyHover]: defaultStore.state.showNoteActionsOnlyHover }]"
+	:class="[$style.root, { [$style.showActionsOnlyHover]: defaultStore.state.showNoteActionsOnlyHover, [$style.skipRender]: defaultStore.state.skipNoteRender }]"
 	:tabindex="isDeleted ? '-1' : '0'"
 >
 	<SkNoteSub v-if="appearNote.reply && !renoteCollapsed && !inReplyToCollapsed" :note="appearNote.reply" :class="$style.replyTo"/>
@@ -133,7 +133,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 					ref="renoteButton"
 					:class="$style.footerButton"
 					class="_button"
-					:style="renoted ? 'color: var(--accent) !important;' : ''"
+					:style="renoted ? 'color: var(--MI_THEME-accent) !important;' : ''"
 					@click.stop
 					@mousedown.prevent="renoted ? undoRenote(appearNote) : boostVisibility()"
 				>
@@ -202,6 +202,9 @@ import { computed, inject, onMounted, ref, shallowRef, Ref, watch, provide } fro
 import * as mfm from '@transfem-org/sfm-js';
 import * as Misskey from 'misskey-js';
 import { isLink } from '@@/js/is-link.js';
+import { shouldCollapsed } from '@@/js/collapsed.js';
+import { host } from '@@/js/config.js';
+import type { MenuItem } from '@/types/menu.js';
 import SkNoteSub from '@/components/SkNoteSub.vue';
 import SkNoteHeader from '@/components/SkNoteHeader.vue';
 import SkNoteSimple from '@/components/SkNoteSimple.vue';
@@ -233,13 +236,10 @@ import { deepClone } from '@/scripts/clone.js';
 import { useTooltip } from '@/scripts/use-tooltip.js';
 import { claimAchievement } from '@/scripts/achievements.js';
 import { getNoteSummary } from '@/scripts/get-note-summary.js';
-import type { MenuItem } from '@/types/menu.js';
 import MkRippleEffect from '@/components/MkRippleEffect.vue';
 import { showMovedDialog } from '@/scripts/show-moved-dialog.js';
 import { useRouter } from '@/router/supplier.js';
 import { boostMenuItems, type Visibility } from '@/scripts/boost-quote.js';
-import { shouldCollapsed } from '@@/js/collapsed.js';
-import { host } from '@@/js/config.js';
 import { isEnabledUrlPreview } from '@/instance.js';
 import { type Keymap } from '@/scripts/hotkey.js';
 import { focusPrev, focusNext } from '@/scripts/focus.js';
@@ -901,8 +901,8 @@ function emitUpdReaction(emoji: string, delta: number) {
 			margin: auto;
 			width: calc(100% - 8px);
 			height: calc(100% - 8px);
-			border: solid 2px var(--focus);
-			border-radius: var(--radius);
+			border: solid 2px var(--MI_THEME-focus);
+			border-radius: var(--MI-radius);
 			box-sizing: border-box;
 		}
 	}
@@ -929,9 +929,9 @@ function emitUpdReaction(emoji: string, delta: number) {
 			right: 12px;
 			padding: 0 4px;
 			margin-bottom: 0 !important;
-			background: var(--popup);
+			background: var(--MI_THEME-popup);
 			border-radius: var(--radius-sm);
-			box-shadow: 0px 4px 32px var(--shadow);
+			box-shadow: 0px 4px 32px var(--MI_THEME-shadow);
 		}
 
 		.footerButton {
@@ -948,6 +948,11 @@ function emitUpdReaction(emoji: string, delta: number) {
 			visibility: visible;
 		}
 	}
+}
+
+.skipRender {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 150px;
 }
 
 .tip {
@@ -975,7 +980,7 @@ function emitUpdReaction(emoji: string, delta: number) {
 	padding: 24px 32px 0 calc(32px + var(--avatar) + 14px);
 	line-height: 28px;
 	white-space: pre;
-	color: var(--renote);
+	color: var(--MI_THEME-renote);
 
 	&::before {
 		content: '';
@@ -983,7 +988,7 @@ function emitUpdReaction(emoji: string, delta: number) {
 		top: 0;
 		left: calc(32px + .5 * var(--avatar));
 		bottom: -8px;
-		border-left: var(--thread-width) solid var(--thread);
+		border-left: var(--thread-width) solid var(--MI_THEME-thread);
 	}
 
 	&:first-child {
@@ -1074,7 +1079,7 @@ function emitUpdReaction(emoji: string, delta: number) {
 	position: absolute;
 	left: calc(32px + .5 * var(--avatar));
 	// using solid instead of dotted, stylelistic choice
-	border-left: var(--thread-width) solid var(--thread);
+	border-left: var(--thread-width) solid var(--MI_THEME-thread);
 	top: calc(28px + 28px); // 28px of .root padding, plus 28px of avatar height (see SkNote)
 	height: 28px;
 }
@@ -1102,7 +1107,7 @@ function emitUpdReaction(emoji: string, delta: number) {
 	width: var(--avatar);
 	height: var(--avatar);
 	position: sticky !important;
-	top: calc(22px + var(--stickyTop, 0px));
+	top: calc(22px + var(--MI-stickyTop, 0px));
 	left: 0;
 	transition: top 0.5s;
 
@@ -1133,7 +1138,7 @@ function emitUpdReaction(emoji: string, delta: number) {
 
 .showLessLabel {
 	display: inline-block;
-	background: var(--popup);
+	background: var(--MI_THEME-popup);
 	padding: 6px 10px;
 	font-size: 0.8em;
 	border-radius: var(--radius-ellipse);
@@ -1154,16 +1159,16 @@ function emitUpdReaction(emoji: string, delta: number) {
 	z-index: 2;
 	width: 100%;
 	height: 64px;
-	//background: linear-gradient(0deg, var(--panel), color(from var(--panel) srgb r g b / 0));
+	//background: linear-gradient(0deg, var(--MI_THEME-panel), color(from var(--MI_THEME-panel) srgb r g b / 0));
 
 	&:hover > .collapsedLabel {
-		background: var(--panelHighlight);
+		background: var(--MI_THEME-panelHighlight);
 	}
 }
 
 .collapsedLabel {
 	display: inline-block;
-	background: var(--panel);
+	background: var(--MI_THEME-panel);
 	padding: 6px 10px;
 	font-size: 0.8em;
 	border-radius: var(--radius-ellipse);
@@ -1175,13 +1180,13 @@ function emitUpdReaction(emoji: string, delta: number) {
 }
 
 .replyIcon {
-	color: var(--accent);
+	color: var(--MI_THEME-accent);
 	margin-right: 0.5em;
 }
 
 .translation {
-	border: solid 0.5px var(--divider);
-	border-radius: var(--radius);
+	border: solid 0.5px var(--MI_THEME-divider);
+	border-radius: var(--MI-radius);
 	padding: 12px;
 	margin-top: 8px;
 }
@@ -1205,7 +1210,7 @@ function emitUpdReaction(emoji: string, delta: number) {
 .quoteNote {
 	padding: 16px;
 	// Made border solid, stylistic choice
-	border: solid 1px var(--renote);
+	border: solid 1px var(--MI_THEME-renote);
 	border-radius: var(--radius-sm);
 	overflow: clip;
 }
@@ -1229,7 +1234,7 @@ function emitUpdReaction(emoji: string, delta: number) {
 	}
 
 	&:hover {
-		color: var(--fgHighlighted);
+		color: var(--MI_THEME-fgHighlighted);
 	}
 }
 

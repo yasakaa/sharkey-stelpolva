@@ -3,8 +3,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Endpoint } from '@/server/api/endpoint-base.js';
+import type { UsersRepository } from '@/models/_.js';
 import { MiAccessToken, MiUser } from '@/models/_.js';
 import { SignupService } from '@/core/SignupService.js';
 import { UserEntityService } from '@/core/entities/UserEntityService.js';
@@ -15,7 +16,6 @@ import type { Config } from '@/config.js';
 import { ApiError } from '@/server/api/error.js';
 import { Packed } from '@/misc/json-schema.js';
 import { RoleService } from '@/core/RoleService.js';
-import { ApiError } from '@/server/api/error.js';
 
 export const meta = {
 	tags: ['admin'],

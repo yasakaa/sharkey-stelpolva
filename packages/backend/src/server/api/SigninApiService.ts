@@ -30,7 +30,6 @@ import { SigninService } from './SigninService.js';
 import type { AuthenticationResponseJSON } from '@simplewebauthn/types';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { isSystemAccount } from '@/misc/is-system-account.js';
-import type { MiMeta } from '@/models/_.js';
 
 @Injectable()
 export class SigninApiService {

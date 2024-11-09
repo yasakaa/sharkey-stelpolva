@@ -82,16 +82,16 @@ let loadingStatus = ref<string | undefined>(undefined);
 let player = ref<PlayerElement | undefined>(undefined);
 let ruffleError = ref<string | undefined>(undefined);
 
-function dismissWarning() {
+async function dismissWarning() {
 	playerHide.value = false;
-	loadRuffle().then(() => {
-		try {
-			createPlayer();
-			loadContent();
-		} catch (error) {
-			handleError(error);
-		}
-	}).catch(handleError);
+	try {
+		await loadRuffle();
+		// NOTE: I don't like this because this handles a success implicitly but Hazel and Julia have forced my hand
+		createPlayer();
+		await loadContent();
+	} catch (error) {
+		handleError(error);
+	}
 }
 
 function handleError(error: unknown) {
@@ -170,22 +170,25 @@ function createPlayer() {
 /**
  * @throws If `player.value` is uninitialized.
  */
-function loadContent() {
+async function loadContent() {
 	if (player.value === undefined) throw Error('Player is uninitialized.');
 	ruffleContainer.value?.appendChild(player.value);
 	loadingStatus.value = i18n.ts._flash.loadingFlashFile;
-	player.value.load(url.value).then(() => {
+	try {
+		await player.value.load(url.value);
 		loadingStatus.value = undefined;
-	}).catch(error => {
-		fetch('https://raw.esm.sh/', {
-			mode: 'cors',
-		}).then(() => {
+	} catch (error) {
+		try {
+			await fetch('https://raw.esm.sh/', {
+				mode: 'cors',
+			});
+			// NOTE: I don't like this because this handles a success implicitly but Hazel and Julia have forced my hand
 			handleError(error); // Unexpected error
-		}).catch(() => {
+		} catch (_) {
 			// Must be CSP because esm.sh should be online if `loadRuffle()` didn't fail
 			handleError(i18n.ts._flash.cspError);
-		});
-	});
+		}
+	}
 }
 
 function playPause() {

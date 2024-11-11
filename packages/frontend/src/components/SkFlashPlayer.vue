@@ -86,7 +86,6 @@ async function dismissWarning() {
 	playerHide.value = false;
 	try {
 		await loadRuffle();
-		// NOTE: I don't like this because this handles a success implicitly but Hazel and Julia have forced my hand
 		createPlayer();
 		await loadContent();
 	} catch (error) {
@@ -182,7 +181,6 @@ async function loadContent() {
 			await fetch('https://raw.esm.sh/', {
 				mode: 'cors',
 			});
-			// NOTE: I don't like this because this handles a success implicitly but Hazel and Julia have forced my hand
 			handleError(error); // Unexpected error
 		} catch (_) {
 			// Must be CSP because esm.sh should be online if `loadRuffle()` didn't fail

@@ -80,18 +80,18 @@ class HttpsRequestServiceAgent extends https.Agent {
 	}
 
 	@bindThis
-	public createConnection(options: Object, callback?: Function): net.Socket {
+	public createConnection(options: net.NetConnectOpts, callback?: (err: unknown, stream: net.Socket) => void): net.Socket {
 		const socket = super.createConnection(options, callback)
-		.on('connect', ()=>{
-			const address = socket.remoteAddress;
-			if (process.env.NODE_ENV === 'production') {
-				if (address && ipaddr.isValid(address)) {
-					if (this.isPrivateIp(address)) {
-						socket.destroy(new Error(`Blocked address: ${address}`));
+			.on('connect', () => {
+				const address = socket.remoteAddress;
+				if (process.env.NODE_ENV === 'production') {
+					if (address && ipaddr.isValid(address)) {
+						if (this.isPrivateIp(address)) {
+							socket.destroy(new Error(`Blocked address: ${address}`));
+						}
 					}
 				}
-			}
-		});
+			});
 		return socket;
 	};
 
@@ -109,7 +109,6 @@ class HttpsRequestServiceAgent extends https.Agent {
 		return parsedIp.range() !== 'unicast';
 	}
 }
-
 
 @Injectable()
 export class HttpRequestService {

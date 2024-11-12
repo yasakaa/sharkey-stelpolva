@@ -15,7 +15,7 @@ export function calcPopupPosition(el: HTMLElement, props: {
 	const contentWidth = el.offsetWidth;
 	const contentHeight = el.offsetHeight;
 
-	const LEFT_MARGIN = 4;
+	const LEFT_MARGIN = 2;
 
 	let rect: DOMRect;
 

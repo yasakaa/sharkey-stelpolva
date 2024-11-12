@@ -26,30 +26,33 @@ export type HttpRequestSendOptions = {
 	validators?: ((res: Response) => void)[];
 };
 
-@Injectable()
+declare module 'node:http' {
+	interface Agent {
+		createConnection(options: net.NetConnectOpts, callback?: (err: unknown, stream: net.Socket) => void): net.Socket;
+	}
+}
+
 class HttpRequestServiceAgent extends http.Agent {
 	constructor(
-		@Inject(DI.config)
 		private config: Config,
-
-		options?: Object
+		options?: http.AgentOptions,
 	) {
 		super(options);
 	}
 
 	@bindThis
-	public createConnection(options: Object, callback?: Function): net.Socket {
+	public createConnection(options: net.NetConnectOpts, callback?: (err: unknown, stream: net.Socket) => void): net.Socket {
 		const socket = super.createConnection(options, callback)
-		.on('connect', ()=>{
-			const address = socket.remoteAddress;
-			if (process.env.NODE_ENV === 'production') {
-				if (address && ipaddr.isValid(address)) {
-					if (this.isPrivateIp(address)) {
-						socket.destroy(new Error(`Blocked address: ${address}`));
+			.on('connect', () => {
+				const address = socket.remoteAddress;
+				if (process.env.NODE_ENV === 'production') {
+					if (address && ipaddr.isValid(address)) {
+						if (this.isPrivateIp(address)) {
+							socket.destroy(new Error(`Blocked address: ${address}`));
+						}
 					}
 				}
-			}
-		});
+			});
 		return socket;
 	};
 
@@ -68,13 +71,10 @@ class HttpRequestServiceAgent extends http.Agent {
 	}
 }
 
-@Injectable()
 class HttpsRequestServiceAgent extends https.Agent {
 	constructor(
-		@Inject(DI.config)
 		private config: Config,
-
-		options?: Object
+		options?: https.AgentOptions,
 	) {
 		super(options);
 	}

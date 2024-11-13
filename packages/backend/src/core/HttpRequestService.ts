@@ -113,6 +113,16 @@ class HttpsRequestServiceAgent extends https.Agent {
 @Injectable()
 export class HttpRequestService {
 	/**
+	 * Get http non-proxy agent (without local address filtering)
+	 */
+	private httpNative: http.Agent;
+
+	/**
+	 * Get https non-proxy agent (without local address filtering)
+	 */
+	private httpsNative: https.Agent;
+
+	/**
 	 * Get http non-proxy agent
 	 */
 	private http: http.Agent;
@@ -142,19 +152,20 @@ export class HttpRequestService {
 			lookup: false,	// nativeのdns.lookupにfallbackしない
 		});
 
-		this.http = new HttpRequestServiceAgent(config, {
+		const agentOption = {
 			keepAlive: true,
 			keepAliveMsecs: 30 * 1000,
 			lookup: cache.lookup as unknown as net.LookupFunction,
 			localAddress: config.outgoingAddress,
-		});
+		};
 
-		this.https = new HttpsRequestServiceAgent(config, {
-			keepAlive: true,
-			keepAliveMsecs: 30 * 1000,
-			lookup: cache.lookup as unknown as net.LookupFunction,
-			localAddress: config.outgoingAddress,
-		});
+		this.httpNative = new http.Agent(agentOption);
+
+		this.httpsNative = new https.Agent(agentOption);
+
+		this.http = new HttpRequestServiceAgent(config, agentOption);
+
+		this.https = new HttpsRequestServiceAgent(config, agentOption);
 
 		const maxSockets = Math.max(256, config.deliverJobConcurrency ?? 128);
 
@@ -189,16 +200,22 @@ export class HttpRequestService {
 	 * @param bypassProxy Allways bypass proxy
 	 */
 	@bindThis
-	public getAgentByUrl(url: URL, bypassProxy = false): http.Agent | https.Agent {
+	public getAgentByUrl(url: URL, bypassProxy = false, isLocalAddressAllowed = false): http.Agent | https.Agent {
 		if (bypassProxy || (this.config.proxyBypassHosts ?? []).includes(url.hostname)) {
+			if (isLocalAddressAllowed) {
+				return url.protocol === 'http:' ? this.httpNative : this.httpsNative;
+			}
 			return url.protocol === 'http:' ? this.http : this.https;
 		} else {
+			if (isLocalAddressAllowed && (!this.config.proxy)) {
+				return url.protocol === 'http:' ? this.httpNative : this.httpsNative;
+			}
 			return url.protocol === 'http:' ? this.httpAgent : this.httpsAgent;
 		}
 	}
 
 	@bindThis
-	public async getActivityJson(url: string): Promise<IObject> {
+	public async getActivityJson(url: string, isLocalAddressAllowed = false): Promise<IObject> {
 		const res = await this.send(url, {
 			method: 'GET',
 			headers: {
@@ -206,6 +223,7 @@ export class HttpRequestService {
 			},
 			timeout: 5000,
 			size: 1024 * 256,
+			isLocalAddressAllowed: isLocalAddressAllowed,
 		}, {
 			throwErrorWhenResponseNotOk: true,
 			validators: [validateContentTypeSetAsActivityPub],
@@ -220,7 +238,7 @@ export class HttpRequestService {
 	}
 
 	@bindThis
-	public async getJson<T = unknown>(url: string, accept = 'application/json, */*', headers?: Record<string, string>): Promise<T> {
+	public async getJson<T = unknown>(url: string, accept = 'application/json, */*', headers?: Record<string, string>, isLocalAddressAllowed = false): Promise<T> {
 		const res = await this.send(url, {
 			method: 'GET',
 			headers: Object.assign({
@@ -228,19 +246,21 @@ export class HttpRequestService {
 			}, headers ?? {}),
 			timeout: 5000,
 			size: 1024 * 256,
+			isLocalAddressAllowed: isLocalAddressAllowed,
 		});
 
 		return await res.json() as T;
 	}
 
 	@bindThis
-	public async getHtml(url: string, accept = 'text/html, */*', headers?: Record<string, string>): Promise<string> {
+	public async getHtml(url: string, accept = 'text/html, */*', headers?: Record<string, string>, isLocalAddressAllowed = false): Promise<string> {
 		const res = await this.send(url, {
 			method: 'GET',
 			headers: Object.assign({
 				Accept: accept,
 			}, headers ?? {}),
 			timeout: 5000,
+			isLocalAddressAllowed: isLocalAddressAllowed,
 		});
 
 		return await res.text();
@@ -255,6 +275,7 @@ export class HttpRequestService {
 			headers?: Record<string, string>,
 			timeout?: number,
 			size?: number,
+			isLocalAddressAllowed?: boolean,
 		} = {},
 		extra: HttpRequestSendOptions = {
 			throwErrorWhenResponseNotOk: true,
@@ -268,6 +289,8 @@ export class HttpRequestService {
 			controller.abort();
 		}, timeout);
 
+		const isLocalAddressAllowed = args.isLocalAddressAllowed ?? false;
+
 		const res = await fetch(url, {
 			method: args.method ?? 'GET',
 			headers: {
@@ -276,7 +299,7 @@ export class HttpRequestService {
 			},
 			body: args.body,
 			size: args.size ?? 10 * 1024 * 1024,
-			agent: (url) => this.getAgentByUrl(url),
+			agent: (url) => this.getAgentByUrl(url, false, isLocalAddressAllowed),
 			signal: controller.signal,
 		});
 

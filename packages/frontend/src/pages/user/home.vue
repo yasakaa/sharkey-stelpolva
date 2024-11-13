@@ -143,8 +143,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 					<MkLazy>
 						<XActivity :key="user.id" :user="user" :collapsed="true"/>
 					</MkLazy>
-					<MkLazy>
-						<XListenBrainz v-if="user.listenbrainz && listenbrainzdata" :key="user.id" :user="user" :collapsed="true"/>
+					<MkLazy v-if="user.listenbrainz && listenbrainzdata">
+						<XListenBrainz :key="user.id" :user="user" :collapsed="true"/>
 					</MkLazy>
 				</template>
 				<!-- <div v-if="!disableNotes">
@@ -307,7 +307,7 @@ const pagination = {
 	endpoint: 'users/featured-notes' as const,
 	limit: 10,
 	params: computed(() => ({
-		userId: props.user.id,
+		userId: props.user.id
 	})),
 };
 
@@ -833,10 +833,6 @@ onUnmounted(() => {
 .verifiedLink {
 	margin-left: 4px;
 	color: var(--MI_THEME-success);
-}
-
-.pinnedNote:not(:last-child) {
-	border-bottom: solid 0.5px var(--MI_THEME-divider);
 }
 
 .infoBadges {

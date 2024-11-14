@@ -9,12 +9,15 @@ import { DI } from '@/di-symbols.js';
 import type { Config } from '@/config.js';
 import { bindThis } from '@/decorators.js';
 import type { ActivityLogsRepository } from '@/models/_.js';
+import { LoggerService } from '@/core/LoggerService.js';
+import Logger from '@/logger.js';
 
 // 10 minutes
 export const scanInterval = 1000 * 60 * 10;
 
 @Injectable()
 export class ActivityLogCleanupService implements OnApplicationShutdown {
+	private readonly logger: Logger;
 	private scanTimer: NodeJS.Timeout | null = null;
 
 	constructor(
@@ -23,7 +26,11 @@ export class ActivityLogCleanupService implements OnApplicationShutdown {
 
 		@Inject(DI.activityLogsRepository)
 		private readonly activityLogsRepository: ActivityLogsRepository,
-	) {}
+
+		loggerService: LoggerService,
+	) {
+		this.logger = loggerService.getLogger('activity-log-cleanup');
+	}
 
 	@bindThis
 	public async start(): Promise<void> {
@@ -44,9 +51,11 @@ export class ActivityLogCleanupService implements OnApplicationShutdown {
 		const oldestAllowed = new Date(Date.now() - this.config.activityLogging.maxAge);
 
 		// Delete all logs older than the threshold.
-		await this.activityLogsRepository.delete({
+		const { affected } = await this.activityLogsRepository.delete({
 			at: LessThan(oldestAllowed),
 		});
+
+		this.logger.info(`Activity Log cleanup complete; removed ${affected ?? 0} expired logs.`);
 	}
 
 	@bindThis

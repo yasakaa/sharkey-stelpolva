@@ -85,6 +85,8 @@ import { Config } from '@/config.js';
 import MisskeyLogger from '@/logger.js';
 import { bindThis } from '@/decorators.js';
 import { SkLatestNote } from '@/models/LatestNote.js';
+import { SkActivityContext } from '@/models/SkActivityContext.js';
+import { SkActivityLog } from '@/models/SkActivityLog.js';
 
 pg.types.setTypeParser(20, Number);
 
@@ -171,6 +173,8 @@ class MyCustomLogger implements Logger {
 
 export const entities = [
 	SkLatestNote,
+	SkActivityContext,
+	SkActivityLog,
 	MiAnnouncement,
 	MiAnnouncementRead,
 	MiMeta,

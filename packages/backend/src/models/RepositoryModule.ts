@@ -80,7 +80,9 @@ import {
 	MiUserPublickey,
 	MiUserSecurityKey,
 	MiWebhook,
-	NoteEdit
+	NoteEdit,
+	SkActivityContext,
+	SkActivityLog,
 } from './_.js';
 import type { DataSource } from 'typeorm';
 
@@ -123,6 +125,18 @@ const $avatarDecorationsRepository: Provider = {
 const $latestNotesRepository: Provider = {
 	provide: DI.latestNotesRepository,
 	useFactory: (db: DataSource) => db.getRepository(SkLatestNote).extend(miRepository as MiRepository<SkLatestNote>),
+	inject: [DI.db],
+};
+
+const $activityContextRepository: Provider = {
+	provide: DI.activityContextRepository,
+	useFactory: (db: DataSource) => db.getRepository(SkActivityContext).extend(miRepository as MiRepository<SkActivityContext>),
+	inject: [DI.db],
+};
+
+const $activityLogsRepository: Provider = {
+	provide: DI.activityLogsRepository,
+	useFactory: (db: DataSource) => db.getRepository(SkActivityLog).extend(miRepository as MiRepository<SkActivityLog>),
 	inject: [DI.db],
 };
 
@@ -526,6 +540,8 @@ const $noteScheduleRepository: Provider = {
 		$appsRepository,
 		$avatarDecorationsRepository,
 		$latestNotesRepository,
+		$activityContextRepository,
+		$activityLogsRepository,
 		$noteFavoritesRepository,
 		$noteThreadMutingsRepository,
 		$noteReactionsRepository,
@@ -600,6 +616,8 @@ const $noteScheduleRepository: Provider = {
 		$appsRepository,
 		$avatarDecorationsRepository,
 		$latestNotesRepository,
+		$activityContextRepository,
+		$activityLogsRepository,
 		$noteFavoritesRepository,
 		$noteThreadMutingsRepository,
 		$noteReactionsRepository,

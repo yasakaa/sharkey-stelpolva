@@ -383,3 +383,18 @@ checkActivityPubGetSignature: false
 #     # Disable query truncation. If set to true, the full text of the query will be output to the log.
 #     # default: false
 #     disableQueryTruncation: false
+
+# Settings for the activity logger, which records inbound activities to the database.
+# Disabled by default due to the large volume of data it saves.
+#activityLogging:
+  # Log activities to the database (default: false)
+  #enabled: false
+
+  # Save the activity before processing, then update later with the results.
+  # This has the advantage of capturing activities that cause a hard-crash, but doubles the number of queries used.
+  # Default: false
+  #preSave: false
+
+  # How long to save each log entry before deleting it.
+  # Default: 2592000000 (1 week)
+  #maxAge: 2592000000

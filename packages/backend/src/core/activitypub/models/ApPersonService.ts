@@ -7,6 +7,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import promiseLimit from 'promise-limit';
 import { DataSource } from 'typeorm';
 import { ModuleRef } from '@nestjs/core';
+import { AbortError } from 'node-fetch';
 import { DI } from '@/di-symbols.js';
 import type { FollowingsRepository, InstancesRepository, MiMeta, UserProfilesRepository, UserPublickeysRepository, UsersRepository } from '@/models/_.js';
 import type { Config } from '@/config.js';
@@ -482,7 +483,13 @@ export class ApPersonService implements OnModuleInit {
 		}
 		//#endregion
 
-		await this.updateFeatured(user.id, resolver).catch(err => this.logger.error(err));
+		await this.updateFeatured(user.id, resolver).catch(err => {
+			if (err instanceof AbortError || (err instanceof StatusError && err.isRetryable)) {
+				this.logger.warn(`Failed to update featured notes: ${err.name}: ${err.message}`);
+			} else {
+				this.logger.error('Failed to update featured notes:', err);
+			}
+		});
 
 		return user;
 	}
@@ -647,7 +654,13 @@ export class ApPersonService implements OnModuleInit {
 			{ followerSharedInbox: person.sharedInbox ?? person.endpoints?.sharedInbox },
 		);
 
-		await this.updateFeatured(exist.id, resolver).catch(err => this.logger.error(err));
+		await this.updateFeatured(exist.id, resolver).catch(err => {
+			if (err instanceof AbortError || (err instanceof StatusError && err.isRetryable)) {
+				this.logger.warn(`Failed to update featured notes: ${err.name}: ${err.message}`);
+			} else {
+				this.logger.error('Failed to update featured notes:', err);
+			}
+		});
 
 		const updated = { ...exist, ...updates };
 

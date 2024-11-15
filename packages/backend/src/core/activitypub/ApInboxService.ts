@@ -436,7 +436,7 @@ export class ApInboxService {
 			const exist = await this.apNoteService.fetchNote(note);
 			if (exist) return 'skip: note exists';
 
-			await this.apNoteService.createNote(note, resolver, silent);
+			await this.apNoteService.createNote(note, actor, resolver, silent);
 			return 'ok';
 		} catch (err) {
 			if (err instanceof StatusError && !err.isRetryable) {
@@ -791,7 +791,7 @@ export class ApInboxService {
 			await this.apQuestionService.updateQuestion(object, actor, resolver).catch(err => console.error(err));
 			return 'ok: Question updated';
 		} else if (getApType(object) === 'Note') {
-			await this.apNoteService.updateNote(object, resolver).catch(err => console.error(err));
+			await this.apNoteService.updateNote(object, actor, resolver).catch(err => console.error(err));
 			return 'ok: Note updated';
 		} else {
 			return `skip: Unknown type: ${getApType(object)}`;

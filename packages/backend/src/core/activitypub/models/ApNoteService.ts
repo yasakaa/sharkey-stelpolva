@@ -621,7 +621,7 @@ export class ApNoteService {
 			if (exist) return exist;
 			//#endregion
 
-			if (uri.startsWith(this.config.url)) {
+			if (this.utilityService.isUriLocal(uri)) {
 				throw new StatusError('cannot resolve local note', 400, 'cannot resolve local note');
 			}
 

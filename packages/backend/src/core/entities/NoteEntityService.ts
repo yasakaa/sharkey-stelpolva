@@ -11,7 +11,7 @@ import type { Packed } from '@/misc/json-schema.js';
 import { awaitAll } from '@/misc/prelude/await-all.js';
 import type { MiUser } from '@/models/User.js';
 import type { MiNote } from '@/models/Note.js';
-import type { UsersRepository, NotesRepository, FollowingsRepository, PollsRepository, PollVotesRepository, NoteReactionsRepository, ChannelsRepository, MiMeta } from '@/models/_.js';
+import type { BlockingsRepository, UsersRepository, NotesRepository, FollowingsRepository, PollsRepository, PollVotesRepository, NoteReactionsRepository, ChannelsRepository, MiMeta } from '@/models/_.js';
 import { bindThis } from '@/decorators.js';
 import { DebounceLoader } from '@/misc/loader.js';
 import { IdService } from '@/core/IdService.js';
@@ -38,6 +38,9 @@ export class NoteEntityService implements OnModuleInit {
 
 		@Inject(DI.meta)
 		private meta: MiMeta,
+
+		@Inject(DI.blockingsRepository)
+		private blockingsRepository: BlockingsRepository,
 
 		@Inject(DI.usersRepository)
 		private usersRepository: UsersRepository,
@@ -142,6 +145,17 @@ export class NoteEntityService implements OnModuleInit {
 			}
 		}
 
+		if (!hide && meId && packedNote.userId !== meId) {
+			const isBlocked = await this.blockingsRepository.exists({
+				where: {
+					blockeeId: meId,
+					blockerId: packedNote.userId,
+				},
+			});
+
+			if (isBlocked) hide = true;
+		}
+
 		if (hide) {
 			packedNote.visibleUserIds = undefined;
 			packedNote.fileIds = [];
@@ -149,6 +163,12 @@ export class NoteEntityService implements OnModuleInit {
 			packedNote.text = null;
 			packedNote.poll = undefined;
 			packedNote.cw = null;
+			packedNote.repliesCount = 0;
+			packedNote.reactionAcceptance = null;
+			packedNote.reactionAndUserPairCache = undefined;
+			packedNote.reactionCount = 0;
+			packedNote.reactionEmojis = undefined;
+			packedNote.reactions = undefined;
 			packedNote.isHidden = true;
 		}
 	}
@@ -262,7 +282,13 @@ export class NoteEntityService implements OnModuleInit {
 				return true;
 			} else {
 				// フォロワーかどうか
-				const [following, user] = await Promise.all([
+				const [blocked, following, user] = await Promise.all([
+					this.blockingsRepository.exists({
+						where: {
+							blockeeId: meId,
+							blockerId: note.userId,
+						},
+					}),
 					this.followingsRepository.count({
 						where: {
 							followeeId: note.userId,
@@ -273,6 +299,8 @@ export class NoteEntityService implements OnModuleInit {
 					this.usersRepository.findOneByOrFail({ id: meId }),
 				]);
 
+				if (blocked) return false;
+
 				/* If we know the following, everyhting is fine.
 
 				But if we do not know the following, it might be that both the
@@ -282,6 +310,17 @@ export class NoteEntityService implements OnModuleInit {
 				*/
 				return following > 0 || (note.userHost != null && user.host != null);
 			}
+		}
+
+		if (meId != null) {
+			const isBlocked = await this.blockingsRepository.exists({
+				where: {
+					blockeeId: meId,
+					blockerId: note.userId,
+				},
+			});
+
+			if (isBlocked) return false;
 		}
 
 		return true;

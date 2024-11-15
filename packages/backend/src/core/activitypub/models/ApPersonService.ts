@@ -157,8 +157,8 @@ export class ApPersonService implements OnModuleInit {
 		const sharedInboxObject = x.sharedInbox ?? (x.endpoints ? x.endpoints.sharedInbox : undefined);
 		if (sharedInboxObject != null) {
 			const sharedInbox = getApId(sharedInboxObject);
-			if (!(typeof sharedInbox === "string" && sharedInbox.length > 0 && this.utilityService.punyHost(sharedInbox) === expectHost)) {
-				throw new Error("invalid Actor: wrong shared inbox");
+			if (!(typeof sharedInbox === 'string' && sharedInbox.length > 0 && this.utilityService.punyHost(sharedInbox) === expectHost)) {
+				throw new Error('invalid Actor: wrong shared inbox');
 			}
 		}
 
@@ -168,8 +168,7 @@ export class ApPersonService implements OnModuleInit {
 				if (this.utilityService.punyHost(collectionUri) !== expectHost) {
 					throw new Error(`invalid Actor: ${collection} has different host`);
 				}
-			}
-			else if (collectionUri != null) {
+			} else if (collectionUri != null) {
 				throw new Error(`invalid Actor: wrong ${collection}`);
 			}
 		}

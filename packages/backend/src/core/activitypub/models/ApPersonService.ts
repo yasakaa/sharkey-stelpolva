@@ -483,13 +483,7 @@ export class ApPersonService implements OnModuleInit {
 		}
 		//#endregion
 
-		await this.updateFeatured(user.id, resolver).catch(err => {
-			if (err instanceof AbortError || (err instanceof StatusError && err.isRetryable)) {
-				this.logger.warn(`Failed to update featured notes: ${err.name}: ${err.message}`);
-			} else {
-				this.logger.error('Failed to update featured notes:', err);
-			}
-		});
+		await this.updateFeatured(user.id, resolver).catch(err => console.error(err));
 
 		return user;
 	}
@@ -654,13 +648,7 @@ export class ApPersonService implements OnModuleInit {
 			{ followerSharedInbox: person.sharedInbox ?? person.endpoints?.sharedInbox },
 		);
 
-		await this.updateFeatured(exist.id, resolver).catch(err => {
-			if (err instanceof AbortError || (err instanceof StatusError && err.isRetryable)) {
-				this.logger.warn(`Failed to update featured notes: ${err.name}: ${err.message}`);
-			} else {
-				this.logger.error('Failed to update featured notes:', err);
-			}
-		});
+		await this.updateFeatured(exist.id, resolver).catch(err => console.error(err));
 
 		const updated = { ...exist, ...updates };
 
@@ -735,7 +723,15 @@ export class ApPersonService implements OnModuleInit {
 		const _resolver = resolver ?? this.apResolverService.createResolver();
 
 		// Resolve to (Ordered)Collection Object
-		const collection = await _resolver.resolveCollection(user.featured);
+		const collection = await _resolver.resolveCollection(user.featured).catch(err => {
+			if (err instanceof AbortError || err instanceof StatusError) {
+				this.logger.warn(`Failed to update featured notes: ${err.name}: ${err.message}`);
+			} else {
+				this.logger.error('Failed to update featured notes:', err);
+			}
+		});
+		if (!collection) return;
+
 		if (!isCollectionOrOrderedCollection(collection)) throw new Error('Object is not Collection or OrderedCollection');
 
 		// Resolve to Object(may be Note) arrays

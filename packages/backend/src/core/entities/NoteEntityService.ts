@@ -11,12 +11,13 @@ import type { Packed } from '@/misc/json-schema.js';
 import { awaitAll } from '@/misc/prelude/await-all.js';
 import type { MiUser } from '@/models/User.js';
 import type { MiNote } from '@/models/Note.js';
-import type { BlockingsRepository, UsersRepository, NotesRepository, FollowingsRepository, PollsRepository, PollVotesRepository, NoteReactionsRepository, ChannelsRepository, MiMeta } from '@/models/_.js';
+import type { UsersRepository, NotesRepository, FollowingsRepository, PollsRepository, PollVotesRepository, NoteReactionsRepository, ChannelsRepository, MiMeta } from '@/models/_.js';
 import { bindThis } from '@/decorators.js';
 import { DebounceLoader } from '@/misc/loader.js';
 import { IdService } from '@/core/IdService.js';
 import { ReactionsBufferingService } from '@/core/ReactionsBufferingService.js';
 import type { OnModuleInit } from '@nestjs/common';
+import type { CacheService } from '../CacheService.js';
 import type { CustomEmojiService } from '../CustomEmojiService.js';
 import type { ReactionService } from '../ReactionService.js';
 import type { UserEntityService } from './UserEntityService.js';
@@ -27,6 +28,7 @@ import type { Config } from '@/config.js';
 export class NoteEntityService implements OnModuleInit {
 	private userEntityService: UserEntityService;
 	private driveFileEntityService: DriveFileEntityService;
+	private cacheService: CacheService;
 	private customEmojiService: CustomEmojiService;
 	private reactionService: ReactionService;
 	private reactionsBufferingService: ReactionsBufferingService;
@@ -38,9 +40,6 @@ export class NoteEntityService implements OnModuleInit {
 
 		@Inject(DI.meta)
 		private meta: MiMeta,
-
-		@Inject(DI.blockingsRepository)
-		private blockingsRepository: BlockingsRepository,
 
 		@Inject(DI.usersRepository)
 		private usersRepository: UsersRepository,
@@ -78,6 +77,7 @@ export class NoteEntityService implements OnModuleInit {
 	onModuleInit() {
 		this.userEntityService = this.moduleRef.get('UserEntityService');
 		this.driveFileEntityService = this.moduleRef.get('DriveFileEntityService');
+		this.cacheService = this.moduleRef.get('CacheService');
 		this.customEmojiService = this.moduleRef.get('CustomEmojiService');
 		this.reactionService = this.moduleRef.get('ReactionService');
 		this.reactionsBufferingService = this.moduleRef.get('ReactionsBufferingService');
@@ -146,12 +146,7 @@ export class NoteEntityService implements OnModuleInit {
 		}
 
 		if (!hide && meId && packedNote.userId !== meId) {
-			const isBlocked = await this.blockingsRepository.exists({
-				where: {
-					blockeeId: meId,
-					blockerId: packedNote.userId,
-				},
-			});
+			const isBlocked = (await this.cacheService.userBlockedCache.fetch(meId)).has(packedNote.userId);
 
 			if (isBlocked) hide = true;
 		}
@@ -283,12 +278,7 @@ export class NoteEntityService implements OnModuleInit {
 			} else {
 				// フォロワーかどうか
 				const [blocked, following, user] = await Promise.all([
-					this.blockingsRepository.exists({
-						where: {
-							blockeeId: meId,
-							blockerId: note.userId,
-						},
-					}),
+					this.cacheService.userBlockingCache.fetch(meId).then((ids) => ids.has(note.userId)),
 					this.followingsRepository.count({
 						where: {
 							followeeId: note.userId,
@@ -313,12 +303,7 @@ export class NoteEntityService implements OnModuleInit {
 		}
 
 		if (meId != null) {
-			const isBlocked = await this.blockingsRepository.exists({
-				where: {
-					blockeeId: meId,
-					blockerId: note.userId,
-				},
-			});
+			const isBlocked = (await this.cacheService.userBlockedCache.fetch(meId)).has(note.userId);
 
 			if (isBlocked) return false;
 		}

@@ -425,9 +425,8 @@ export class ApInboxService {
 				if (this.utilityService.extractDbHost(actor.uri) !== this.utilityService.extractDbHost(note.id)) {
 					return 'skip: host in actor.uri !== note.id';
 				}
-			}
-			else {
-				return 'skip: note.id is not a string'
+			} else {
+				return 'skip: note.id is not a string';
 			}
 		}
 

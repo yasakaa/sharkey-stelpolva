@@ -11379,9 +11379,9 @@ export interface Locale extends ILocale {
      */
     "remoteFollowersWarning": string;
     /**
-     * Select a follow graph...
+     * Select a follow relationship...
      */
-    "selectFollowingList": string;
+    "selectFollowRelationship": string;
 }
 declare const locales: {
     [lang: string]: Locale;

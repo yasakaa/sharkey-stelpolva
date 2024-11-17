@@ -43,7 +43,7 @@ const columnIcon = computed(() => followingTabIcon(props.column.userList));
 
 async function selectList(): Promise<void> {
 	const { canceled, result: newList } = await os.select<FollowingFeedTab>({
-		title: i18n.ts.selectFollowingList,
+		title: i18n.ts.selectFollowRelationship,
 		items: followingFeedTabs.map(t => ({
 			value: t,
 			text: followingTabName(t),
@@ -97,7 +97,7 @@ const {
 const menu: MenuItem[] = [
 	{
 		icon: columnIcon.value,
-		text: i18n.ts.selectFollowingList,
+		text: i18n.ts.selectFollowRelationship,
 		action: selectList,
 	},
 	...createOptionsMenu(columnStorage),

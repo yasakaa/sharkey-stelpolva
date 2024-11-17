@@ -401,4 +401,4 @@ _deck:
   _columns:
     following: "Following"
 
-selectFollowingList: "Select a follow graph..."
+selectFollowRelationship: "Select a follow relationship..."

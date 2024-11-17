@@ -16,7 +16,7 @@ import { bindThis } from '@/decorators.js';
 import { DebounceLoader } from '@/misc/loader.js';
 import { IdService } from '@/core/IdService.js';
 import { ReactionsBufferingService } from '@/core/ReactionsBufferingService.js';
-import { isPureRenotePacked } from '@/misc/is-renote.js';
+import { isPackedPureRenote } from '@/misc/is-renote.js';
 import type { OnModuleInit } from '@nestjs/common';
 import type { CacheService } from '../CacheService.js';
 import type { CustomEmojiService } from '../CustomEmojiService.js';
@@ -139,7 +139,7 @@ export class NoteEntityService implements OnModuleInit {
 		// Otherwise we can have empty notes on the timeline, which is not good.
 		// Notes are packed in depth-first order, so we can safely grab the "isHidden" property to avoid duplicated checks.
 		// This is pulled out to ensure that we check both the renote *and* the boosted note.
-		if (packedNote.renote?.isHidden && isPureRenotePacked(packedNote)) {
+		if (packedNote.renote?.isHidden && isPackedPureRenote(packedNote)) {
 			hide = true;
 		}
 

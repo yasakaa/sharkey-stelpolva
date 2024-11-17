@@ -291,16 +291,25 @@ export class ApNoteService {
 		let quote: MiNote | undefined | null = null;
 
 		if (note._misskey_quote ?? note.quoteUrl ?? note.quoteUri) {
-			const tryResolveNote = async (uri: string): Promise<
+			const tryResolveNote = async (uri: unknown): Promise<
 				| { status: 'ok'; res: MiNote }
 				| { status: 'permerror' | 'temperror' }
 			> => {
-				if (typeof uri !== 'string' || !/^https?:/.test(uri)) return { status: 'permerror' };
+				if (typeof uri !== 'string' || !/^https?:/.test(uri)) {
+					this.logger.warn(`Failed to resolve quote ${uri} for note ${entryUri}: URI is invalid`);
+					return { status: 'permerror' };
+				}
 				try {
 					const res = await this.resolveNote(uri, { resolver });
-					if (res == null) return { status: 'permerror' };
+					if (res == null) {
+						this.logger.warn(`Failed to resolve quote ${uri} for note ${entryUri}: resolution error`);
+						return { status: 'permerror' };
+					}
 					return { status: 'ok', res };
 				} catch (e) {
+					const error = e instanceof Error ? `${e.name}: ${e.message}` : String(e);
+					this.logger.warn(`Failed to resolve quote ${uri} for note ${entryUri}: ${error}`);
+
 					return {
 						status: (e instanceof StatusError && !e.isRetryable) ? 'permerror' : 'temperror',
 					};
@@ -310,10 +319,10 @@ export class ApNoteService {
 			const uris = unique([note._misskey_quote, note.quoteUrl, note.quoteUri].filter(x => x != null));
 			const results = await Promise.all(uris.map(tryResolveNote));
 
-			quote = results.filter((x): x is { status: 'ok', res: MiNote } => x.status === 'ok').map(x => x.res).at(0);
+			quote = results.filter((x): x is { status: 'ok', res: MiNote, uri: string } => x.status === 'ok').map(x => x.res).at(0);
 			if (!quote) {
 				if (results.some(x => x.status === 'temperror')) {
-					throw new Error(`failed to resolve quote for ${entryUri}`);
+					throw new Error(`temporary error resolving quote for ${entryUri}`);
 				}
 			}
 		}
@@ -520,16 +529,25 @@ export class ApNoteService {
 		let quote: MiNote | undefined | null = null;
 
 		if (note._misskey_quote ?? note.quoteUrl ?? note.quoteUri) {
-			const tryResolveNote = async (uri: string): Promise<
+			const tryResolveNote = async (uri: unknown): Promise<
 				| { status: 'ok'; res: MiNote }
 				| { status: 'permerror' | 'temperror' }
 			> => {
-				if (typeof uri !== 'string' || !/^https?:/.test(uri)) return { status: 'permerror' };
+				if (typeof uri !== 'string' || !/^https?:/.test(uri)) {
+					this.logger.warn(`Failed to resolve quote ${uri} for note ${entryUri}: URI is invalid`);
+					return { status: 'permerror' };
+				}
 				try {
 					const res = await this.resolveNote(uri, { resolver });
-					if (res == null) return { status: 'permerror' };
+					if (res == null) {
+						this.logger.warn(`Failed to resolve quote ${uri} for note ${entryUri}: resolution error`);
+						return { status: 'permerror' };
+					}
 					return { status: 'ok', res };
 				} catch (e) {
+					const error = e instanceof Error ? `${e.name}: ${e.message}` : String(e);
+					this.logger.warn(`Failed to resolve quote ${uri} for note ${entryUri}: ${error}`);
+
 					return {
 						status: (e instanceof StatusError && !e.isRetryable) ? 'permerror' : 'temperror',
 					};
@@ -539,10 +557,10 @@ export class ApNoteService {
 			const uris = unique([note._misskey_quote, note.quoteUrl, note.quoteUri].filter(x => x != null));
 			const results = await Promise.all(uris.map(tryResolveNote));
 
-			quote = results.filter((x): x is { status: 'ok', res: MiNote } => x.status === 'ok').map(x => x.res).at(0);
+			quote = results.filter((x): x is { status: 'ok', res: MiNote, uri: string } => x.status === 'ok').map(x => x.res).at(0);
 			if (!quote) {
 				if (results.some(x => x.status === 'temperror')) {
-					throw new Error(`failed to resolve quote for ${noteUri}`);
+					throw new Error(`temporary error resolving quote for ${entryUri}`);
 				}
 			}
 		}

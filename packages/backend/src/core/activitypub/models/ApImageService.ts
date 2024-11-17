@@ -4,7 +4,6 @@
  */
 
 import { Inject, Injectable } from '@nestjs/common';
-import { UnrecoverableError } from 'bullmq';
 import { DI } from '@/di-symbols.js';
 import type { DriveFilesRepository, MiMeta } from '@/models/_.js';
 import type { MiRemoteUser } from '@/models/User.js';
@@ -16,6 +15,7 @@ import { bindThis } from '@/decorators.js';
 import { checkHttps } from '@/misc/check-https.js';
 import { FederatedInstanceService } from '@/core/FederatedInstanceService.js';
 import type { Config } from '@/config.js';
+import { IdentifiableError } from '@/misc/identifiable-error.js';
 import { ApResolverService } from '../ApResolverService.js';
 import { ApLoggerService } from '../ApLoggerService.js';
 import { isDocument, type IObject } from '../type.js';
@@ -48,7 +48,7 @@ export class ApImageService {
 	public async createImage(actor: MiRemoteUser, value: string | IObject): Promise<MiDriveFile | null> {
 		// 投稿者が凍結されていたらスキップ
 		if (actor.isSuspended) {
-			throw new UnrecoverableError(`actor has been suspended: ${actor.uri}`);
+			throw new IdentifiableError('85ab9bd7-3a41-4530-959d-f07073900109', `actor has been suspended: ${actor.uri}`);
 		}
 
 		const image = await this.apResolverService.createResolver().resolve(value);

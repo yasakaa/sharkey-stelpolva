@@ -12,7 +12,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 	<div ref="noteScroll" :class="$style.notes">
 		<MkHorizontalSwipe v-model:tab="userList" :tabs="headerTabs">
-			<SkFollowingRecentNotes ref="followingRecentNotes" :userList="userList" :withNonPublic="withNonPublic" :withQuotes="withQuotes" :withBots="withBots" :withReplies="withReplies" :onlyFiles="onlyFiles" @userSelected="userSelected" @loaded="listReady"/>
+			<SkFollowingRecentNotes ref="followingRecentNotes" :selectedUserId="selectedUserId" :userList="userList" :withNonPublic="withNonPublic" :withQuotes="withQuotes" :withBots="withBots" :withReplies="withReplies" :onlyFiles="onlyFiles" @userSelected="userSelected" @loaded="listReady"/>
 		</MkHorizontalSwipe>
 	</div>
 

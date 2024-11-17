@@ -15,7 +15,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 		<template #default="{ items: notes }">
 			<MkDateSeparatedList v-slot="{ item: note }" :items="notes" :class="$style.panel" :noGap="true">
-				<SkFollowingFeedEntry v-if="!isHardMuted(note)" :isMuted="isSoftMuted(note)" :note="note" @select="u => selectUser(u.id)"/>
+				<SkFollowingFeedEntry v-if="!isHardMuted(note)" :isMuted="isSoftMuted(note)" :note="note" :class="props.selectedUserId == note.userId && $style.selected" @select="u => selectUser(u.id)"/>
 			</MkDateSeparatedList>
 		</template>
 	</MkPagination>
@@ -42,6 +42,7 @@ const props = defineProps<{
 	withReplies: boolean;
 	withBots: boolean;
 	onlyFiles: boolean;
+	selectedUserId?: string | null;
 }>();
 
 const emit = defineEmits<{
@@ -118,5 +119,26 @@ function checkMute(note: Misskey.entities.Note | undefined | null, mutes: Mutes)
 <style module lang="scss">
 .panel {
 	background: var(--panel);
+}
+
+@keyframes border {
+	from {
+		border-left: 0 solid var(--accent);
+	}
+	to {
+		border-left: 6px solid var(--accent);
+	}
+}
+
+.selected {
+	animation: border 0.2s ease-out 0s 1 forwards;
+
+	&:first-child {
+		border-top-left-radius: 5px;
+	}
+
+	&:last-child {
+		border-bottom-left-radius: 5px;
+	}
 }
 </style>

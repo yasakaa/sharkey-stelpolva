@@ -483,7 +483,7 @@ export class ApPersonService implements OnModuleInit {
 		}
 		//#endregion
 
-		await this.updateFeatured(user.id, resolver).catch(err => console.error(err));
+		await this.updateFeatured(user.id, resolver).catch(err => this.logger.error(err));
 
 		return user;
 	}
@@ -648,7 +648,7 @@ export class ApPersonService implements OnModuleInit {
 			{ followerSharedInbox: person.sharedInbox ?? person.endpoints?.sharedInbox },
 		);
 
-		await this.updateFeatured(exist.id, resolver).catch(err => console.error(err));
+		await this.updateFeatured(exist.id, resolver).catch(err => this.logger.error(err));
 
 		const updated = { ...exist, ...updates };
 

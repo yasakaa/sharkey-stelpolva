@@ -142,8 +142,6 @@ type Option = {
 	editcount?: boolean | null;
 };
 
-type PureRenoteOption = Option & { renote: MiNote } & ({ text?: null } | { cw?: null } | { reply?: null } | { poll?: null } | { files?: null | [] });
-
 @Injectable()
 export class NoteEditService implements OnApplicationShutdown {
 	#shutdownController = new AbortController();
@@ -444,7 +442,7 @@ export class NoteEditService implements OnApplicationShutdown {
 
 		if (user.host && !data.cw) {
 			await this.federatedInstanceService.fetch(user.host).then(async i => {
-				if (i.isNSFW && !this.isPureRenote(data)) {
+				if (i.isNSFW && !this.noteCreateService.isPureRenote(data)) {
 					data.cw = 'Instance is marked as NSFW';
 				}
 			});
@@ -787,11 +785,6 @@ export class NoteEditService implements OnApplicationShutdown {
 
 		// Register to search database
 		if (!user.noindex) this.index(note);
-	}
-
-	@bindThis
-	private isPureRenote(note: Option): note is PureRenoteOption {
-		return this.isRenote(note) && !this.isQuote(note);
 	}
 
 	@bindThis

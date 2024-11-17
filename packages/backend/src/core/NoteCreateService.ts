@@ -146,7 +146,7 @@ type Option = {
 	app?: MiApp | null;
 };
 
-type PureRenoteOption = Option & { renote: MiNote } & ({ text?: null } | { cw?: null } | { reply?: null } | { poll?: null } | { files?: null | [] });
+export type PureRenoteOption = Option & { renote: MiNote } & ({ text?: null } | { cw?: null } | { reply?: null } | { poll?: null } | { files?: null | [] });
 
 @Injectable()
 export class NoteCreateService implements OnApplicationShutdown {
@@ -824,7 +824,7 @@ export class NoteCreateService implements OnApplicationShutdown {
 	}
 
 	@bindThis
-	private isPureRenote(note: Option): note is PureRenoteOption {
+	public isPureRenote(note: Option): note is PureRenoteOption {
 		return this.isRenote(note) && !this.isQuote(note);
 	}
 

@@ -11,23 +11,23 @@ The following script will correct any local or remote hellspawns in the database
 
 ```postgresql
 /* Remove "instance is marked as NSFW" hellspawns */
-UPDATE note
-SET cw = null
+UPDATE "note"
+SET "cw" = null
 WHERE
 	"renoteId" IS NOT NULL
 	AND "text" IS NULL
-	AND cw = 'Instance is marked as NSFW'
+	AND "cw" = 'Instance is marked as NSFW'
 	AND "replyId" IS NULL
 	AND "hasPoll" = false
 	AND "fileIds" = '{}';
 
 /* Fix legacy / user-created hellspawns */
-UPDATE note
-SET text = '.'
+UPDATE "note"
+SET "text" = '.'
 WHERE
 	"renoteId" IS NOT NULL
 	AND "text" IS NULL
-	AND cw IS NOT NULL
+	AND "cw" IS NOT NULL
 	AND "replyId" IS NULL
 	AND "hasPoll" = false
 	AND "fileIds" = '{}';

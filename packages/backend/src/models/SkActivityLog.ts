@@ -23,8 +23,8 @@ export class SkActivityLog {
 	/**
 	 * Processing duration in milliseconds
 	 */
-	@Column('double precision', { default: 0 })
-	public duration = 0;
+	@Column('double precision', { nullable: true })
+	public duration: number | null = null;
 
 	@Column({
 		type: 'text',

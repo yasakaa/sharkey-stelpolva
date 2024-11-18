@@ -105,6 +105,9 @@ export class InboxProcessorService implements OnApplicationShutdown {
 			// Truncate nanoseconds to microseconds, then scale to milliseconds.
 			// 123,456,789 ns -> 123,456 us -> 123.456 ms
 			const duration = Number((endTime - startTime) / 1000n) / 1000;
+			if (duration > 10000) {
+				this.logger.warn(`Activity ${JSON.stringify(payload.id)} by "${keyId}" took ${(duration / 1000).toFixed(1)} seconds to complete`);
+			}
 
 			log.accepted = result.startsWith('ok');
 			log.duration = duration;

@@ -88,6 +88,7 @@ export class InboxProcessorService implements OnApplicationShutdown {
 	}
 
 	private async _processLogged(job: Bull.Job<InboxJobData>): Promise<string> {
+		const startTime = process.hrtime.bigint();
 		const payload = job.data.activity;
 		const keyId = job.data.signature.keyId;
 		const log = this.createLog(payload, keyId);
@@ -98,19 +99,9 @@ export class InboxProcessorService implements OnApplicationShutdown {
 		}
 
 		try {
-			const startTime = process.hrtime.bigint();
 			const result = await this._process(job, log);
-			const endTime = process.hrtime.bigint();
-
-			// Truncate nanoseconds to microseconds, then scale to milliseconds.
-			// 123,456,789 ns -> 123,456 us -> 123.456 ms
-			const duration = Number((endTime - startTime) / 1000n) / 1000;
-			if (duration > 10000) {
-				this.logger.warn(`Activity ${JSON.stringify(payload.id)} by "${keyId}" took ${(duration / 1000).toFixed(1)} seconds to complete`);
-			}
 
 			log.accepted = result.startsWith('ok');
-			log.duration = duration;
 			log.result = result;
 
 			return result;
@@ -120,6 +111,22 @@ export class InboxProcessorService implements OnApplicationShutdown {
 
 			throw err;
 		} finally {
+			// Calculate the activity processing time with correct rounding and decimals.
+			// 1. Truncate nanoseconds to microseconds
+			// 2. Scale to 1/10 millisecond ticks.
+			// 3. Round to nearest tick.
+			// 4. Sale to milliseconds
+			// Example: 123,456,789 ns -> 123,456 us -> 12,345.6 ticks -> 12,346 ticks -> 123.46 ms
+			const endTime = process.hrtime.bigint();
+			const duration = Math.round(Number((endTime - startTime) / 1000n) / 10) / 100;
+			log.duration = duration;
+
+			// Activities should time out after roughly 5 seconds.
+			// A runtime longer than 10 seconds could indicate a problem or attack.
+			if (duration > 10000) {
+				this.logger.warn(`Activity ${JSON.stringify(payload.id)} by "${keyId}" took ${(duration / 1000).toFixed(1)} seconds to complete`);
+			}
+
 			// Save or finalize asynchronously
 			this.recordLog(log).catch(err => this.logger.error('Failed to record AP activity:', err));
 		}

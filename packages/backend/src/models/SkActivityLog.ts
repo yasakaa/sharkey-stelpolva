@@ -10,10 +10,13 @@ import { id } from './util/id.js';
 
 @Entity('activity_log')
 export class SkActivityLog {
-	@PrimaryColumn(id())
+	@PrimaryColumn({
+		...id(),
+		primaryKeyConstraintName: 'PK_activity_log',
+	})
 	public id: string;
 
-	@Index()
+	@Index('IDX_activity_log_at')
 	@Column('timestamptz')
 	public at: Date;
 
@@ -23,7 +26,7 @@ export class SkActivityLog {
 	})
 	public keyId: string;
 
-	@Index()
+	@Index('IDX_activity_log_host')
 	@Column('text')
 	public host: string;
 
@@ -54,12 +57,12 @@ export class SkActivityLog {
 	})
 	@JoinColumn({
 		name: 'context_hash',
+		foreignKeyConstraintName: 'FK_activity_log_context_hash',
 	})
 	public context: SkActivityContext | null;
 
 	@Column({
-		type: 'varchar' as const,
-		length: 32,
+		...id(),
 		name: 'auth_user_id',
 		nullable: true,
 	})
@@ -71,6 +74,7 @@ export class SkActivityLog {
 	})
 	@JoinColumn({
 		name: 'auth_user_id',
+		foreignKeyConstraintName: 'FK_activity_log_auth_user_id',
 	})
 	public authUser: MiUser | null;
 

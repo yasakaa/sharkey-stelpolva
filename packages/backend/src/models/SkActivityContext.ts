@@ -3,12 +3,13 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { Column, PrimaryColumn, Entity, Index } from 'typeorm';
+import { Column, PrimaryColumn, Entity } from 'typeorm';
 
 @Entity('activity_context')
 export class SkActivityContext {
-	@PrimaryColumn('text')
-	@Index()
+	@PrimaryColumn('text', {
+		primaryKeyConstraintName: 'PK_activity_context',
+	})
 	public md5: string;
 
 	@Column('jsonb')

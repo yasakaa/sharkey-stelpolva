@@ -6,6 +6,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { summaly } from '@misskey-dev/summaly';
 import { SummalyResult } from '@misskey-dev/summaly/built/summary.js';
+import * as Redis from 'ioredis';
 import { DI } from '@/di-symbols.js';
 import type { Config } from '@/config.js';
 import { HttpRequestService } from '@/core/HttpRequestService.js';
@@ -15,9 +16,8 @@ import { LoggerService } from '@/core/LoggerService.js';
 import { bindThis } from '@/decorators.js';
 import { ApiError } from '@/server/api/error.js';
 import { MiMeta } from '@/models/Meta.js';
-import type { FastifyRequest, FastifyReply } from 'fastify';
-import * as Redis from 'ioredis';
 import { RedisKVCache } from '@/misc/cache.js';
+import type { FastifyRequest, FastifyReply } from 'fastify';
 
 @Injectable()
 export class UrlPreviewService {
@@ -41,7 +41,7 @@ export class UrlPreviewService {
 		this.previewCache = new RedisKVCache<SummalyResult>(this.redisClient, 'summaly', {
 			lifetime: 1000 * 60 * 60 * 24, // 1d
 			memoryCacheLifetime: 1000 * 60 * 10, // 10m
-			fetcher: (key: string) => { throw new Error('the UrlPreview cache should never fetch'); },
+			fetcher: () => { throw new Error('the UrlPreview cache should never fetch'); },
 			toRedisConverter: (value) => JSON.stringify(value),
 			fromRedisConverter: (value) => JSON.parse(value),
 		});

@@ -20,6 +20,12 @@ export class SkActivityLog {
 	@Column('timestamptz')
 	public at: Date;
 
+	/**
+	 * Processing duration in milliseconds
+	 */
+	@Column('double precision', { default: 0 })
+	public duration = 0;
+
 	@Column({
 		type: 'text',
 		name: 'key_id',
@@ -36,8 +42,8 @@ export class SkActivityLog {
 	@Column('boolean')
 	public accepted: boolean;
 
-	@Column('text')
-	public result: string;
+	@Column('text', { nullable: true })
+	public result: string | null = null;
 
 	@Column('jsonb')
 	// https://github.com/typeorm/typeorm/issues/8559

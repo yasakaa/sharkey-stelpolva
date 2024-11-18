@@ -98,9 +98,16 @@ export class InboxProcessorService implements OnApplicationShutdown {
 		}
 
 		try {
+			const startTime = process.hrtime.bigint();
 			const result = await this._process(job, log);
+			const endTime = process.hrtime.bigint();
+
+			// Truncate nanoseconds to microseconds, then scale to milliseconds.
+			// 123,456,789 ns -> 123,456 us -> 123.456 ms
+			const duration = Number((endTime - startTime) / 1000n) / 1000;
 
 			log.accepted = result.startsWith('ok');
+			log.duration = duration;
 			log.result = result;
 
 			return result;
@@ -249,7 +256,7 @@ export class InboxProcessorService implements OnApplicationShutdown {
 			delete activity.id;
 		}
 
-		// Attach log to verified user
+		// Record verified user in log
 		if (log) {
 			log.verified = true;
 			log.authUser = authUser.user;
@@ -361,7 +368,6 @@ export class InboxProcessorService implements OnApplicationShutdown {
 			at: new Date(),
 			verified: false,
 			accepted: false,
-			result: 'not processed',
 			activity,
 			keyId,
 			host,

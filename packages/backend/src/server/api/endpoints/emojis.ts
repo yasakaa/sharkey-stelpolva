@@ -54,7 +54,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				.where('host IS NULL')
 				.orderBy('LOWER(category)', 'ASC')
 				.orderBy('LOWER(name)', 'ASC')
-				.getMany()
+				.getMany();
 			return {
 				emojis: await this.emojiEntityService.packSimpleMany(emojis),
 			};

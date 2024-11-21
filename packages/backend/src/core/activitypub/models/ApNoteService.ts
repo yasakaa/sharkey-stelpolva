@@ -439,10 +439,6 @@ export class ApNoteService {
 
 		const url = getOneApHrefNullable(note.url);
 
-		if (url && !checkHttps(url)) {
-			throw new UnrecoverableError(`unexpected schema of note url ${url}: ${noteUri}`);
-		}
-
 		if (url != null) {
 			if (!checkHttps(url)) {
 				throw new UnrecoverableError(`unexpected schema of note.url ${url} in ${noteUri}`);

@@ -193,6 +193,9 @@ export class InboxProcessorService implements OnApplicationShutdown {
 				throw new Bull.UnrecoverableError(`skip: signerHost(${signerHost}) !== activity.id host(${activityIdHost}`);
 			}
 		}
+		else {
+			throw new Bull.UnrecoverableError('skip: activity id is not a string');
+		}
 
 		// Update stats
 		this.federatedInstanceService.fetch(authUser.user.host).then(i => {

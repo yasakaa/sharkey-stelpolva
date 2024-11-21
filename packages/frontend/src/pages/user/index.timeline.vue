@@ -8,22 +8,39 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<template #header>
 		<MkPageHeader v-model:tab="tab" :class="$style.tab" :actions="headerActions" :tabs="headerTabs" hideTitle/>
 	</template>
-	<MkNotes :noGap="true" :pagination="pagination" :class="$style.tl"/>
+	<div v-if="tab === 'pinned'" class="_gaps">
+		<div v-if="user.pinnedNotes.length < 1" class="_fullinfo">
+			<img :src="infoImageUrl" class="_ghost" aria-hidden="true" :alt="i18n.ts.noNotes"/>
+			<div>{{ i18n.ts.noNotes }}</div>
+		</div>
+		<div v-else class="_panel">
+			<MkNote v-for="note of user.pinnedNotes" :key="note.id" class="note" :class="$style.pinnedNote" :note="note" :pinned="true"/>
+		</div>
+	</div>
+	<MkNotes v-else :noGap="true" :pagination="pagination" :class="$style.tl"/>
 </MkStickyContainer>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, defineAsyncComponent } from 'vue';
 import * as Misskey from 'misskey-js';
 import MkNotes from '@/components/MkNotes.vue';
 import { i18n } from '@/i18n.js';
 import * as os from '@/os.js';
+import { infoImageUrl } from '@/instance.js';
+import { defaultStore } from '@/store.js';
+
+const MkNote = defineAsyncComponent(() =>
+	defaultStore.state.noteDesign === 'sharkey'
+		? import('@/components/SkNote.vue')
+		: import('@/components/MkNote.vue'),
+);
 
 const props = defineProps<{
 	user: Misskey.entities.UserDetailed;
 }>();
 
-const tab = ref<string | null>('all');
+const tab = ref('all');
 
 const timetraveled = ref<Date>();
 const withRenotes = ref(true);

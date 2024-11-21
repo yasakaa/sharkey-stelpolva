@@ -182,7 +182,7 @@ export class ApNoteService {
 		}
 
 		if (!checkHttps(note.id)) {
-			throw new UnrecoverableError(`unexpected schema of note url ${url}: ${entryUri}`);
+			throw new UnrecoverableError(`unexpected schema of note note.id ${note.id}: ${entryUri}`);
 		}
 
 		const url = getOneApHrefNullable(note.url);
@@ -402,7 +402,7 @@ export class ApNoteService {
 		const updatedNote = await this.notesRepository.findOneBy({ uri: noteUri });
 		if (updatedNote == null) throw new Error(`Note is not registered: ${noteUri}`);
 
-		const user = await this.usersRepository.findOneBy({ id: UpdatedNote.userId }) as MiRemoteUser | null;
+		const user = await this.usersRepository.findOneBy({ id: updatedNote.userId }) as MiRemoteUser | null;
 		if (user == null) throw new Error('Note is not registered');
 
 		// eslint-disable-next-line no-param-reassign
@@ -456,7 +456,7 @@ export class ApNoteService {
 		this.logger.info(`Creating the Note: ${note.id}`);
 
 		if (actor.isSuspended) {
-			throw new IdentifiableError('85ab9bd7-3a41-4530-959d-f07073900109', `actor ${uri} has been suspended: ${noteUri}`);
+			throw new IdentifiableError('85ab9bd7-3a41-4530-959d-f07073900109', `actor ${actor.id} has been suspended: ${noteUri}`);
 		}
 
 		const apMentions = await this.apMentionService.extractApMentions(note.tag, resolver);

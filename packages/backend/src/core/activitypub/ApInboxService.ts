@@ -273,7 +273,7 @@ export class ApInboxService {
 		if (activity.target === actor.featured) {
 			const activityObject = fromTuple(activity.object);
 			if (isApObject(activityObject) && !isPost(activityObject)) {
-				return 'unsupported featured object type';
+				return `unsupported featured object type: ${getApType(activityObject)}`;
 			}
 
 			const note = await this.apNoteService.resolveNote(activityObject, { resolver });
@@ -647,7 +647,7 @@ export class ApInboxService {
 		if (activity.target === actor.featured) {
 			const activityObject = fromTuple(activity.object);
 			if (isApObject(activityObject) && !isPost(activityObject)) {
-				return 'unsupported featured object type';
+				return `unsupported featured object type: ${getApType(activityObject)}`;
 			}
 
 			const note = await this.apNoteService.resolveNote(activityObject, { resolver });

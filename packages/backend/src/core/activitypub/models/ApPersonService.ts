@@ -7,6 +7,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import promiseLimit from 'promise-limit';
 import { DataSource } from 'typeorm';
 import { ModuleRef } from '@nestjs/core';
+import { AbortError } from 'node-fetch';
 import { DI } from '@/di-symbols.js';
 import type { FollowingsRepository, InstancesRepository, MiMeta, UserProfilesRepository, UserPublickeysRepository, UsersRepository } from '@/models/_.js';
 import type { Config } from '@/config.js';
@@ -722,7 +723,15 @@ export class ApPersonService implements OnModuleInit {
 		const _resolver = resolver ?? this.apResolverService.createResolver();
 
 		// Resolve to (Ordered)Collection Object
-		const collection = await _resolver.resolveCollection(user.featured);
+		const collection = await _resolver.resolveCollection(user.featured).catch(err => {
+			if (err instanceof AbortError || err instanceof StatusError) {
+				this.logger.warn(`Failed to update featured notes: ${err.name}: ${err.message}`);
+			} else {
+				this.logger.error('Failed to update featured notes:', err);
+			}
+		});
+		if (!collection) return;
+
 		if (!isCollectionOrOrderedCollection(collection)) throw new Error('Object is not Collection or OrderedCollection');
 
 		// Resolve to Object(may be Note) arrays

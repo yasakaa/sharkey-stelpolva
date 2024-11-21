@@ -413,6 +413,7 @@ const repliesPagination = computed(() => ({
 	limit: 10,
 	params: {
 		noteId: appearNote.value.id,
+		showQuotes: defaultStore.reactiveState.stpvCombineRepliesQuotes.value,
 	},
 }));
 const repliesPagingComponent = useTemplateRef('repliesPagingComponent');

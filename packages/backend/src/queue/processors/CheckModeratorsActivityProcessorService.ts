@@ -38,23 +38,15 @@ export type ModeratorInactivityRemainingTime = {
 };
 
 function generateModeratorInactivityMail(remainingTime: ModeratorInactivityRemainingTime) {
-	const subject = 'Moderator Inactivity Warning / モデレーター不在の通知';
+	const subject = 'Moderator Inactivity Warning';
 
 	const timeVariant = remainingTime.asDays === 0 ? `${remainingTime.asHours} hours` : `${remainingTime.asDays} days`;
 	const timeVariantJa = remainingTime.asDays === 0 ? `${remainingTime.asHours} 時間` : `${remainingTime.asDays} 日間`;
 	const message = [
 		'To Moderators,',
 		'',
-		`A moderator has been inactive for a period of time. If there are ${timeVariant} of inactivity left, it will switch to invitation only.`,
-		'If you do not wish to move to invitation only, you must log into Misskey and update your last active date and time.',
-		'',
-		'---------------',
-		'',
-		'To モデレーター各位',
-		'',
-		`モデレーターが一定期間活動していないようです。あと${timeVariantJa}活動していない状態が続くと招待制に切り替わります。`,
-		'招待制に切り替わることを望まない場合は、Misskeyにログインして最終アクティブ日時を更新してください。',
-		'',
+		`No moderator has been active for a period of time. After further ${timeVariant} of inactivity, the instance will switch to invitation only.`,
+		'If you do not wish that to happen, please log into Sharkey to update your last active date and time.',
 	];
 
 	const html = message.join('<br>');
@@ -68,21 +60,13 @@ function generateModeratorInactivityMail(remainingTime: ModeratorInactivityRemai
 }
 
 function generateInvitationOnlyChangedMail() {
-	const subject = 'Change to Invitation-Only / 招待制に変更されました';
+	const subject = 'Switch to invitation only';
 
 	const message = [
 		'To Moderators,',
 		'',
-		`Changed to invitation only because no moderator activity was detected for ${MODERATOR_INACTIVITY_LIMIT_DAYS} days.`,
-		'To cancel the invitation only, you need to access the control panel.',
-		'',
-		'---------------',
-		'',
-		'To モデレーター各位',
-		'',
-		`モデレーターの活動が${MODERATOR_INACTIVITY_LIMIT_DAYS}日間検出されなかったため、招待制に変更されました。`,
-		'招待制を解除するには、コントロールパネルにアクセスする必要があります。',
-		'',
+		`The instance has been switched to invitation only, because no moderator activity was detected for ${MODERATOR_INACTIVITY_LIMIT_DAYS} days.`,
+		'To change this, please log in and use the control panel.',
 	];
 
 	const html = message.join('<br>');

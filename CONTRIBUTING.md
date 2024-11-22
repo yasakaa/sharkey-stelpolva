@@ -674,7 +674,7 @@ seems to do a decent job)
     `packages/backend/src/core/activitypub/models/ApNoteService.ts`,
     from `createNote` to `updateNote`
   * from `packages/backend/src/core/NoteCreateService.ts` to
-    `packages/backend/src/core/NoteEditService.vue`
+    `packages/backend/src/core/NoteEditService.ts`
   * from `packages/backend/src/server/api/endpoints/notes/create.ts`
     to `packages/backend/src/server/api/endpoints/notes/edit.ts`
   * from `packages/frontend/src/components/MkNote*.vue` to

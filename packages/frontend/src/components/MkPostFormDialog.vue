@@ -13,6 +13,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 import { shallowRef } from 'vue';
 import MkModal from '@/components/MkModal.vue';
 import MkPostForm from '@/components/MkPostForm.vue';
+import * as Misskey from 'misskey-js';
 import type { PostFormProps } from '@/types/post-form.js';
 
 const props = withDefaults(defineProps<PostFormProps & {

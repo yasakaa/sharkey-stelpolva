@@ -41,6 +41,7 @@ type MfmProps = {
 	rootScale?: number;
 	nyaize?: boolean | 'respect';
 	parsedNodes?: mfm.MfmNode[] | null;
+	isBlock?: boolean;
 };
 
 type MfmEvents = {
@@ -446,8 +447,6 @@ export default function (props: MfmProps, { emit }: { emit: SetupContext<MfmEven
 				return [h(EmEmoji, {
 					key: Math.random(),
 					emoji: token.props.emoji,
-					menu: props.enableEmojiMenu,
-					menuReaction: props.enableEmojiMenuReaction,
 				})];
 			}
 

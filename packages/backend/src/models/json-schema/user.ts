@@ -146,6 +146,18 @@ export const packedUserLiteSchema = {
 			type: 'boolean',
 			nullable: false, optional: false,
 		},
+		requireSigninToViewContents: {
+			type: 'boolean',
+			nullable: false, optional: true,
+		},
+		makeNotesFollowersOnlyBefore: {
+			type: 'number',
+			nullable: true, optional: true,
+		},
+		makeNotesHiddenBefore: {
+			type: 'number',
+			nullable: true, optional: true,
+		},
 		instance: {
 			type: 'object',
 			nullable: false, optional: true,

@@ -7,6 +7,7 @@
 import type { AuthenticationResponseJSON } from '@simplewebauthn/types';
 import { EventEmitter } from 'eventemitter3';
 import type { PublicKeyCredentialRequestOptionsJSON } from '@simplewebauthn/types';
+import _ReconnectingWebsocket from 'reconnecting-websocket';
 
 // Warning: (ae-forgotten-export) The symbol "components" needs to be exported by the entry point index.d.ts
 //
@@ -122,6 +123,9 @@ type AdminApproveUserRequest = operations['admin___approve-user']['requestBody']
 
 // @public (undocumented)
 type AdminAvatarDecorationsCreateRequest = operations['admin___avatar-decorations___create']['requestBody']['content']['application/json'];
+
+// @public (undocumented)
+type AdminAvatarDecorationsCreateResponse = operations['admin___avatar-decorations___create']['responses']['200']['content']['application/json'];
 
 // @public (undocumented)
 type AdminAvatarDecorationsDeleteRequest = operations['admin___avatar-decorations___delete']['requestBody']['content']['application/json'];
@@ -1286,6 +1290,7 @@ declare namespace entities {
         AdminAnnouncementsListResponse,
         AdminAnnouncementsUpdateRequest,
         AdminAvatarDecorationsCreateRequest,
+        AdminAvatarDecorationsCreateResponse,
         AdminAvatarDecorationsDeleteRequest,
         AdminAvatarDecorationsListRequest,
         AdminAvatarDecorationsListResponse,
@@ -3243,7 +3248,7 @@ export class Stream extends EventEmitter<StreamEvents> implements IStream {
     constructor(origin: string, user: {
         token: string;
     } | null, options?: {
-        WebSocket?: WebSocket;
+        WebSocket?: _ReconnectingWebsocket.Options['WebSocket'];
     });
     // (undocumented)
     close(): void;

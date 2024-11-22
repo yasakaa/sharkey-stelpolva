@@ -8,7 +8,6 @@ import { Endpoint } from '@/server/api/endpoint-base.js';
 import { NoteEntityService } from '@/core/entities/NoteEntityService.js';
 import { DI } from '@/di-symbols.js';
 import type { NotesRepository } from '@/models/_.js';
-import { QueryService } from '@/core/QueryService.js';
 import { ApiError } from '../../error.js';
 
 export const meta = {
@@ -28,6 +27,12 @@ export const meta = {
 			code: 'NO_SUCH_NOTE',
 			id: '24fcbfc6-2e37-42b6-8388-c29b3861a08d',
 		},
+
+		signinRequired: {
+			message: 'Signin required.',
+			code: 'SIGNIN_REQUIRED',
+			id: '8e75455b-738c-471d-9f80-62693f33372e',
+		},
 	},
 } as const;
 
@@ -44,23 +49,27 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 	constructor(
 		@Inject(DI.notesRepository)
 		private notesRepository: NotesRepository,
-		
 		private noteEntityService: NoteEntityService,
 		private queryService: QueryService,
 	) {
 		super(meta, paramDef, async (ps, me) => {
 			const query = await this.notesRepository.createQueryBuilder('note')
-				.where('note.id = :noteId', { noteId: ps.noteId });
+				.where('note.id = :noteId', { noteId: ps.noteId })
+				.innerJoinAndSelect('user');
 
 			this.queryService.generateVisibilityQuery(query, me);
 			if (me) {
 				this.queryService.generateBlockedUserQuery(query, me);
 			}
-			
+
 			const note = await query.getOne();
 
 			if (note === null) {
 				throw new ApiError(meta.errors.noSuchNote);
+			}
+
+			if (note.user!.requireSigninToViewContents && me == null) {
+				throw new ApiError(meta.errors.signinRequired);
 			}
 
 			return await this.noteEntityService.pack(note, me, {

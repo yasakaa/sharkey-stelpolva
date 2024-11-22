@@ -108,6 +108,10 @@ export class ApNoteService {
 			return new IdentifiableError('d450b8a9-48e4-4dab-ae36-f4db763fda7c', `invalid Note: attributedTo has different host. expected: ${expectHost}, actual: ${actualHost}`);
 		}
 
+		if (object.published && !this.idService.isSafeT(new Date(object.published).valueOf())) {
+			return new IdentifiableError('d450b8a9-48e4-4dab-ae36-f4db763fda7c', 'invalid Note: published timestamp is malformed');
+		}
+
 		if (actor) {
 			const attribution = (object.attributedTo) ? getOneApId(object.attributedTo) : actor.uri;
 			if (attribution !== actor.uri) {
@@ -116,10 +120,6 @@ export class ApNoteService {
 			if (user && attribution !== user.uri) {
 				return new IdentifiableError('d450b8a9-48e4-4dab-ae36-f4db763fda7c', `invalid Note: updated attribution does not match original attribution. updated attribution: ${user.uri}, original attribution: ${attribution}`);
 			}
-		}
-
-		if (object.published && !this.idService.isSafeT(new Date(object.published).valueOf())) {
-			return new IdentifiableError('d450b8a9-48e4-4dab-ae36-f4db763fda7c', 'invalid Note: published timestamp is malformed');
 		}
 
 		if (note) {
@@ -183,7 +183,7 @@ export class ApNoteService {
 			}
 
 			if (this.utilityService.punyHost(url) !== this.utilityService.punyHost(note.id)) {
-				throw new Error(`note url <> uri host mismatch: ${url} <> ${note.id}`);
+				throw new Error(`note url & uri host mismatch: note url: ${url}, note uri: ${note.id}`);
 			}
 		}
 
@@ -421,9 +421,6 @@ export class ApNoteService {
 
 		const url = getOneApHrefNullable(note.url);
 
-		if (url && !checkHttps(url)) {
-			throw new Error('unexpected schema of note url: ' + url);
-		}
 
 		if (url != null) {
 			if (!checkHttps(url)) {
@@ -431,7 +428,7 @@ export class ApNoteService {
 			}
 
 			if (this.utilityService.punyHost(url) !== this.utilityService.punyHost(note.id)) {
-				throw new Error(`note url <> id host mismatch: ${url} <> ${note.id}`);
+				throw new Error(`note url & uri host mismatch: note url: ${url}, note uri: ${note.id}`);
 			}
 		}
 

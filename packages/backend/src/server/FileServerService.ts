@@ -629,9 +629,6 @@ export class FileServerService {
 			// Maximum of 10 requests / 10 minutes
 			max: 10,
 			duration: 1000 * 60 * 10,
-
-			// Minimum of 250 ms between each request
-			minInterval: 250,
 		};
 
 		// Rate limit proxy requests

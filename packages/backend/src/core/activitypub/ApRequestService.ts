@@ -19,7 +19,6 @@ import type Logger from '@/logger.js';
 import type { IObject } from './type.js';
 import { validateContentTypeSetAsActivityPub } from '@/core/activitypub/misc/validator.js';
 import { assertActivityMatchesUrls } from '@/core/activitypub/misc/check-against-url.js';
-import { UtilityService } from "@/core/UtilityService.js";
 import type { IObject } from './type.js';
 
 type Request = {

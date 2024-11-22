@@ -807,7 +807,7 @@ export class ApInboxService {
 		} else if (getApType(object) === 'Question') {
 			await this.apQuestionService.updateQuestion(object, actor, resolver).catch(err => console.error(err));
 			return 'ok: Question updated';
-		} else if (getApType(object) === 'Note') {
+		} else if (isPost(object)) {
 			await this.apNoteService.updateNote(object, actor, resolver).catch(err => console.error(err));
 			return 'ok: Note updated';
 		} else {

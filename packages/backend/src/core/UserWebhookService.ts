@@ -14,7 +14,7 @@ import type { OnApplicationShutdown } from '@nestjs/common';
 import type { Packed } from '@/misc/json-schema.js';
 
 export type UserWebhookPayload<T extends WebhookEventTypes> =
-	T extends 'note' | 'reply' | 'renote' |'mention' ? {
+	T extends 'note' | 'reply' | 'renote' |'mention' | 'edited' ? {
 		note: Packed<'Note'>,
 	} :
 	T extends 'follow' | 'unfollow' ? {

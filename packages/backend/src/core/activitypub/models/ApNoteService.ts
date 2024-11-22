@@ -421,7 +421,6 @@ export class ApNoteService {
 
 		const url = getOneApHrefNullable(note.url);
 
-
 		if (url != null) {
 			if (!checkHttps(url)) {
 				throw new Error('unexpected schema of note url: ' + url);

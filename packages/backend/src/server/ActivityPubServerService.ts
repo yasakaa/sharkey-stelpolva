@@ -814,7 +814,7 @@ export class ActivityPubServerService {
 		});
 
 		fastify.get<{ Params: { acct: string; } }>('/@:acct', { constraints: { apOrHtml: 'ap' } }, async (request, reply) => {
-			if (await this.shouldRefuseGetRequest(request, reply, request.params.user)) return;
+			if (await this.shouldRefuseGetRequest(request, reply, request.params.acct)) return;
 
 			vary(reply.raw, 'Accept');
 

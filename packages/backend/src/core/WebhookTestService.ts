@@ -389,6 +389,10 @@ export class WebhookTestService {
 				send('mention', { note: toPackedNote(dummyMention1) });
 				break;
 			}
+			case 'edited': {
+				send('edited', { note: toPackedNote(dummyNote1) });
+				break;
+			}
 			case 'follow': {
 				send('follow', { user: toPackedUserDetailedNotMe(dummyUser1) });
 				break;

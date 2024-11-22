@@ -393,7 +393,7 @@ export class ApNoteService {
 		const object = await resolver.resolve(value);
 
 		const entryUri = getApId(value);
-		const err = this.validateNote(object, entryUri);
+		const err = this.validateNote(object, entryUri, actor, user, UpdatedNote);
 		if (err) {
 			this.logger.error(err.message, {
 				resolver: { history: resolver.getHistory() },

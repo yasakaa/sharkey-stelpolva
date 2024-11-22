@@ -8541,13 +8541,13 @@ export interface Locale extends ILocale {
          */
         "pleaseLogin": string;
         /**
-         * Allowed
-         */
-        "allowed": string;
-			/**
          * アクセスを許可すると、自動で以下のURLに遷移します
          */
         "byClickingYouWillBeRedirectedToThisUrl": string;
+        /**
+         * Allowed
+         */
+        "allowed": string;
     };
     "_antennaSources": {
         /**
@@ -10689,6 +10689,38 @@ export interface Locale extends ILocale {
          */
         "codeGeneratedDescription": string;
     };
+    "_selfXssPrevention": {
+        /**
+         * 警告
+         */
+        "warning": string;
+        /**
+         * 「この画面に何か貼り付けろ」はすべて詐欺です。
+         */
+        "title": string;
+        /**
+         * ここに何かを貼り付けると、悪意のあるユーザーにアカウントを乗っ取られたり、個人情報を盗まれたりする可能性があります。
+         */
+        "description1": string;
+        /**
+         * 貼り付けようとしているものが何なのかを正確に理解していない場合は、%c今すぐ作業を中止してこのウィンドウを閉じてください。
+         */
+        "description2": string;
+        /**
+         * 詳しくはこちらをご確認ください。 {link}
+         */
+        "description3": ParameterizedString<"link">;
+    };
+    "_followRequest": {
+        /**
+         * 受け取った申請
+         */
+        "recieved": string;
+        /**
+         * 送った申請
+         */
+        "sent": string;
+    };
     /**
      * Approvals
      */
@@ -11472,38 +11504,6 @@ export interface Locale extends ILocale {
      * Remote followers may have incomplete or outdated activity
      */
     "remoteFollowersWarning": string;
-    "_selfXssPrevention": {
-        /**
-         * 警告
-         */
-        "warning": string;
-        /**
-         * 「この画面に何か貼り付けろ」はすべて詐欺です。
-         */
-        "title": string;
-        /**
-         * ここに何かを貼り付けると、悪意のあるユーザーにアカウントを乗っ取られたり、個人情報を盗まれたりする可能性があります。
-         */
-        "description1": string;
-        /**
-         * 貼り付けようとしているものが何なのかを正確に理解していない場合は、%c今すぐ作業を中止してこのウィンドウを閉じてください。
-         */
-        "description2": string;
-        /**
-         * 詳しくはこちらをご確認ください。 {link}
-         */
-        "description3": ParameterizedString<"link">;
-    };
-    "_followRequest": {
-        /**
-         * 受け取った申請
-         */
-        "recieved": string;
-        /**
-         * 送った申請
-         */
-        "sent": string;
-    };
 }
 declare const locales: {
     [lang: string]: Locale;

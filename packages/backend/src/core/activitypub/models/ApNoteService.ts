@@ -143,6 +143,15 @@ export class ApNoteService {
 	}
 
 	/**
+	 * Returns true if the provided object / ID exists in the local database.
+	 */
+	@bindThis
+	public async hasNote(object: string | IObject | [string | IObject]): Promise<boolean> {
+		const uri = getApId(object);
+		return await this.notesRepository.existsBy({ uri });
+	}
+
+	/**
 	 * Noteを作成します。
 	 */
 	@bindThis

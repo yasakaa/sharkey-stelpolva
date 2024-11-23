@@ -7,6 +7,7 @@ import { URL } from 'node:url';
 import { Inject, Injectable, OnApplicationShutdown } from '@nestjs/common';
 import httpSignature from '@peertube/http-signature';
 import * as Bull from 'bullmq';
+import { AbortError } from 'node-fetch';
 import type Logger from '@/logger.js';
 import { FederatedInstanceService } from '@/core/FederatedInstanceService.js';
 import { FetchInstanceMetadataService } from '@/core/FetchInstanceMetadataService.js';
@@ -238,6 +239,19 @@ export class InboxProcessorService implements OnApplicationShutdown {
 					return e.message;
 				}
 			}
+
+			if (e instanceof StatusError) {
+				if (e.isRetryable) {
+					return `temporary error ${e.statusCode}`;
+				} else {
+					return `skip: permanent error ${e.statusCode}`;
+				}
+			}
+
+			if (e instanceof AbortError) {
+				return 'request aborted';
+			}
+
 			throw e;
 		}
 		return 'ok';

@@ -9759,6 +9759,10 @@ export interface Locale extends ILocale {
              * ロールタイムライン
              */
             "roleTimeline": string;
+            /**
+             * Following
+             */
+            "following": string;
         };
     };
     "_dialog": {
@@ -11504,6 +11508,10 @@ export interface Locale extends ILocale {
      * Remote followers may have incomplete or outdated activity
      */
     "remoteFollowersWarning": string;
+    /**
+     * Select a follow relationship...
+     */
+    "selectFollowRelationship": string;
 }
 declare const locales: {
     [lang: string]: Locale;

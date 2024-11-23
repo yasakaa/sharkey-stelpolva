@@ -11,6 +11,7 @@ import { DI } from '@/di-symbols.js';
 import type Logger from '@/logger.js';
 import { bindThis } from '@/decorators.js';
 import { CheckModeratorsActivityProcessorService } from '@/queue/processors/CheckModeratorsActivityProcessorService.js';
+import { StatusError } from '@/misc/status-error.js';
 import { UserWebhookDeliverProcessorService } from './processors/UserWebhookDeliverProcessorService.js';
 import { SystemWebhookDeliverProcessorService } from './processors/SystemWebhookDeliverProcessorService.js';
 import { EndedPollNotificationProcessorService } from './processors/EndedPollNotificationProcessorService.js';
@@ -134,7 +135,7 @@ export class QueueProcessorService implements OnApplicationShutdown {
 			// 何故かeがundefinedで来ることがある
 			if (!e) return '?';
 
-			if (e instanceof Bull.UnrecoverableError || e.name === 'AbortError') {
+			if (e instanceof Bull.UnrecoverableError || e.name === 'AbortError' || e instanceof StatusError) {
 				return `${e.name}: ${e.message}`;
 			}
 
@@ -148,12 +149,15 @@ export class QueueProcessorService implements OnApplicationShutdown {
 		function renderJob(job?: Bull.Job) {
 			if (!job) return '?';
 
-			return {
-				name: job.name || undefined,
+			const info: Record<string, string> = {
 				info: getJobInfo(job),
-				failedReason: job.failedReason || undefined,
 				data: job.data,
 			};
+
+			if (job.name) info.name = job.name;
+			if (job.failedReason) info.failedReason = job.failedReason;
+
+			return info;
 		}
 
 		//#region system

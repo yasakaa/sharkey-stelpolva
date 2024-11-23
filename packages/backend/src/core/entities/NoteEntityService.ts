@@ -16,6 +16,7 @@ import { bindThis } from '@/decorators.js';
 import { DebounceLoader } from '@/misc/loader.js';
 import { IdService } from '@/core/IdService.js';
 import { ReactionsBufferingService } from '@/core/ReactionsBufferingService.js';
+import { isPackedPureRenote } from '@/misc/is-renote.js';
 import type { OnModuleInit } from '@nestjs/common';
 import type { CacheService } from '../CacheService.js';
 import type { CustomEmojiService } from '../CustomEmojiService.js';
@@ -180,10 +181,9 @@ export class NoteEntityService implements OnModuleInit {
 				} else {
 					// フォロワーかどうか
 					// TODO: 当関数呼び出しごとにクエリが走るのは重そうだからなんとかする
-					const appearNote = packedNote.renote ?? packedNote;
 					const isFollowing = await this.followingsRepository.exists({
 						where: {
-							followeeId: appearNote.userId,
+							followeeId: packedNote.userId,
 							followerId: meId,
 						},
 					});
@@ -191,6 +191,14 @@ export class NoteEntityService implements OnModuleInit {
 					hide = !isFollowing;
 				}
 			}
+		}
+
+		// If this is a pure renote (boost), then we should *also* check the boosted note's visibility.
+		// Otherwise we can have empty notes on the timeline, which is not good.
+		// Notes are packed in depth-first order, so we can safely grab the "isHidden" property to avoid duplicated checks.
+		// This is pulled out to ensure that we check both the renote *and* the boosted note.
+		if (packedNote.renote?.isHidden && isPackedPureRenote(packedNote)) {
+			hide = true;
 		}
 
 		if (!hide && meId && packedNote.userId !== meId) {

@@ -10,9 +10,9 @@ import lightTheme from '@@/themes/l-cherry.json5';
 import darkTheme from '@@/themes/d-ice.json5';
 import { searchEngineMap } from './scripts/search-engine-map.js';
 import type { SoundType } from '@/scripts/sound.js';
-import type { FollowingFeedTab } from '@/scripts/following-feed-utils.js';
 import { DEFAULT_DEVICE_KIND, type DeviceKind } from '@/scripts/device-kind.js';
 import { miLocalStorage } from '@/local-storage.js';
+import { defaultFollowingFeedState } from '@/scripts/following-feed-utils.js';
 import { Storage } from '@/pizzax.js';
 import type { Ast } from '@syuilo/aiscript';
 
@@ -250,15 +250,7 @@ export const defaultStore = markRaw(new Storage('base', {
 	},
 	followingFeed: {
 		where: 'account',
-		default: {
-			withNonPublic: false,
-			withQuotes: false,
-			withBots: true,
-			withReplies: false,
-			onlyFiles: false,
-			userList: 'following' as FollowingFeedTab,
-			remoteWarningDismissed: false,
-		},
+		default: defaultFollowingFeedState,
 	},
 
 	overridedDeviceKind: {

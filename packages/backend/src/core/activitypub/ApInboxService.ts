@@ -32,7 +32,7 @@ import { AbuseReportService } from '@/core/AbuseReportService.js';
 import { FederatedInstanceService } from '@/core/FederatedInstanceService.js';
 import { fromTuple } from '@/misc/from-tuple.js';
 import { IdentifiableError } from '@/misc/identifiable-error.js';
-import { getApHrefNullable, getApId, getApIds, getApType, isAccept, isActor, isAdd, isAnnounce, isBlock, isCollection, isCollectionOrOrderedCollection, isCreate, isDelete, isFlag, isFollow, isLike, isMove, isPost, isReject, isRemove, isTombstone, isUndo, isUpdate, validActor, validPost } from './type.js';
+import { getApHrefNullable, getApId, getApIds, getApType, isAccept, isActor, isAdd, isAnnounce, isApObject, isBlock, isCollection, isCollectionOrOrderedCollection, isCreate, isDelete, isFlag, isFollow, isLike, isMove, isPost, isReject, isRemove, isTombstone, isUndo, isUpdate, validActor, validPost } from './type.js';
 import { ApNoteService } from './models/ApNoteService.js';
 import { ApLoggerService } from './ApLoggerService.js';
 import { ApDbResolverService } from './ApDbResolverService.js';
@@ -166,7 +166,7 @@ export class ApInboxService {
 		} else if (isAnnounce(activity)) {
 			return await this.announce(actor, activity, resolver);
 		} else if (isLike(activity)) {
-			return await this.like(actor, activity);
+			return await this.like(actor, activity, resolver);
 		} else if (isUndo(activity)) {
 			return await this.undo(actor, activity, resolver);
 		} else if (isBlock(activity)) {
@@ -198,10 +198,13 @@ export class ApInboxService {
 	}
 
 	@bindThis
-	private async like(actor: MiRemoteUser, activity: ILike): Promise<string> {
+	private async like(actor: MiRemoteUser, activity: ILike, resolver?: Resolver): Promise<string> {
 		const targetUri = getApId(activity.object);
 
-		const note = await this.apNoteService.fetchNote(targetUri);
+		const object = fromTuple(activity.object);
+		if (!object) return 'skip: activity has no object property';
+
+		const note = await this.apNoteService.resolveNote(object, { resolver });
 		if (!note) return `skip: target note not found ${targetUri}`;
 
 		await this.apNoteService.extractEmojis(activity.tag ?? [], actor.host).catch(() => null);
@@ -272,8 +275,12 @@ export class ApInboxService {
 		}
 
 		if (activity.target === actor.featured) {
-			const object = fromTuple(activity.object);
-			const note = await this.apNoteService.resolveNote(object, { resolver });
+			const activityObject = fromTuple(activity.object);
+			if (isApObject(activityObject) && !isPost(activityObject)) {
+				return `unsupported featured object type: ${getApType(activityObject)}`;
+			}
+
+			const note = await this.apNoteService.resolveNote(activityObject, { resolver });
 			if (note == null) return 'note not found';
 			await this.notePiningService.addPinned(actor, note.id);
 			return;
@@ -386,7 +393,7 @@ export class ApInboxService {
 	}
 
 	@bindThis
-	private async create(actor: MiRemoteUser, activity: ICreate, resolver?: Resolver): Promise<string | void> {
+	private async create(actor: MiRemoteUser, activity: ICreate | IUpdate, resolver?: Resolver): Promise<string | void> {
 		const uri = getApId(activity);
 
 		this.logger.info(`Create: ${uri}`);
@@ -421,14 +428,14 @@ export class ApInboxService {
 		});
 
 		if (isPost(object)) {
-			await this.createNote(resolver, actor, object, false, activity);
+			await this.createNote(resolver, actor, object, false);
 		} else {
 			return `Unknown type: ${getApType(object)}`;
 		}
 	}
 
 	@bindThis
-	private async createNote(resolver: Resolver, actor: MiRemoteUser, note: IObject, silent = false, activity?: ICreate): Promise<string> {
+	private async createNote(resolver: Resolver, actor: MiRemoteUser, note: IObject, silent = false): Promise<string> {
 		const uri = getApId(note);
 
 		if (typeof note === 'object') {
@@ -643,6 +650,10 @@ export class ApInboxService {
 
 		if (activity.target === actor.featured) {
 			const activityObject = fromTuple(activity.object);
+			if (isApObject(activityObject) && !isPost(activityObject)) {
+				return `unsupported featured object type: ${getApType(activityObject)}`;
+			}
+
 			const note = await this.apNoteService.resolveNote(activityObject, { resolver });
 			if (note == null) return 'note not found';
 			await this.notePiningService.removePinned(actor, note.id);
@@ -787,7 +798,7 @@ export class ApInboxService {
 	}
 
 	@bindThis
-	private async update(actor: MiRemoteUser, activity: IUpdate, resolver?: Resolver): Promise<string> {
+	private async update(actor: MiRemoteUser, activity: IUpdate, resolver?: Resolver): Promise<string | void> {
 		if (actor.uri !== activity.actor) {
 			return 'skip: invalid actor';
 		}
@@ -806,9 +817,19 @@ export class ApInboxService {
 			await this.apPersonService.updatePerson(actor.uri, resolver, object);
 			return 'ok: Person updated';
 		} else if (getApType(object) === 'Question') {
+			// If we get an Update(Question) for a note that doesn't exist, then create it instead
+			if (!await this.apNoteService.hasNote(object)) {
+				return await this.create(actor, activity, resolver);
+			}
+
 			await this.apQuestionService.updateQuestion(object, actor, resolver).catch(err => console.error(err));
 			return 'ok: Question updated';
 		} else if (isPost(object)) {
+			// If we get an Update(Note) for a note that doesn't exist, then create it instead
+			if (!await this.apNoteService.hasNote(object)) {
+				return await this.create(actor, activity, resolver);
+			}
+
 			await this.apNoteService.updateNote(object, actor, resolver).catch(err => console.error(err));
 			return 'ok: Note updated';
 		} else {

@@ -496,5 +496,5 @@ function applyEnvOverrides(config: Source) {
 	_apply_top([['outgoingAddress', 'outgoingAddressFamily', 'proxy', 'proxySmtp', 'mediaProxy', 'proxyRemoteFiles', 'videoThumbnailGenerator']]);
 	_apply_top([['maxFileSize', 'maxNoteLength', 'maxRemoteNoteLength', 'maxAltTextLength', 'maxRemoteAltTextLength', 'pidFile']]);
 	_apply_top(['import', ['downloadTimeout', 'maxFileSize']]);
-	_apply_top([['signToActivityPubGet', 'checkActivityPubGetSignature']]);
+	_apply_top([['signToActivityPubGet', 'checkActivityPubGetSignature', 'setupPassword']]);
 }

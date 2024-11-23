@@ -712,7 +712,8 @@ seems to do a decent job)
   test:e2e` (requires a test database, [see above](#testing)) and fix
   as much as you can
   * right now `megalodon` doesn't pass its tests, so we skip them
-* run lint `pnpm --filter=backend lint` + `pnpm --filter=frontend
-  --filter=frontend-embed eslint` and fix as much as you can
+* run lint `pnpm --filter=backend --filter=frontend-shared lint` +
+  `pnpm --filter=frontend --filter=frontend-embed eslint` and fix as
+  much as you can
 
 Then push and open a Merge Request.

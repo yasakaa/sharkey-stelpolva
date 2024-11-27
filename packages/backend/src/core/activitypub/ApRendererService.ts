@@ -469,6 +469,7 @@ export class ApRendererService {
 		};
 	}
 
+	// if you change this, also change `server/api/endpoints/i/update.ts`
 	@bindThis
 	public async renderPerson(user: MiLocalUser) {
 		const id = this.userEntityService.genLocalUserUri(user.id);

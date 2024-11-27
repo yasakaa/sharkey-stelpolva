@@ -166,7 +166,7 @@ fastify.get('/.well-known/change-password', async (request, reply) => {
 					{ element: 'Link', attributes: self },
 					{ element: 'Link', attributes: profilePage },
 					{ element: 'Link', attributes: subscribe },
-					{ element: 'Alias', attributes: profileLink });
+					{ element: 'Alias', value: profileLink });
 			} else {
 				reply.type(jrd);
 				return {

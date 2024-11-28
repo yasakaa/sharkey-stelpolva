@@ -104,7 +104,7 @@ export function getUserMenu(user: Misskey.entities.UserDetailed, router: IRouter
 	async function getConfirmed(text: string): Promise<boolean> {
 		const confirm = await os.confirm({
 			type: 'warning',
-			title: 'confirm',
+			title: i18n.ts.confirm,
 			text,
 		});
 

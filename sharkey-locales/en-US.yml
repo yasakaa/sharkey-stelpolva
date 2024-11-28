@@ -156,7 +156,6 @@ allowClickingNotifications: "Allow clicking on pop-up notifications"
 pinnedOnly: "Pinned"
 blockingYou: "Blocking you"
 warnExternalUrl: "Show warning when opening external URLs"
-confirm: "Confirm"
 _delivery:
   stop: "Suspend delivery"
   resume: "Resume delivery"

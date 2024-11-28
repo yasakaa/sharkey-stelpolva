@@ -11000,10 +11000,6 @@ export interface Locale extends ILocale {
      * Show warning when opening external URLs
      */
     "warnExternalUrl": string;
-    /**
-     * Confirm
-     */
-    "confirm": string;
     "_mfm": {
         /**
          * This is not a widespread feature, it may not display properly on most other fedi software, including other Misskey forks

@@ -588,12 +588,12 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 	// `ApRendererService.renderPerson`
 	private userNeedsPublishing(oldUser: MiLocalUser, newUser: Partial<MiUser>): boolean {
 		for (const field of ['avatarId', 'bannerId', 'backgroundId', 'isBot', 'username', 'name', 'isLocked', 'isExplorable', 'isCat', 'noindex', 'speakAsCat', 'movedToUri', 'alsoKnownAs'] as (keyof MiUser)[]) {
-			if (newUser.hasOwnProperty(field) && oldUser[field] !== newUser[field]) {
+			if ((field in newUser) && oldUser[field] !== newUser[field]) {
 				return true;
 			}
 		}
 		for (const arrayField of ['emojis', 'tags'] as (keyof MiUser)[]) {
-			if (newUser.hasOwnProperty(arrayField) !== oldUser.hasOwnProperty(arrayField)) {
+			if ((arrayField in newUser) !== (arrayField in oldUser)) {
 				return true;
 			}
 
@@ -611,12 +611,12 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 
 	private profileNeedsPublishing(oldProfile: MiUserProfile, newProfile: Partial<MiUserProfile>): boolean {
 		for (const field of ['description', 'followedMessage', 'birthday', 'location', 'listenbrainz'] as (keyof MiUserProfile)[]) {
-			if (newProfile.hasOwnProperty(field) && oldProfile[field] !== newProfile[field]) {
+			if ((field in newProfile) && oldProfile[field] !== newProfile[field]) {
 				return true;
 			}
 		}
 		for (const arrayField of ['fields'] as (keyof MiUserProfile)[]) {
-			if (newProfile.hasOwnProperty(arrayField) !== oldProfile.hasOwnProperty(arrayField)) {
+			if ((arrayField in newProfile) !== (arrayField in oldProfile)) {
 				return true;
 			}
 

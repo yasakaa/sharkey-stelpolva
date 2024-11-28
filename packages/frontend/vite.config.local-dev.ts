@@ -2,11 +2,10 @@ import dns from 'dns';
 import { readFile } from 'node:fs/promises';
 import type { IncomingMessage } from 'node:http';
 import { defineConfig } from 'vite';
-import type { PluginOption, UserConfig } from 'vite';
+import type { UserConfig } from 'vite';
 import * as yaml from 'js-yaml';
 import locales from '../../locales/index.js';
 import { getConfig } from './vite.config.js';
-import packageInfo from './package.json' with { type: 'json' };
 
 dns.setDefaultResultOrder('ipv4first');
 
@@ -25,20 +24,6 @@ function varyHandler(req: IncomingMessage) {
 	}
 	return '/index.html';
 }
-
-const externalPackages = [
-	// sharkey: Used for SkFlashPlayer, has large wasm files so it's loaded via Ruffle's preferred CDN
-	{
-		name: 'ruffle',
-		match: /^@ruffle-rs\/ruffle\/?(?<file>.*)$/,
-		path(id: string, pattern: RegExp): string {
-			const match = pattern.exec(id)?.groups;
-			return match
-				? `https://esm.sh/@ruffle-rs/ruffle@${packageInfo.dependencies['@ruffle-rs/ruffle']}/${match['file']}?raw`
-				: id;
-		},
-	},
-]
 
 const devConfig: UserConfig = {
 	// 基本の設定は vite.config.js から引き継ぐ
@@ -103,19 +88,6 @@ const devConfig: UserConfig = {
 		...defaultConfig.build,
 		rollupOptions: {
 			...defaultConfig.build?.rollupOptions,
-			external: externalPackages.map(p => p.match),
-			output: {
-				...defaultConfig.build?.rollupOptions?.output,
-				paths(id) {
-					for (const p of externalPackages) {
-						if (p.match.test(id)) {
-							return p.path(id, p.match);
-						}
-					}
-
-					return id;
-				},
-			},
 			input: 'index.html',
 		},
 	},

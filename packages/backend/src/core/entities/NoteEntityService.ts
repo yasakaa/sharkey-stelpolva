@@ -218,8 +218,8 @@ export class NoteEntityService implements OnModuleInit {
 			packedNote.reactionAcceptance = null;
 			packedNote.reactionAndUserPairCache = undefined;
 			packedNote.reactionCount = 0;
-			packedNote.reactionEmojis = undefined;
-			packedNote.reactions = undefined;
+			packedNote.reactionEmojis = {};
+			packedNote.reactions = {};
 			packedNote.isHidden = true;
 			// TODO: hiddenReason みたいなのを提供しても良さそう
 		}

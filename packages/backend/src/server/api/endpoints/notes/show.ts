@@ -35,6 +35,12 @@ export const meta = {
 			id: '8e75455b-738c-471d-9f80-62693f33372e',
 		},
 	},
+
+	// 2 calls per second
+	limit: {
+		duration: 1000,
+		max: 2,
+	},
 } as const;
 
 export const paramDef = {
@@ -50,6 +56,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 	constructor(
 		@Inject(DI.notesRepository)
 		private notesRepository: NotesRepository,
+
 		private noteEntityService: NoteEntityService,
 		private queryService: QueryService,
 	) {

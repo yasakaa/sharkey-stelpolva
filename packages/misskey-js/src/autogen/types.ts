@@ -11042,6 +11042,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -11092,6 +11098,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -11161,6 +11173,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -11213,6 +11231,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -11255,6 +11279,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -11321,6 +11351,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -11371,6 +11407,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -11438,6 +11480,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -11624,6 +11672,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -11678,6 +11732,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -11726,6 +11786,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -11783,6 +11849,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -11845,6 +11917,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -11898,6 +11976,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -12080,6 +12164,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -12191,6 +12281,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -12239,6 +12335,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -12301,6 +12403,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -12359,6 +12467,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -12409,6 +12523,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -12484,6 +12604,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -12532,6 +12658,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -12599,6 +12731,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -12647,6 +12785,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -12703,6 +12847,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -12745,6 +12895,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -12809,6 +12965,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -12881,6 +13043,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -12939,6 +13107,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -13014,6 +13188,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -13077,6 +13257,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -13179,6 +13365,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -13260,6 +13452,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -13323,6 +13521,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -13412,6 +13616,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -13478,6 +13688,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -13551,6 +13767,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -13614,6 +13836,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -13683,6 +13911,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -13801,6 +14035,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -13857,6 +14097,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -13909,6 +14155,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -13951,6 +14203,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -14015,6 +14273,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -14065,6 +14329,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -14126,6 +14396,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -14174,6 +14450,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -14230,6 +14512,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -14272,6 +14560,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -14321,6 +14615,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -14393,6 +14693,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -14453,6 +14759,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -14502,6 +14814,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -14634,6 +14952,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -14683,6 +15007,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -14745,6 +15075,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -14796,6 +15132,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -14855,6 +15197,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -14994,6 +15342,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -15108,6 +15462,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -15166,6 +15526,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -15216,6 +15582,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -15273,6 +15645,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -15336,6 +15714,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -15388,6 +15772,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -15454,6 +15844,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -15496,6 +15892,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -15614,6 +16016,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -15673,6 +16081,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -15746,6 +16160,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -15803,6 +16223,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -15851,6 +16277,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -15914,6 +16346,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -15969,6 +16407,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -16328,6 +16772,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -16378,6 +16828,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -16445,6 +16901,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -16508,6 +16970,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -16556,6 +17024,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -16616,6 +17090,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -16658,6 +17138,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -16716,6 +17202,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -16835,6 +17327,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -16883,6 +17381,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -16941,6 +17445,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -16989,6 +17499,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -17106,6 +17622,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -17158,6 +17680,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -17224,6 +17752,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -17281,6 +17815,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -17334,6 +17874,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -17380,6 +17926,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -17451,6 +18003,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -17493,6 +18051,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -17549,6 +18113,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -17667,6 +18237,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -17886,6 +18462,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -18069,6 +18651,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -18138,6 +18726,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -18186,6 +18780,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -18836,6 +19436,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -18898,6 +19504,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -18952,6 +19564,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -19510,6 +20128,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -19568,6 +20192,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -19622,6 +20252,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -19662,6 +20298,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -19714,6 +20356,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -19831,6 +20479,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -19880,6 +20534,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -19943,6 +20603,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -19995,6 +20661,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -20056,6 +20728,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -20107,6 +20785,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -20165,6 +20849,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -20211,6 +20901,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -20270,6 +20966,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -20320,6 +21022,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -20383,6 +21091,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -20433,6 +21147,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -20870,6 +21590,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -20925,6 +21651,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -20996,6 +21728,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -21053,6 +21791,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -21101,6 +21845,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -21216,6 +21966,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -21264,6 +22020,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -21326,6 +22088,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -21370,6 +22138,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -21428,6 +22202,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -21472,6 +22252,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -21525,6 +22311,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -21585,6 +22377,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -21701,6 +22499,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -21755,6 +22559,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -21869,6 +22679,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -21927,6 +22743,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -21979,6 +22801,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -22047,6 +22875,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -22109,6 +22943,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -22159,6 +22999,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -22217,6 +23063,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -22484,6 +23336,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -22538,6 +23396,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -22617,6 +23481,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -22683,6 +23553,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -22745,6 +23621,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -22825,6 +23707,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -22895,6 +23783,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -22952,6 +23846,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -23014,6 +23914,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -23067,6 +23973,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -23115,6 +24027,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -23180,6 +24098,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -23229,6 +24153,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -23344,6 +24274,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -23408,6 +24344,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -23464,6 +24406,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -23536,6 +24484,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -23615,6 +24569,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -23665,6 +24625,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -23722,6 +24688,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -23836,6 +24808,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -23910,6 +24888,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -23968,6 +24952,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -24105,6 +25095,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -24260,6 +25256,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -24363,6 +25365,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -24403,6 +25411,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -24508,6 +25522,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -24643,6 +25663,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -24685,6 +25711,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -24737,6 +25769,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -24797,6 +25835,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -24845,6 +25889,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -25042,6 +26092,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -25084,6 +26140,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -25136,6 +26198,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -25194,6 +26262,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -25242,6 +26316,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -25368,6 +26448,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -25430,6 +26516,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -25478,6 +26570,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -25520,6 +26618,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -25576,6 +26680,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -25618,6 +26728,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -25672,6 +26788,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -25740,6 +26862,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -25798,6 +26926,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -25904,6 +27038,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -25952,6 +27092,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -26015,6 +27161,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -26065,6 +27217,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -26131,6 +27289,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -26186,6 +27350,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -26255,6 +27425,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -26302,6 +27478,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -26374,6 +27556,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -26425,6 +27613,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -26502,6 +27696,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -26558,6 +27758,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -26621,6 +27827,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -26689,6 +27901,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -26745,6 +27963,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -26808,6 +28032,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -26866,6 +28096,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -26919,6 +28155,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -26967,6 +28209,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -27025,6 +28273,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -27075,6 +28329,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -27195,6 +28455,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -27247,6 +28513,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -27295,6 +28567,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -27355,6 +28633,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -27410,6 +28694,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -27461,6 +28751,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -27532,6 +28828,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -27616,6 +28918,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -27676,6 +28984,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -27732,6 +29046,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -27798,6 +29118,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -27850,6 +29176,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -27929,6 +29261,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -27978,6 +29316,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -28036,6 +29380,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -28104,6 +29454,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -28158,6 +29514,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -28219,6 +29581,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -28269,6 +29637,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -28369,6 +29743,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -28490,6 +29870,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -28540,6 +29926,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -28663,6 +30055,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -28711,6 +30109,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -28771,6 +30175,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -28837,6 +30247,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -28879,6 +30295,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -28937,6 +30359,12 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Internal server error */
       500: {
         content: {
@@ -28985,6 +30413,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };
@@ -29043,6 +30477,12 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };

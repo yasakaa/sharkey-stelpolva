@@ -19,16 +19,17 @@ export async function server() {
 		logger: new NestLogger(),
 	});
 
-	const serverService = app.get(ServerService);
-	await serverService.launch();
-
 	if (process.env.NODE_ENV !== 'test') {
-		app.get(ChartManagementService).start();
+		await app.get(ChartManagementService).start();
 	}
 	if (!envOption.noDaemons) {
-		app.get(QueueStatsService).start();
-		app.get(ServerStatsService).start();
+		await app.get(QueueStatsService).start();
+		await app.get(ServerStatsService).start();
 	}
+
+	// Start server last so the other services can register hooks first
+	const serverService = app.get(ServerService);
+	await serverService.launch();
 
 	return app;
 }
@@ -38,8 +39,8 @@ export async function jobQueue() {
 		logger: new NestLogger(),
 	});
 
-	jobQueue.get(QueueProcessorService).start();
-	jobQueue.get(ChartManagementService).start();
+	await jobQueue.get(QueueProcessorService).start();
+	await jobQueue.get(ChartManagementService).start();
 
 	return jobQueue;
 }

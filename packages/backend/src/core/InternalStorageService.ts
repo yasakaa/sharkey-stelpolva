@@ -4,7 +4,7 @@
  */
 
 import * as fs from 'node:fs';
-import { copyFile, mkdir, unlink, writeFile } from 'node:fs/promises';
+import { copyFile, unlink, writeFile } from 'node:fs/promises';
 import * as Path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';

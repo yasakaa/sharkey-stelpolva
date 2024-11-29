@@ -32,7 +32,7 @@ import { AbuseReportService } from '@/core/AbuseReportService.js';
 import { FederatedInstanceService } from '@/core/FederatedInstanceService.js';
 import { fromTuple } from '@/misc/from-tuple.js';
 import { IdentifiableError } from '@/misc/identifiable-error.js';
-import { getApHrefNullable, getApId, getApIds, getApType, isAccept, isActor, isAdd, isAnnounce, isApObject, isBlock, isCollection, isCollectionOrOrderedCollection, isCreate, isDelete, isFlag, isFollow, isLike, isMove, isPost, isReject, isRemove, isTombstone, isUndo, isUpdate, validActor, validPost } from './type.js';
+import { getApHrefNullable, getApId, getApIds, getApType, getNullableApId, isAccept, isActor, isAdd, isAnnounce, isApObject, isBlock, isCollection, isCollectionOrOrderedCollection, isCreate, isDelete, isFlag, isFollow, isLike, isMove, isPost, isReject, isRemove, isTombstone, isUndo, isUpdate, validActor, validPost } from './type.js';
 import { ApNoteService } from './models/ApNoteService.js';
 import { ApLoggerService } from './ApLoggerService.js';
 import { ApDbResolverService } from './ApDbResolverService.js';
@@ -342,7 +342,7 @@ export class ApInboxService {
 				// 対象が4xxならスキップ
 				if (err instanceof StatusError) {
 					if (!err.isRetryable) {
-						return `Ignored announce target ${target.id} - ${err.statusCode}`;
+						return `skip: ignored announce target ${target.id} - ${err.statusCode}`;
 					}
 					return `Error in announce target ${target.id} - ${err.statusCode}`;
 				}
@@ -430,7 +430,7 @@ export class ApInboxService {
 		if (isPost(object)) {
 			await this.createNote(resolver, actor, object, false);
 		} else {
-			return `Unknown type: ${getApType(object)}`;
+			return `skip: Unsupported type for Create: ${getApType(object)} ${getNullableApId(object)}`;
 		}
 	}
 
@@ -462,7 +462,7 @@ export class ApInboxService {
 			return 'ok';
 		} catch (err) {
 			if (err instanceof StatusError && !err.isRetryable) {
-				return `skip ${err.statusCode}`;
+				return `skip: ${err.statusCode}`;
 			} else {
 				throw err;
 			}
@@ -549,7 +549,7 @@ export class ApInboxService {
 			const note = await this.apDbResolverService.getNoteFromApId(uri);
 
 			if (note == null) {
-				return 'message not found';
+				return 'skip: ignoring deleted note on both ends';
 			}
 
 			if (note.userId !== actor.id) {
@@ -688,7 +688,7 @@ export class ApInboxService {
 		if (isAnnounce(object)) return await this.undoAnnounce(actor, object);
 		if (isAccept(object)) return await this.undoAccept(actor, object);
 
-		return `skip: unknown object type ${getApType(object)}`;
+		return `skip: unknown activity type ${getApType(object)}`;
 	}
 
 	@bindThis
@@ -822,7 +822,7 @@ export class ApInboxService {
 				return await this.create(actor, activity, resolver);
 			}
 
-			await this.apQuestionService.updateQuestion(object, actor, resolver).catch(err => console.error(err));
+			await this.apQuestionService.updateQuestion(object, actor, resolver);
 			return 'ok: Question updated';
 		} else if (isPost(object)) {
 			// If we get an Update(Note) for a note that doesn't exist, then create it instead
@@ -830,10 +830,10 @@ export class ApInboxService {
 				return await this.create(actor, activity, resolver);
 			}
 
-			await this.apNoteService.updateNote(object, actor, resolver).catch(err => console.error(err));
+			await this.apNoteService.updateNote(object, actor, resolver);
 			return 'ok: Note updated';
 		} else {
-			return `skip: Unknown type: ${getApType(object)}`;
+			return `skip: Unsupported type for Update: ${getApType(object)} ${getNullableApId(object)}`;
 		}
 	}
 

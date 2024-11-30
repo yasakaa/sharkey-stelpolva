@@ -60,8 +60,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 import { ref, computed, onDeactivated } from 'vue';
 import * as Misskey from 'misskey-js';
 import packageInfo from '../../package.json';
-import MkEllipsis from './global/MkEllipsis.vue';
-import MkLoading from './global/MkLoading.vue';
+import MkEllipsis from '@/components/global/MkEllipsis.vue';
+import MkLoading from '@/components/global/MkLoading.vue';
 import { i18n } from '@/i18n.js';
 import { defaultStore } from '@/store.js';
 import { PublicAPI, PublicAPILike } from '@/types/ruffle/setup'; // This gives us the types for window.RufflePlayer, etc via side effects

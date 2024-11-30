@@ -43,7 +43,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			</button>
 			<input v-if="player && !playerHide" v-model="player.volume" type="range" min="0" max="1" step="0.1"/>
 			<input v-else type="range" min="0" max="1" value="1" disabled/>
-			<a :title="i18n.ts.download" :href="flashFile.url" target="_blank">
+			<a :title="i18n.ts.download" :href="flashFile.url" :download="flashFile.name" target="_blank">
 				<i class="ph-download ph-bold ph-lg"></i>
 			</a>
 			<button :class="$style.fullscreen" :disabled="playerHide" @click="fullscreen()">

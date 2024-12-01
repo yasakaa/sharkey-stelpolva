@@ -336,6 +336,10 @@ export interface ILike extends IActivity {
 	_misskey_reaction?: string;
 }
 
+export interface IDislike extends IActivity {
+	type: 'Dislike';
+}
+
 export interface IAnnounce extends IActivity {
 	type: 'Announce';
 }
@@ -368,6 +372,7 @@ export const isLike = (object: IObject): object is ILike => {
 	const type = getApType(object);
 	return type != null && ['Like', 'EmojiReaction', 'EmojiReact'].includes(type);
 };
+export const isDislike = (object: IObject): object is IDislike => getApType(object) === 'Dislike';
 export const isAnnounce = (object: IObject): object is IAnnounce => getApType(object) === 'Announce';
 export const isBlock = (object: IObject): object is IBlock => getApType(object) === 'Block';
 export const isFlag = (object: IObject): object is IFlag => getApType(object) === 'Flag';

@@ -286,7 +286,6 @@ export async function common(createVue: () => App<Element>) {
 	const fontId = def_arr?.[0];
 	if (fontId) {
 		loadFontStyle(fontId);
-		document.documentElement.classList.add(`default-font-${def_arr.join('_')}`);
 	}
 	//#endregion
 

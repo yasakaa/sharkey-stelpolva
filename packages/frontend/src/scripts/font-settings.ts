@@ -1,4 +1,5 @@
 import { computed, ref, watch } from 'vue';
+import { loadFontStyle } from './load-font.js';
 import type { Ref, ComputedRef } from 'vue';
 import { miLocalStorage } from '@/local-storage.js';
 import { i18n } from '@/i18n.js';
@@ -53,14 +54,6 @@ function getFontId(name: string, option: string) {
 	}
 }
 
-async function loadFontStyle(fontId: string) {
-	try {
-		await import(`@/styles-font/${fontId}.scss`);
-	} catch (e) {
-		console.warn(`Failed to load font style: ${fontId}`, e);
-	}
-}
-
 export function getDefaultFontSettings() {
 	const def_arr = miLocalStorage.getItem('defaultFontFace')?.split('_');
 	const fontFace = ref(def_arr?.[0] ?? 'maokentangyuan');
@@ -77,10 +70,7 @@ export function getDefaultFontSettings() {
 		miLocalStorage.setItem('defaultFontFace', newFontId);
 		document.documentElement.classList.add(`default-font-${newFontId}`);
 
-		if (['misskey-biz', 'roboto', 'arial', 'times', 'sharkey-default', 'system-ui'].includes(fontFace.value)) {
-			await loadFontStyle(fontFace.value);
-		}
-		console.log(newFontId);
+		await loadFontStyle(fontFace.value);
 	}
 
 	watch(fontFace, (newVal) => {

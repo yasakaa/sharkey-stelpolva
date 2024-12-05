@@ -32,7 +32,7 @@ import { AbuseReportService } from '@/core/AbuseReportService.js';
 import { FederatedInstanceService } from '@/core/FederatedInstanceService.js';
 import { fromTuple } from '@/misc/from-tuple.js';
 import { IdentifiableError } from '@/misc/identifiable-error.js';
-import { getApHrefNullable, getApId, getApIds, getApType, getNullableApId, isAccept, isActor, isAdd, isAnnounce, isApObject, isBlock, isCollection, isCollectionOrOrderedCollection, isCreate, isDelete, isFlag, isFollow, isLike, isMove, isPost, isReject, isRemove, isTombstone, isUndo, isUpdate, validActor, validPost } from './type.js';
+import { getApHrefNullable, getApId, getApIds, getApType, getNullableApId, isAccept, isActor, isAdd, isAnnounce, isApObject, isBlock, isCollection, isCollectionOrOrderedCollection, isCreate, isDelete, isFlag, isFollow, isLike, isDislike, isMove, isPost, isReject, isRemove, isTombstone, isUndo, isUpdate, validActor, validPost } from './type.js';
 import { ApNoteService } from './models/ApNoteService.js';
 import { ApLoggerService } from './ApLoggerService.js';
 import { ApDbResolverService } from './ApDbResolverService.js';
@@ -41,7 +41,7 @@ import { ApAudienceService } from './ApAudienceService.js';
 import { ApPersonService } from './models/ApPersonService.js';
 import { ApQuestionService } from './models/ApQuestionService.js';
 import type { Resolver } from './ApResolverService.js';
-import type { IAccept, IAdd, IAnnounce, IBlock, ICreate, IDelete, IFlag, IFollow, ILike, IObject, IReject, IRemove, IUndo, IUpdate, IMove, IPost } from './type.js';
+import type { IAccept, IAdd, IAnnounce, IBlock, ICreate, IDelete, IFlag, IFollow, ILike, IDislike, IObject, IReject, IRemove, IUndo, IUpdate, IMove, IPost } from './type.js';
 
 @Injectable()
 export class ApInboxService {
@@ -167,6 +167,8 @@ export class ApInboxService {
 			return await this.announce(actor, activity, resolver);
 		} else if (isLike(activity)) {
 			return await this.like(actor, activity, resolver);
+		} else if (isDislike(activity)) {
+			return await this.dislike(actor, activity);
 		} else if (isUndo(activity)) {
 			return await this.undo(actor, activity, resolver);
 		} else if (isBlock(activity)) {
@@ -219,6 +221,11 @@ export class ApInboxService {
 				throw err;
 			}
 		}
+	}
+
+	@bindThis
+	private async dislike(actor: MiRemoteUser, dislike: IDislike): Promise<string> {
+		return await this.undoLike(actor, dislike);
 	}
 
 	@bindThis
@@ -783,7 +790,7 @@ export class ApInboxService {
 	}
 
 	@bindThis
-	private async undoLike(actor: MiRemoteUser, activity: ILike): Promise<string> {
+	private async undoLike(actor: MiRemoteUser, activity: ILike | IDislike): Promise<string> {
 		const targetUri = getApId(activity.object);
 
 		const note = await this.apNoteService.fetchNote(targetUri);

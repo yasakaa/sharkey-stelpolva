@@ -138,7 +138,7 @@ export class ApPersonService implements OnModuleInit {
 	 */
 	@bindThis
 	private validateActor(x: IObject, uri: string): IActor {
-		const expectHost = this.utilityService.punyHost(uri);
+		const expectHost = this.utilityService.punyHostPSLDomain(uri);
 
 		if (!isActor(x)) {
 			throw new UnrecoverableError(`invalid Actor type '${x.type}' in ${uri}`);
@@ -152,7 +152,7 @@ export class ApPersonService implements OnModuleInit {
 			throw new UnrecoverableError(`invalid Actor ${uri} - wrong inbox type`);
 		}
 
-		const inboxHost = this.utilityService.punyHost(x.inbox);
+		const inboxHost = this.utilityService.punyHostPSLDomain(x.inbox);
 		if (inboxHost !== expectHost) {
 			throw new UnrecoverableError(`invalid Actor ${uri} - wrong inbox ${inboxHost}`);
 		}
@@ -160,7 +160,7 @@ export class ApPersonService implements OnModuleInit {
 		const sharedInboxObject = x.sharedInbox ?? (x.endpoints ? x.endpoints.sharedInbox : undefined);
 		if (sharedInboxObject != null) {
 			const sharedInbox = getApId(sharedInboxObject);
-			if (!(typeof sharedInbox === 'string' && sharedInbox.length > 0 && this.utilityService.punyHost(sharedInbox) === expectHost)) {
+			if (!(typeof sharedInbox === 'string' && sharedInbox.length > 0 && this.utilityService.punyHostPSLDomain(sharedInbox) === expectHost)) {
 				throw new UnrecoverableError(`invalid Actor ${uri} - wrong shared inbox ${sharedInbox}`);
 			}
 		}
@@ -170,7 +170,7 @@ export class ApPersonService implements OnModuleInit {
 			if (xCollection != null) {
 				const collectionUri = getApId(xCollection);
 				if (typeof collectionUri === 'string' && collectionUri.length > 0) {
-					if (this.utilityService.punyHost(collectionUri) !== expectHost) {
+					if (this.utilityService.punyHostPSLDomain(collectionUri) !== expectHost) {
 						throw new UnrecoverableError(`invalid Actor ${uri} - wrong ${collection} ${collectionUri}`);
 					}
 				} else if (collectionUri != null) {
@@ -202,7 +202,7 @@ export class ApPersonService implements OnModuleInit {
 			x.summary = truncate(x.summary, summaryLength);
 		}
 
-		const idHost = this.utilityService.punyHost(x.id);
+		const idHost = this.utilityService.punyHostPSLDomain(x.id);
 		if (idHost !== expectHost) {
 			throw new UnrecoverableError(`invalid Actor ${uri} - wrong id ${x.id}`);
 		}
@@ -212,7 +212,7 @@ export class ApPersonService implements OnModuleInit {
 				throw new UnrecoverableError(`invalid Actor ${uri} - wrong publicKey.id type`);
 			}
 
-			const publicKeyIdHost = this.utilityService.punyHost(x.publicKey.id);
+			const publicKeyIdHost = this.utilityService.punyHostPSLDomain(x.publicKey.id);
 			if (publicKeyIdHost !== expectHost) {
 				throw new UnrecoverableError(`invalid Actor ${uri} - wrong publicKey.id ${x.publicKey.id}`);
 			}
@@ -351,7 +351,7 @@ export class ApPersonService implements OnModuleInit {
 				throw new UnrecoverableError(`unexpected schema of person url ${url} in ${uri}`);
 			}
 
-			if (this.utilityService.punyHost(url) !== this.utilityService.punyHost(person.id)) {
+			if (this.utilityService.punyHostPSLDomain(url) !== this.utilityService.punyHostPSLDomain(person.id)) {
 				throw new UnrecoverableError(`person url <> uri host mismatch: ${url} <> ${person.id} in ${uri}`);
 			}
 		}
@@ -563,7 +563,7 @@ export class ApPersonService implements OnModuleInit {
 				throw new UnrecoverableError(`unexpected schema of person url ${url} in ${uri}`);
 			}
 
-			if (this.utilityService.punyHost(url) !== this.utilityService.punyHost(person.id)) {
+			if (this.utilityService.punyHostPSLDomain(url) !== this.utilityService.punyHostPSLDomain(person.id)) {
 				throw new UnrecoverableError(`person url <> uri host mismatch: ${url} <> ${person.id} in ${uri}`);
 			}
 		}

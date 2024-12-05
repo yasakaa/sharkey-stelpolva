@@ -131,7 +131,7 @@ export class Resolver {
 			throw new UnrecoverableError(`invalid AP object ${value}: missing id`);
 		}
 
-		if (this.utilityService.punyHost(object.id) !== this.utilityService.punyHost(value)) {
+		if (this.utilityService.punyHostPSLDomain(object.id) !== this.utilityService.punyHostPSLDomain(value)) {
 			throw new UnrecoverableError(`invalid AP object ${value}: id ${object.id} has different host`);
 		}
 

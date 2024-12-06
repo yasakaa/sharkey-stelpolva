@@ -24,6 +24,7 @@ import { miLocalStorage } from '@/local-storage.js';
 import { fetchCustomEmojis } from '@/custom-emojis.js';
 import { setupRouter } from '@/router/main.js';
 import { createMainRouter } from '@/router/definition.js';
+import { loadFontStyle } from '@/scripts/load-font.js';
 
 export async function common(createVue: () => App<Element>) {
 	console.info(`Sharkey v${version}`);
@@ -279,6 +280,14 @@ export async function common(createVue: () => App<Element>) {
 	window.onunhandledrejection = null;
 
 	removeSplash();
+
+	//#region Load default font
+	const def_arr = miLocalStorage.getItem('defaultFontFace')?.split('_');
+	const fontId = def_arr?.[0];
+	if (fontId) {
+		loadFontStyle(fontId);
+	}
+	//#endregion
 
 	return {
 		isClientUpdated,

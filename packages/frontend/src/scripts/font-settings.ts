@@ -1,4 +1,5 @@
 import { computed, ref, watch } from 'vue';
+import { loadFontStyle } from './load-font.js';
 import type { Ref, ComputedRef } from 'vue';
 import { miLocalStorage } from '@/local-storage.js';
 import { i18n } from '@/i18n.js';
@@ -59,7 +60,7 @@ export function getDefaultFontSettings() {
 	const fontFaceType = ref(def_arr?.[1] ?? '');
 	const availableTypes = computed(() => getFontOptionsList(fontFace.value));
 
-	function setDafaultFont() {
+	async function setDafaultFont() {
 		for (const klass of [...document.documentElement.classList.values()]) {
 			if (klass.startsWith('default-font-')) {
 				document.documentElement.classList.remove(klass);
@@ -68,7 +69,8 @@ export function getDefaultFontSettings() {
 		const newFontId = getFontId(fontFace.value, fontFaceType.value);
 		miLocalStorage.setItem('defaultFontFace', newFontId);
 		document.documentElement.classList.add(`default-font-${newFontId}`);
-		console.log(newFontId);
+
+		await loadFontStyle(fontFace.value);
 	}
 
 	watch(fontFace, (newVal) => {

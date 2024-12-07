@@ -28,13 +28,12 @@ import { bindThis } from '@/decorators.js';
 import { isMimeImage } from '@/misc/is-mime-image.js';
 import { correctFilename } from '@/misc/correct-filename.js';
 import { handleRequestRedirectToOmitSearch } from '@/misc/fastify-hook-handlers.js';
-import { RateLimiterService } from '@/server/api/RateLimiterService.js';
 import { getIpHash } from '@/misc/get-ip-hash.js';
 import { AuthenticateService } from '@/server/api/AuthenticateService.js';
-import type { IEndpointMeta } from '@/server/api/endpoints.js';
 import { RoleService } from '@/core/RoleService.js';
+import { RateLimit, SkRateLimiterService } from '@/server/api/SkRateLimiterService.js';
+import { sendRateLimitHeaders } from '@/misc/rate-limit-utils.js';
 import type { FastifyInstance, FastifyRequest, FastifyReply, FastifyPluginOptions } from 'fastify';
-import type Limiter from 'ratelimiter';
 
 const _filename = fileURLToPath(import.meta.url);
 const _dirname = dirname(_filename);
@@ -59,7 +58,7 @@ export class FileServerService {
 		private internalStorageService: InternalStorageService,
 		private loggerService: LoggerService,
 		private authenticateService: AuthenticateService,
-		private rateLimiterService: RateLimiterService,
+		private rateLimiterService: SkRateLimiterService,
 		private roleService: RoleService,
 	) {
 		this.logger = this.loggerService.getLogger('server', 'gray');
@@ -634,42 +633,37 @@ export class FileServerService {
 	}
 
 	private async checkResourceLimit(reply: FastifyReply, actor: string, group: string, resource: string, factor = 1): Promise<boolean> {
-		const limit = {
+		const limit: RateLimit = {
 			// Group by resource
 			key: `${group}${resource}`,
+			type: 'bucket',
 
-			// Maximum of 10 requests / 10 minutes
-			max: 10,
-			duration: 1000 * 60 * 10,
+			// Maximum of 10 requests, average rate of 1 per minute
+			size: 10,
+			dripRate: 1000 * 60,
 		};
 
 		return await this.checkLimit(reply, actor, limit, factor);
 	}
 
 	private async checkSharedLimit(reply: FastifyReply, actor: string, group: string, factor = 1): Promise<boolean> {
-		const limit = {
+		const limit: RateLimit = {
 			key: group,
+			type: 'bucket',
 
-			// Maximum of 3600 requests per hour, which is an average of 1 per second.
-			max: 3600,
-			duration: 1000 * 60 * 60,
+			// Maximum of 3600 requests, average rate of 1 per second.
+			size: 3600,
 		};
 
 		return await this.checkLimit(reply, actor, limit, factor);
 	}
 
-	private async checkLimit(reply: FastifyReply, actor: string, limit: IEndpointMeta['limit'] & { key: NonNullable<string> }, factor = 1): Promise<boolean> {
-		try {
-			await this.rateLimiterService.limit(limit, actor, factor);
-			return true;
-		} catch (err) {
-			// errはLimiter.LimiterInfoであることが期待される
-			if (hasRateLimitInfo(err)) {
-				const cooldownInSeconds = Math.ceil((err.info.resetMs - Date.now()) / 1000);
-				// もしかするとマイナスになる可能性がなくはないのでマイナスだったら0にしておく
-				reply.header('Retry-After', Math.max(cooldownInSeconds, 0).toString(10));
-			}
+	private async checkLimit(reply: FastifyReply, actor: string, limit: RateLimit, factor = 1): Promise<boolean> {
+		const info = await this.rateLimiterService.limit(limit, actor, factor);
 
+		sendRateLimitHeaders(reply, info);
+
+		if (info.blocked) {
 			reply.code(429);
 			reply.send({
 				message: 'Rate limit exceeded. Please try again later.',
@@ -679,9 +673,8 @@ export class FileServerService {
 
 			return false;
 		}
+
+		return true;
 	}
 }
 
-function hasRateLimitInfo(err: unknown): err is { info: Limiter.LimiterInfo } {
-	return err != null && typeof(err) === 'object' && 'info' in err;
-}

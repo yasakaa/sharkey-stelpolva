@@ -14,6 +14,7 @@ import type { LimitInfo } from '@/server/api/SkRateLimiterService.js';
 import { EnvService } from '@/core/EnvService.js';
 import type { IEndpointMeta } from './endpoints.js';
 
+/** @deprecated Use SkRateLimiterService instead */
 @Injectable()
 export class RateLimiterService {
 	protected readonly logger: Logger;

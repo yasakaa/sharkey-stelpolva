@@ -8,7 +8,6 @@ import * as fs from 'node:fs';
 import * as stream from 'node:stream/promises';
 import { Inject, Injectable } from '@nestjs/common';
 import * as Sentry from '@sentry/node';
-import { LimiterInfo } from 'ratelimiter';
 import { DI } from '@/di-symbols.js';
 import { getIpHash } from '@/misc/get-ip-hash.js';
 import type { MiLocalUser, MiUser } from '@/models/User.js';
@@ -19,9 +18,9 @@ import { createTemp } from '@/misc/create-temp.js';
 import { bindThis } from '@/decorators.js';
 import { RoleService } from '@/core/RoleService.js';
 import type { Config } from '@/config.js';
-import { isLimitInfo } from '@/server/api/SkRateLimiterService.js';
+import { sendRateLimitHeaders } from '@/misc/rate-limit-utils.js';
+import { LegacyRateLimit, SkRateLimiterService } from '@/server/api/SkRateLimiterService.js';
 import { ApiError } from './error.js';
-import { RateLimiterService } from './RateLimiterService.js';
 import { ApiLoggerService } from './ApiLoggerService.js';
 import { AuthenticateService, AuthenticationError } from './AuthenticateService.js';
 import type { FastifyRequest, FastifyReply } from 'fastify';
@@ -51,7 +50,7 @@ export class ApiCallService implements OnApplicationShutdown {
 		private userIpsRepository: UserIpsRepository,
 
 		private authenticateService: AuthenticateService,
-		private rateLimiterService: RateLimiterService,
+		private rateLimiterService: SkRateLimiterService,
 		private roleService: RoleService,
 		private apiLoggerService: ApiLoggerService,
 	) {
@@ -67,21 +66,6 @@ export class ApiCallService implements OnApplicationShutdown {
 		let statusCode = err.httpStatusCode;
 		if (err.httpStatusCode === 401) {
 			reply.header('WWW-Authenticate', 'Bearer realm="Misskey"');
-		} else if (err.code === 'RATE_LIMIT_EXCEEDED') {
-			const info: unknown = err.info;
-			const unixEpochInSeconds = Date.now();
-			if (isLimitInfo(info)) {
-				// Number of seconds to wait before trying again. Left for backwards compatibility.
-				reply.header('Retry-After', info.resetSec.toString());
-				// Number of milliseconds to wait before trying again.
-				reply.header('X-RateLimit-Reset', info.resetMs.toString());
-			} else if (typeof(info) === 'object' && info && 'resetMs' in info && typeof(info.resetMs) === 'number') {
-				const cooldownInSeconds = Math.ceil((info.resetMs - unixEpochInSeconds) / 1000);
-				// もしかするとマイナスになる可能性がなくはないのでマイナスだったら0にしておく
-				reply.header('Retry-After', Math.max(cooldownInSeconds, 0).toString(10));
-			} else {
-				this.logger.warn(`rate limit information has unexpected type: ${JSON.stringify(info)}`);
-			}
 		} else if (err.kind === 'client') {
 			reply.header('WWW-Authenticate', `Bearer realm="Misskey", error="invalid_request", error_description="${err.message}"`);
 			statusCode = statusCode ?? 400;
@@ -347,40 +331,17 @@ export class ApiCallService implements OnApplicationShutdown {
 
 			if (factor > 0) {
 				// Rate limit
-				const info = await this.rateLimiterService.limit(limit as IEndpointMeta['limit'] & { key: NonNullable<string> }, limitActor, factor)
-					.then(info => {
-						// We always want these headers, because clients need them for pacing.
-						// Conditional check in case we somehow revert to the old limiter, which does not return info.
-						if (info) {
-							// Number of seconds until the limit has fully reset.
-							reply.header('X-RateLimit-Clear', info.fullResetSec.toString());
-							// Number of calls that can be made before being limited.
-							reply.header('X-RateLimit-Remaining', info.remaining.toString());
+				const info = await this.rateLimiterService.limit(limit as LegacyRateLimit, limitActor, factor);
 
-							// Only forward the info object if it's blocked, otherwise we'll reject *all* requests
-							if (info.blocked) {
-								return info;
-							}
-						}
+				sendRateLimitHeaders(reply, info);
 
-						return undefined;
-					})
-					.catch(err => {
-						// The old limiter throws info instead of returning it.
-						if ('info' in err) {
-							return err.info as LimiterInfo;
-						} else {
-							throw err;
-						}
-					});
-
-				if (info) {
+				if (info.blocked) {
 					throw new ApiError({
 						message: 'Rate limit exceeded. Please try again later.',
 						code: 'RATE_LIMIT_EXCEEDED',
 						id: 'd5826d14-3982-4d2e-8011-b9e9f02499ef',
 						httpStatusCode: 429,
-					}, info);
+					});
 				}
 			}
 		}

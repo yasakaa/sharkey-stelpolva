@@ -74,10 +74,9 @@ import { SigninWithPasskeyApiService } from './api/SigninWithPasskeyApiService.j
 		ApiLoggerService,
 		ApiServerService,
 		AuthenticateService,
-		{
-			provide: RateLimiterService,
-			useClass: SkRateLimiterService,
-		},
+		SkRateLimiterService,
+		// No longer used, but kept for backwards compatibility
+		RateLimiterService,
 		SigninApiService,
 		SigninWithPasskeyApiService,
 		SigninService,

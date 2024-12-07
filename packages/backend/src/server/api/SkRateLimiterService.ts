@@ -10,7 +10,7 @@ import { LoggerService } from '@/core/LoggerService.js';
 import { TimeService } from '@/core/TimeService.js';
 import { EnvService } from '@/core/EnvService.js';
 import { DI } from '@/di-symbols.js';
-import { RateLimiterService } from './RateLimiterService.js';
+import type Logger from '@/logger.js';
 
 /**
  * Metadata about the current status of a rate limiter
@@ -51,18 +51,6 @@ export interface LimitInfo {
 	fullResetMs: number;
 }
 
-export function isLimitInfo(info: unknown): info is LimitInfo {
-	if (info == null) return false;
-	if (typeof(info) !== 'object') return false;
-	if (!('blocked' in info) || typeof(info.blocked) !== 'boolean') return false;
-	if (!('remaining' in info) || typeof(info.remaining) !== 'number') return false;
-	if (!('resetSec' in info) || typeof(info.resetSec) !== 'number') return false;
-	if (!('resetMs' in info) || typeof(info.resetMs) !== 'number') return false;
-	if (!('fullResetSec' in info) || typeof(info.fullResetSec) !== 'number') return false;
-	if (!('fullResetMs' in info) || typeof(info.fullResetMs) !== 'number') return false;
-	return true;
-}
-
 /**
  * Rate limit based on "leaky bucket" logic.
  * The bucket count increases with each call, and decreases gradually at a given rate.
@@ -99,10 +87,10 @@ export interface RateLimit {
 }
 
 export type SupportedRateLimit = RateLimit | LegacyRateLimit;
-export type LegacyRateLimit = IEndpointMeta['limit'] & { key: NonNullable<string>, type: undefined | 'legacy' };
+export type LegacyRateLimit = IEndpointMeta['limit'] & { key: NonNullable<string>, type?: undefined };
 
 export function isLegacyRateLimit(limit: SupportedRateLimit): limit is LegacyRateLimit {
-	return limit.type === undefined || limit.type === 'legacy';
+	return limit.type === undefined;
 }
 
 export function hasMinLimit(limit: LegacyRateLimit): limit is LegacyRateLimit & { minInterval: number } {
@@ -110,13 +98,16 @@ export function hasMinLimit(limit: LegacyRateLimit): limit is LegacyRateLimit & 
 }
 
 @Injectable()
-export class SkRateLimiterService extends RateLimiterService {
+export class SkRateLimiterService {
+	private readonly logger: Logger;
+	private readonly disabled: boolean;
+
 	constructor(
 		@Inject(TimeService)
 		private readonly timeService: TimeService,
 
 		@Inject(DI.redis)
-		redisClient: Redis.Redis,
+		private readonly redisClient: Redis.Redis,
 
 		@Inject(LoggerService)
 		loggerService: LoggerService,
@@ -124,7 +115,8 @@ export class SkRateLimiterService extends RateLimiterService {
 		@Inject(EnvService)
 		envService: EnvService,
 	) {
-		super(redisClient, loggerService, envService);
+		this.logger = loggerService.getLogger('limiter');
+		this.disabled = envService.env.NODE_ENV !== 'production';
 	}
 
 	public async limit(limit: SupportedRateLimit, actor: string, factor = 1): Promise<LimitInfo> {

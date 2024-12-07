@@ -10,28 +10,28 @@ import { DI } from '@/di-symbols.js';
 import type Logger from '@/logger.js';
 import { LoggerService } from '@/core/LoggerService.js';
 import { bindThis } from '@/decorators.js';
+import type { LimitInfo } from '@/server/api/SkRateLimiterService.js';
+import { EnvService } from '@/core/EnvService.js';
 import type { IEndpointMeta } from './endpoints.js';
 
 @Injectable()
 export class RateLimiterService {
-	private logger: Logger;
-	private disabled = false;
+	protected readonly logger: Logger;
+	protected readonly disabled: boolean;
 
 	constructor(
 		@Inject(DI.redis)
-		private redisClient: Redis.Redis,
+		protected readonly redisClient: Redis.Redis,
 
 		private loggerService: LoggerService,
+		envService: EnvService,
 	) {
 		this.logger = this.loggerService.getLogger('limiter');
-
-		if (process.env.NODE_ENV !== 'production') {
-			this.disabled = true;
-		}
+		this.disabled = envService.env.NODE_ENV !== 'production';
 	}
 
 	@bindThis
-	public limit(limitation: IEndpointMeta['limit'] & { key: NonNullable<string> }, actor: string, factor = 1) {
+	public limit(limitation: IEndpointMeta['limit'] & { key: NonNullable<string> }, actor: string, factor = 1): Promise<LimitInfo | void> {
 		return new Promise<void>((ok, reject) => {
 			if (this.disabled) ok();
 

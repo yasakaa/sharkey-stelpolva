@@ -209,7 +209,7 @@ export class SkRateLimiterService extends RateLimiterService {
 		// Update the limit counter, but not if blocked
 		if (!blocked) {
 			// Don't await, or we will slow down the API.
-			this.setLimitCounter(limit, actor, counter, resetMs, 'min')
+			this.setLimitCounter(limit, actor, counter, fullResetSec, 'min')
 				.catch(err => this.logger.error(`Failed to update limit ${limit.key}:min for ${actor}:`, err));
 		}
 
@@ -217,7 +217,7 @@ export class SkRateLimiterService extends RateLimiterService {
 	}
 
 	private async limitBucket(limit: RateLimit, actor: string, factor: number): Promise<LimitInfo> {
-		const counter = await this.getLimitCounter(limit, actor);
+		const counter = await this.getLimitCounter(limit, actor, 'bucket');
 		const dripRate = (limit.dripRate ?? 1000);
 		const dripSize = (limit.dripSize ?? 1);
 		const bucketSize = (limit.size * factor);
@@ -245,14 +245,14 @@ export class SkRateLimiterService extends RateLimiterService {
 		// Update the limit counter, but not if blocked
 		if (!blocked) {
 			// Don't await, or we will slow down the API.
-			this.setLimitCounter(limit, actor, counter, fullResetMs)
+			this.setLimitCounter(limit, actor, counter, fullResetSec, 'bucket')
 				.catch(err => this.logger.error(`Failed to update limit ${limit.key} for ${actor}:`, err));
 		}
 
 		return limitInfo;
 	}
 
-	private async getLimitCounter(limit: SupportedRateLimit, actor: string, subject?: string): Promise<LimitCounter> {
+	private async getLimitCounter(limit: SupportedRateLimit, actor: string, subject: string): Promise<LimitCounter> {
 		const key = createLimitKey(limit, actor, subject);
 
 		const value = await this.redisClient.get(key);
@@ -263,19 +263,16 @@ export class SkRateLimiterService extends RateLimiterService {
 		return JSON.parse(value);
 	}
 
-	private async setLimitCounter(limit: SupportedRateLimit, actor: string, counter: LimitCounter, expirationMs: number, subject?: string): Promise<void> {
+	private async setLimitCounter(limit: SupportedRateLimit, actor: string, counter: LimitCounter, expiration: number, subject: string): Promise<void> {
 		const key = createLimitKey(limit, actor, subject);
 		const value = JSON.stringify(counter);
-		await this.redisClient.set(key, value, 'PX', expirationMs);
+		const expirationSec = Math.max(expiration, 1);
+		await this.redisClient.set(key, value, 'EX', expirationSec);
 	}
 }
 
-function createLimitKey(limit: SupportedRateLimit, actor: string, subject?: string): string {
-	if (subject) {
-		return `rl_${actor}_${limit.key}_${subject}`;
-	} else {
-		return `rl_${actor}_${limit.key}`;
-	}
+function createLimitKey(limit: SupportedRateLimit, actor: string, subject: string): string {
+	return `rl_${actor}_${limit.key}_${subject}`;
 }
 
 export interface LimitCounter {

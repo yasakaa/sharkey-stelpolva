@@ -4,6 +4,7 @@
  */
 
 import { KEYWORD } from 'color-convert/conversions.js';
+import { jest } from '@jest/globals';
 import type Redis from 'ioredis';
 import { LegacyRateLimit, LimitCounter, RateLimit, SkRateLimiterService } from '@/server/api/SkRateLimiterService.js';
 import { LoggerService } from '@/core/LoggerService.js';
@@ -98,7 +99,7 @@ describe(SkRateLimiterService, () => {
 			minCounter = undefined;
 
 			mockRedisGet = (key: string) => {
-				if (key === 'rl_actor_test' && counter) {
+				if (key === 'rl_actor_test_bucket' && counter) {
 					return JSON.stringify(counter);
 				}
 
@@ -112,7 +113,7 @@ describe(SkRateLimiterService, () => {
 			mockRedisSet = (args: unknown[]) => {
 				const [key, value] = args;
 
-				if (key === 'rl_actor_test') {
+				if (key === 'rl_actor_test_bucket') {
 					if (value == null) counter = undefined;
 					else if (typeof(value) === 'string') counter = JSON.parse(value);
 					else throw new Error('invalid redis call');
@@ -280,12 +281,12 @@ describe(SkRateLimiterService, () => {
 			});
 
 			it('should set key expiration', async () => {
-				mockRedisSet = args => {
-					expect(args[2]).toBe('PX');
-					expect(args[3]).toBe(1000);
-				};
+				const mock = jest.fn(mockRedisSet);
+				mockRedisSet = mock;
 
 				await serviceUnderTest().limit(limit, actor);
+
+				expect(mock).toHaveBeenCalledWith(['rl_actor_test_bucket', '{"t":0,"c":1}', 'EX', 1]);
 			});
 
 			it('should not increment when already blocked', async () => {
@@ -434,12 +435,12 @@ describe(SkRateLimiterService, () => {
 			});
 
 			it('should set key expiration', async () => {
-				mockRedisSet = args => {
-					expect(args[2]).toBe('PX');
-					expect(args[3]).toBe(1000);
-				};
+				const mock = jest.fn(mockRedisSet);
+				mockRedisSet = mock;
 
 				await serviceUnderTest().limit(limit, actor);
+
+				expect(mock).toHaveBeenCalledWith(['rl_actor_test_min', '{"t":0,"c":1}', 'EX', 1]);
 			});
 
 			it('should not increment when already blocked', async () => {
@@ -547,12 +548,12 @@ describe(SkRateLimiterService, () => {
 			});
 
 			it('should set key expiration', async () => {
-				mockRedisSet = args => {
-					expect(args[2]).toBe('PX');
-					expect(args[3]).toBe(1000);
-				};
+				const mock = jest.fn(mockRedisSet);
+				mockRedisSet = mock;
 
 				await serviceUnderTest().limit(limit, actor);
+
+				expect(mock).toHaveBeenCalledWith(['rl_actor_test_bucket', '{"t":0,"c":1}', 'EX', 1]);
 			});
 
 			it('should not increment when already blocked', async () => {
@@ -670,12 +671,13 @@ describe(SkRateLimiterService, () => {
 			});
 
 			it('should set key expiration', async () => {
-				mockRedisSet = args => {
-					expect(args[2]).toBe('PX');
-					expect(args[3]).toBe(1000);
-				};
+				const mock = jest.fn(mockRedisSet);
+				mockRedisSet = mock;
 
 				await serviceUnderTest().limit(limit, actor);
+
+				expect(mock).toHaveBeenCalledWith(['rl_actor_test_bucket', '{"t":0,"c":1}', 'EX', 1]);
+				expect(mock).toHaveBeenCalledWith(['rl_actor_test_min', '{"t":0,"c":1}', 'EX', 1]);
 			});
 
 			it('should not increment when already blocked', async () => {

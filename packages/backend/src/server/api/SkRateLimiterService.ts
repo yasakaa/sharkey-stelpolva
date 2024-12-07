@@ -171,7 +171,7 @@ export class SkRateLimiterService extends RateLimiterService {
 		const [lim1, lim2] = await Promise.all(promises);
 		return {
 			blocked: (lim1?.blocked || lim2?.blocked) ?? false,
-			remaining: Math.min(lim1?.remaining ?? 1, lim2?.remaining ?? 1),
+			remaining: Math.min(lim1?.remaining ?? Number.MAX_SAFE_INTEGER, lim2?.remaining ?? Number.MAX_SAFE_INTEGER),
 			resetSec: Math.max(lim1?.resetSec ?? 0, lim2?.resetSec ?? 0),
 			resetMs: Math.max(lim1?.resetMs ?? 0, lim2?.resetMs ?? 0),
 			fullResetSec: Math.max(lim1?.fullResetSec ?? 0, lim2?.fullResetSec ?? 0),

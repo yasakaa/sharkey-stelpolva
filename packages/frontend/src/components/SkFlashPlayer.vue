@@ -137,7 +137,7 @@ async function loadRuffle() {
 		'preferredRenderer': null,
 		'openUrlMode': 'deny',
 		'allowNetworking': 'none',
-		'favorFlash': true,
+		'favorFlash': false,
 		'socketProxy': [],
 		'fontSources': [],
 		'defaultFonts': {},

@@ -57,7 +57,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onDeactivated } from 'vue';
+import { ref, onDeactivated } from 'vue';
 import * as Misskey from 'misskey-js';
 import MkEllipsis from '@/components/global/MkEllipsis.vue';
 import MkLoading from '@/components/global/MkLoading.vue';
@@ -70,9 +70,9 @@ const props = defineProps<{
 	flashFile: Misskey.entities.DriveFile
 }>();
 
-const isSensitive = computed(() => { return props.flashFile.isSensitive; });
-const url = computed(() => { return props.flashFile.url; });
-const comment = computed(() => { return props.flashFile.comment ?? ''; });
+const isSensitive = props.flashFile.isSensitive;
+const url = props.flashFile.url;
+const comment = props.flashFile.comment ?? '';
 let hide = ref((defaultStore.state.nsfw === 'force') || isSensitive.value && (defaultStore.state.nsfw !== 'ignore'));
 let playerHide = ref(true);
 let ruffleContainer = ref<HTMLDivElement>();

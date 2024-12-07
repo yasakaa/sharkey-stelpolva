@@ -73,7 +73,7 @@ const props = defineProps<{
 const isSensitive = props.flashFile.isSensitive;
 const url = props.flashFile.url;
 const comment = props.flashFile.comment ?? '';
-let hide = ref((defaultStore.state.nsfw === 'force') || isSensitive.value && (defaultStore.state.nsfw !== 'ignore'));
+let hide = ref((defaultStore.state.nsfw === 'force') || isSensitive && (defaultStore.state.nsfw !== 'ignore'));
 let playerHide = ref(true);
 let ruffleContainer = ref<HTMLDivElement>();
 let playPauseButtonKey = ref<number>(0);
@@ -173,7 +173,7 @@ async function loadContent() {
 	ruffleContainer.value?.appendChild(player.value);
 	loadingStatus.value = i18n.ts._flash.loadingFlashFile;
 	try {
-		await player.value.load(url.value);
+		await player.value.load(url);
 		loadingStatus.value = undefined;
 	} catch (error) {
 		try {

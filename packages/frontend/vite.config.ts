@@ -134,6 +134,7 @@ export function getConfig(): UserConfig {
 			_DATA_TRANSFER_DECK_COLUMN_: JSON.stringify('mk_deck_column'),
 			__VUE_OPTIONS_API__: true,
 			__VUE_PROD_DEVTOOLS__: false,
+			_RUFFLE_VERSION_: JSON.stringify(packageInfo.dependencies['@ruffle-rs/ruffle'])
 		},
 
 		build: {

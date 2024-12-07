@@ -59,7 +59,6 @@ SPDX-License-Identifier: AGPL-3.0-only
 <script lang="ts" setup>
 import { ref, computed, onDeactivated } from 'vue';
 import * as Misskey from 'misskey-js';
-import packageInfo from '../../package.json';
 import MkEllipsis from '@/components/global/MkEllipsis.vue';
 import MkLoading from '@/components/global/MkLoading.vue';
 import { i18n } from '@/i18n.js';
@@ -110,7 +109,7 @@ async function loadRuffle() {
 
 	window.RufflePlayer.config = {
 		// Options affecting the whole page
-		'publicPath': `https://raw.esm.sh/@ruffle-rs/ruffle@${packageInfo.dependencies['@ruffle-rs/ruffle']}/`,
+		'publicPath': `https://raw.esm.sh/@ruffle-rs/ruffle@${_RUFFLE_VERSION_}/`,
 		'polyfills': false,
 
 		// Options affecting files only

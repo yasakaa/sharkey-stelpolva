@@ -32,6 +32,7 @@ import { RateLimiterService } from '@/server/api/RateLimiterService.js';
 import { getIpHash } from '@/misc/get-ip-hash.js';
 import { AuthenticateService } from '@/server/api/AuthenticateService.js';
 import type { IEndpointMeta } from '@/server/api/endpoints.js';
+import { RoleService } from '@/core/RoleService.js';
 import type { FastifyInstance, FastifyRequest, FastifyReply, FastifyPluginOptions } from 'fastify';
 import type Limiter from 'ratelimiter';
 
@@ -59,6 +60,7 @@ export class FileServerService {
 		private loggerService: LoggerService,
 		private authenticateService: AuthenticateService,
 		private rateLimiterService: RateLimiterService,
+		private roleService: RoleService,
 	) {
 		this.logger = this.loggerService.getLogger('server', 'gray');
 
@@ -625,12 +627,13 @@ export class FileServerService {
 		// koa will automatically load the `X-Forwarded-For` header if `proxy: true` is configured in the app.
 		const [user] = await this.authenticateService.authenticate(token);
 		const actor = user?.id ?? getIpHash(request.ip);
+		const factor = user ? (await this.roleService.getUserPolicies(user.id)).rateLimitFactor : 1;
 
 		// Call both limits: the per-resource limit and the shared cross-resource limit
-		return await this.checkResourceLimit(reply, actor, group, resource) && await this.checkSharedLimit(reply, actor, group);
+		return await this.checkResourceLimit(reply, actor, group, resource, factor) && await this.checkSharedLimit(reply, actor, group, factor);
 	}
 
-	private async checkResourceLimit(reply: FastifyReply, actor: string, group: string, resource: string): Promise<boolean> {
+	private async checkResourceLimit(reply: FastifyReply, actor: string, group: string, resource: string, factor = 1): Promise<boolean> {
 		const limit = {
 			// Group by resource
 			key: `${group}${resource}`,
@@ -640,10 +643,10 @@ export class FileServerService {
 			duration: 1000 * 60 * 10,
 		};
 
-		return await this.checkLimit(reply, actor, limit);
+		return await this.checkLimit(reply, actor, limit, factor);
 	}
 
-	private async checkSharedLimit(reply: FastifyReply, actor: string, group: string): Promise<boolean> {
+	private async checkSharedLimit(reply: FastifyReply, actor: string, group: string, factor = 1): Promise<boolean> {
 		const limit = {
 			key: group,
 
@@ -652,12 +655,12 @@ export class FileServerService {
 			duration: 1000 * 60 * 60,
 		};
 
-		return await this.checkLimit(reply, actor, limit);
+		return await this.checkLimit(reply, actor, limit, factor);
 	}
 
-	private async checkLimit(reply: FastifyReply, actor: string, limit: IEndpointMeta['limit'] & { key: NonNullable<string> }): Promise<boolean> {
+	private async checkLimit(reply: FastifyReply, actor: string, limit: IEndpointMeta['limit'] & { key: NonNullable<string> }, factor = 1): Promise<boolean> {
 		try {
-			await this.rateLimiterService.limit(limit, actor);
+			await this.rateLimiterService.limit(limit, actor, factor);
 			return true;
 		} catch (err) {
 			// errはLimiter.LimiterInfoであることが期待される

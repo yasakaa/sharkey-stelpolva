@@ -3,12 +3,13 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import type { IEndpointMeta } from '@/server/api/endpoints.js';
 import { LoggerService } from '@/core/LoggerService.js';
 import { TimeService } from '@/core/TimeService.js';
 import { EnvService } from '@/core/EnvService.js';
+import { DI } from '@/di-symbols.js';
 import { RateLimiterService } from './RateLimiterService.js';
 
 /**
@@ -111,9 +112,16 @@ export function hasMinLimit(limit: LegacyRateLimit): limit is LegacyRateLimit & 
 @Injectable()
 export class SkRateLimiterService extends RateLimiterService {
 	constructor(
+		@Inject(TimeService)
 		private readonly timeService: TimeService,
+
+		@Inject(DI.redis)
 		redisClient: Redis.Redis,
+
+		@Inject(LoggerService)
 		loggerService: LoggerService,
+
+		@Inject(EnvService)
 		envService: EnvService,
 	) {
 		super(redisClient, loggerService, envService);

@@ -4,44 +4,44 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-<div v-if="hide" class="mod-player-disabled" @click="toggleVisible()">
+<div v-if="hide" :class="$style.mod_player_disabled" @click="toggleVisible()">
 	<div>
 		<b><i class="ph-eye ph-bold ph-lg"></i> {{ i18n.ts.sensitive }}</b>
 		<span>{{ i18n.ts.clickToShow }}</span>
 	</div>
 </div>
 
-<div v-else class="mod-player-enabled">
-	<div class="pattern-display" @click="togglePattern()" @scroll="scrollHandler" @scrollend="scrollEndHandle">
-		<div v-if="patternHide" class="pattern-hide">
+<div v-else :class="$style.mod_player_enabled">
+	<div :class="$style.pattern_display" @click="togglePattern()" @scroll="scrollHandler" @scrollend="scrollEndHandle">
+		<div v-if="patternHide" :class="$style.pattern_hide">
 			<b><i class="ph-eye ph-bold ph-lg"></i> Pattern Hidden</b>
 			<span>{{ i18n.ts.clickToShow }}</span>
 		</div>
-		<span class="patternShadowTop"></span>
-		<span class="patternShadowBottom"></span>
-		<canvas ref="displayCanvas" class="pattern-canvas"></canvas>
+		<span :class="$style.patternShadowTop"></span>
+		<span :class="$style.patternShadowBottom"></span>
+		<canvas ref="displayCanvas" :class="$style.pattern_canvas"></canvas>
 	</div>
-	<div class="controls">
-		<input v-if="patternScrollSliderShow" ref="patternScrollSlider" v-model="patternScrollSliderPos" class="pattern-slider" type="range" min="0" max="100" step="0.01" style=""/>
-		<button class="play" @click="playPause()">
+	<div :class="$style.controls">
+		<input v-if="patternScrollSliderShow" ref="patternScrollSlider" v-model="patternScrollSliderPos" :class="$style.pattern_slider" type="range" min="0" max="100" step="0.01" style=""/>
+		<button :class="$style.play" @click="playPause()">
 			<i v-if="playing" class="ph-pause ph-bold ph-lg"></i>
 			<i v-else class="ph-play ph-bold ph-lg"></i>
 		</button>
-		<button class="stop" @click="stop()">
+		<button :class="$style.stop" @click="stop()">
 			<i class="ph-stop ph-bold ph-lg"></i>
 		</button>
-		<input ref="progress" v-model="position" class="progress" type="range" min="0" max="1" step="0.1" @mousedown="initSeek()" @mouseup="performSeek()"/>
+		<input ref="progress" v-model="position" :class="$style.progress" type="range" min="0" max="1" step="0.1" @mousedown="initSeek()" @mouseup="performSeek()"/>
 		<input v-model="player.context.gain.value" type="range" min="0" max="1" step="0.1"/>
-		<a class="download" :title="i18n.ts.download" :href="module.url" target="_blank">
+		<a :class="$style.download" :title="i18n.ts.download" :href="module.url" :download="module.name" target="_blank">
 			<i class="ph-download ph-bold ph-lg"></i>
 		</a>
 	</div>
-	<i class="hide ph-eye-slash ph-bold ph-lg" @click="toggleVisible()"></i>
+	<i :class="$style.hide" class="ph-eye-slash ph-bold ph-lg" @click="toggleVisible()"></i>
 </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, nextTick, computed, watch, onDeactivated, onMounted } from 'vue';
+import { ref, nextTick, watch, onDeactivated, onMounted } from 'vue';
 import * as Misskey from 'misskey-js';
 import { i18n } from '@/i18n.js';
 import { defaultStore } from '@/store.js';
@@ -70,9 +70,9 @@ const props = defineProps<{
 	module: Misskey.entities.DriveFile
 }>();
 
-const isSensitive = computed(() => { return props.module.isSensitive; });
-const url = computed(() => { return props.module.url; });
-let hide = ref((defaultStore.state.nsfw === 'force') ? true : isSensitive.value && (defaultStore.state.nsfw !== 'ignore'));
+const isSensitive = props.module.isSensitive;
+const url = props.module.url;
+let hide = ref((defaultStore.state.nsfw === 'force') ? true : isSensitive && (defaultStore.state.nsfw !== 'ignore'));
 let patternHide = ref(false);
 let playing = ref(false);
 let displayCanvas = ref<HTMLCanvasElement>();
@@ -111,7 +111,7 @@ function bakeNumberRow() {
 }
 
 onMounted(() => {
-	player.value.load(url.value).then((result) => {
+	player.value.load(url).then((result) => {
 		buffer = result;
 		try {
 			player.value.play(buffer);
@@ -437,7 +437,7 @@ onDeactivated(() => {
 
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" module>
 
 .hide {
 	border-radius: var(--MI-radius-sm) !important;
@@ -446,7 +446,7 @@ onDeactivated(() => {
 	font-size: 12px !important;
 }
 
-.mod-player-enabled {
+.mod_player_enabled {
 	position: relative;
 	overflow: hidden;
 	display: flex;
@@ -469,7 +469,7 @@ onDeactivated(() => {
 		z-index: 4;
 	}
 
-	> .pattern-display {
+	> .pattern_display {
 		width: 100%;
 		height: 100%;
 		overflow-x: scroll;
@@ -484,7 +484,7 @@ onDeactivated(() => {
 			display: none;
 		}
 
-		.pattern-canvas {
+		.pattern_canvas {
 			position: relative;
 			background-color: black;
 			image-rendering: pixelated;
@@ -513,7 +513,7 @@ onDeactivated(() => {
 			z-index: 2;
 		}
 
-		.pattern-hide {
+		.pattern_hide {
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
@@ -563,7 +563,7 @@ onDeactivated(() => {
 			margin: 4px 8px;
 			overflow-x: hidden;
 
-			&.pattern-slider {
+			&.pattern_slider {
 				position: absolute;
 				width: calc( 100% - 8px * 2 );
 				top: calc( 100% - 21px * 3 );
@@ -677,7 +677,7 @@ onDeactivated(() => {
 	}
 }
 
-.mod-player-disabled {
+.mod_player_disabled {
 	display: flex;
 	justify-content: center;
 	align-items: center;

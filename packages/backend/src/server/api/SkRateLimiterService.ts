@@ -155,7 +155,7 @@ export class SkRateLimiterService {
 					type: 'bucket',
 					key: limit.key,
 					size: limit.max,
-					dripRate: Math.round(limit.duration / limit.max),
+					dripRate: Math.max(Math.round(limit.duration / limit.max), 1),
 				}, actor, factor),
 			);
 		}

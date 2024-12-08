@@ -564,6 +564,20 @@ describe(SkRateLimiterService, () => {
 				expect(counter?.c).toBe(1);
 				expect(counter?.t).toBe(0);
 			});
+
+			it('should not allow dripRate to be lower than 0', async () => {
+				// real-world case; taken from StreamingApiServerService
+				limit.max = 4096;
+				limit.duration = 2000;
+				counter = { c: 4096, t: 0 };
+
+				const i1 = await serviceUnderTest().limit(limit, actor);
+				mockTimeService.now = 1;
+				const i2 = await serviceUnderTest().limit(limit, actor);
+
+				expect(i1.blocked).toBeTruthy();
+				expect(i2.blocked).toBeFalsy();
+			});
 		});
 
 		describe('with legacy limit and min interval', () => {

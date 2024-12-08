@@ -10,7 +10,7 @@ import { TimeService } from '@/core/TimeService.js';
 import { EnvService } from '@/core/EnvService.js';
 import { DI } from '@/di-symbols.js';
 import type Logger from '@/logger.js';
-import { BucketRateLimit, LegacyRateLimit, LimitInfo, RateLimit, hasMinLimit, isLegacyRateLimit } from '@/misc/rate-limit-utils.js';
+import { BucketRateLimit, LegacyRateLimit, LimitInfo, RateLimit, hasMinLimit, isLegacyRateLimit, Keyed } from '@/misc/rate-limit-utils.js';
 
 @Injectable()
 export class SkRateLimiterService {
@@ -34,7 +34,7 @@ export class SkRateLimiterService {
 		this.disabled = envService.env.NODE_ENV !== 'production'; // TODO disable in TEST *only*
 	}
 
-	public async limit(limit: RateLimit, actor: string, factor = 1): Promise<LimitInfo> {
+	public async limit(limit: Keyed<RateLimit>, actor: string, factor = 1): Promise<LimitInfo> {
 		if (this.disabled || factor === 0) {
 			return {
 				blocked: false,
@@ -57,7 +57,7 @@ export class SkRateLimiterService {
 		}
 	}
 
-	private async limitLegacy(limit: LegacyRateLimit, actor: string, factor: number): Promise<LimitInfo> {
+	private async limitLegacy(limit: Keyed<LegacyRateLimit>, actor: string, factor: number): Promise<LimitInfo> {
 		const promises: Promise<LimitInfo | null>[] = [];
 
 		// The "min" limit - if present - is handled directly.
@@ -90,7 +90,7 @@ export class SkRateLimiterService {
 		};
 	}
 
-	private async limitMin(limit: LegacyRateLimit & { minInterval: number }, actor: string, factor: number): Promise<LimitInfo | null> {
+	private async limitMin(limit: Keyed<LegacyRateLimit> & { minInterval: number }, actor: string, factor: number): Promise<LimitInfo | null> {
 		if (limit.minInterval === 0) return null;
 		if (limit.minInterval < 0) throw new Error(`Invalid rate limit ${limit.key}: minInterval is negative (${limit.minInterval})`);
 
@@ -126,7 +126,7 @@ export class SkRateLimiterService {
 		return limitInfo;
 	}
 
-	private async limitBucket(limit: BucketRateLimit, actor: string, factor: number): Promise<LimitInfo> {
+	private async limitBucket(limit: Keyed<BucketRateLimit>, actor: string, factor: number): Promise<LimitInfo> {
 		if (limit.size < 1) throw new Error(`Invalid rate limit ${limit.key}: size is less than 1 (${limit.size})`);
 		if (limit.dripRate != null && limit.dripRate < 1) throw new Error(`Invalid rate limit ${limit.key}: dripRate is less than 1 (${limit.dripRate})`);
 		if (limit.dripSize != null && limit.dripSize < 1) throw new Error(`Invalid rate limit ${limit.key}: dripSize is less than 1 (${limit.dripSize})`);
@@ -166,7 +166,7 @@ export class SkRateLimiterService {
 		return limitInfo;
 	}
 
-	private async getLimitCounter(limit: RateLimit, actor: string, subject: string): Promise<LimitCounter> {
+	private async getLimitCounter(limit: Keyed<RateLimit>, actor: string, subject: string): Promise<LimitCounter> {
 		const key = createLimitKey(limit, actor, subject);
 
 		const value = await this.redisClient.get(key);
@@ -177,7 +177,7 @@ export class SkRateLimiterService {
 		return JSON.parse(value);
 	}
 
-	private async setLimitCounter(limit: RateLimit, actor: string, counter: LimitCounter, expiration: number, subject: string): Promise<void> {
+	private async setLimitCounter(limit: Keyed<RateLimit>, actor: string, counter: LimitCounter, expiration: number, subject: string): Promise<void> {
 		const key = createLimitKey(limit, actor, subject);
 		const value = JSON.stringify(counter);
 		const expirationSec = Math.max(expiration, 1);
@@ -185,7 +185,7 @@ export class SkRateLimiterService {
 	}
 }
 
-function createLimitKey(limit: RateLimit, actor: string, subject: string): string {
+function createLimitKey(limit: Keyed<RateLimit>, actor: string, subject: string): string {
 	return `rl_${actor}_${limit.key}_${subject}`;
 }
 

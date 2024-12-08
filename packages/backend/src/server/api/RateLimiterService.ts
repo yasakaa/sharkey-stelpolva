@@ -10,6 +10,7 @@ import { DI } from '@/di-symbols.js';
 import type Logger from '@/logger.js';
 import { LoggerService } from '@/core/LoggerService.js';
 import { bindThis } from '@/decorators.js';
+import { LegacyRateLimit } from '@/misc/rate-limit-utils.js';
 import type { IEndpointMeta } from './endpoints.js';
 
 /** @deprecated Use SkRateLimiterService instead */
@@ -32,7 +33,7 @@ export class RateLimiterService {
 	}
 
 	@bindThis
-	public limit(limitation: IEndpointMeta['limit'] & { key: NonNullable<string> }, actor: string, factor = 1) {
+	public limit(limitation: LegacyRateLimit & { key: NonNullable<string> }, actor: string, factor = 1) {
 		return new Promise<void>((ok, reject) => {
 			if (this.disabled) ok();
 

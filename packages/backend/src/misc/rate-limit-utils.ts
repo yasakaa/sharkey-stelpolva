@@ -6,6 +6,7 @@
 import { FastifyReply } from 'fastify';
 
 export type RateLimit = BucketRateLimit | LegacyRateLimit;
+export type Keyed<T> = T & { key: string };
 
 /**
  * Rate limit based on "leaky bucket" logic.
@@ -16,7 +17,7 @@ export interface BucketRateLimit {
 	/**
 	 * Unique key identifying the particular resource (or resource group) being limited.
 	 */
-	key: string;
+	key?: string;
 
 	/**
 	 * Constant value identifying the type of rate limit.
@@ -50,7 +51,7 @@ export interface LegacyRateLimit {
 	/**
 	 * Unique key identifying the particular resource (or resource group) being limited.
 	 */
-	key: string;
+	key?: string;
 
 	/**
 	 * Constant value identifying the type of rate limit.

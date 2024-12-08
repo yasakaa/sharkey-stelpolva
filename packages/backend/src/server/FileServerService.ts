@@ -32,7 +32,7 @@ import { getIpHash } from '@/misc/get-ip-hash.js';
 import { AuthenticateService } from '@/server/api/AuthenticateService.js';
 import { RoleService } from '@/core/RoleService.js';
 import { SkRateLimiterService } from '@/server/api/SkRateLimiterService.js';
-import { RateLimit, sendRateLimitHeaders } from '@/misc/rate-limit-utils.js';
+import { Keyed, RateLimit, sendRateLimitHeaders } from '@/misc/rate-limit-utils.js';
 import type { FastifyInstance, FastifyRequest, FastifyReply, FastifyPluginOptions } from 'fastify';
 
 const _filename = fileURLToPath(import.meta.url);
@@ -633,7 +633,7 @@ export class FileServerService {
 	}
 
 	private async checkResourceLimit(reply: FastifyReply, actor: string, group: string, resource: string, factor = 1): Promise<boolean> {
-		const limit: RateLimit = {
+		const limit: Keyed<RateLimit> = {
 			// Group by resource
 			key: `${group}${resource}`,
 			type: 'bucket',
@@ -647,7 +647,7 @@ export class FileServerService {
 	}
 
 	private async checkSharedLimit(reply: FastifyReply, actor: string, group: string, factor = 1): Promise<boolean> {
-		const limit: RateLimit = {
+		const limit: Keyed<RateLimit> = {
 			key: group,
 			type: 'bucket',
 
@@ -658,7 +658,7 @@ export class FileServerService {
 		return await this.checkLimit(reply, actor, limit, factor);
 	}
 
-	private async checkLimit(reply: FastifyReply, actor: string, limit: RateLimit, factor = 1): Promise<boolean> {
+	private async checkLimit(reply: FastifyReply, actor: string, limit: Keyed<RateLimit>, factor = 1): Promise<boolean> {
 		const info = await this.rateLimiterService.limit(limit, actor, factor);
 
 		sendRateLimitHeaders(reply, info);

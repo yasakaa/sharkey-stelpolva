@@ -856,7 +856,7 @@ interface IEndpointMetaBase {
 	 * エンドポイントのリミテーションに関するやつ
 	 * 省略した場合はリミテーションは無いものとして解釈されます。
 	 */
-	readonly limit?: Readonly<RateLimit | Omit<RateLimit, 'key'>>;
+	readonly limit?: Readonly<RateLimit>;
 
 	/**
 	 * ファイルの添付を必要とするか否か

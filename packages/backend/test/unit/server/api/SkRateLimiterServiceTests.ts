@@ -8,7 +8,7 @@ import { jest } from '@jest/globals';
 import type Redis from 'ioredis';
 import { LimitCounter, SkRateLimiterService } from '@/server/api/SkRateLimiterService.js';
 import { LoggerService } from '@/core/LoggerService.js';
-import { BucketRateLimit, LegacyRateLimit } from '@/misc/rate-limit-utils.js';
+import { BucketRateLimit, Keyed, LegacyRateLimit } from '@/misc/rate-limit-utils.js';
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
@@ -142,7 +142,7 @@ describe(SkRateLimiterService, () => {
 		});
 
 		describe('with bucket limit', () => {
-			let limit: BucketRateLimit = null!;
+			let limit: Keyed<BucketRateLimit> = null!;
 
 			beforeEach(() => {
 				limit = {
@@ -387,7 +387,7 @@ describe(SkRateLimiterService, () => {
 		});
 
 		describe('with min interval', () => {
-			let limit: MutableLegacyRateLimit = null!;
+			let limit: Keyed<LegacyRateLimit> = null!;
 
 			beforeEach(() => {
 				limit = {
@@ -570,7 +570,7 @@ describe(SkRateLimiterService, () => {
 		});
 
 		describe('with legacy limit', () => {
-			let limit: MutableLegacyRateLimit = null!;
+			let limit: Keyed<LegacyRateLimit> = null!;
 
 			beforeEach(() => {
 				limit = {
@@ -726,7 +726,7 @@ describe(SkRateLimiterService, () => {
 		});
 
 		describe('with legacy limit and min interval', () => {
-			let limit: MutableLegacyRateLimit = null!;
+			let limit: Keyed<LegacyRateLimit> = null!;
 
 			beforeEach(() => {
 				limit = {
@@ -855,11 +855,3 @@ describe(SkRateLimiterService, () => {
 		});
 	});
 });
-
-// The same thing, but mutable
-interface MutableLegacyRateLimit extends LegacyRateLimit {
-	key: string;
-	duration?: number;
-	max?: number;
-	minInterval?: number;
-}

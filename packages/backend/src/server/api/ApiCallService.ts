@@ -18,7 +18,7 @@ import { createTemp } from '@/misc/create-temp.js';
 import { bindThis } from '@/decorators.js';
 import { RoleService } from '@/core/RoleService.js';
 import type { Config } from '@/config.js';
-import { RateLimit, sendRateLimitHeaders } from '@/misc/rate-limit-utils.js';
+import { sendRateLimitHeaders } from '@/misc/rate-limit-utils.js';
 import { SkRateLimiterService } from '@/server/api/SkRateLimiterService.js';
 import { ApiError } from './error.js';
 import { ApiLoggerService } from './ApiLoggerService.js';
@@ -327,7 +327,7 @@ export class ApiCallService implements OnApplicationShutdown {
 				const limit = {
 					key: ep.name,
 					...endpointLimit,
-				} as RateLimit;
+				};
 
 				// Rate limit
 				const info = await this.rateLimiterService.limit(limit, limitActor, factor);

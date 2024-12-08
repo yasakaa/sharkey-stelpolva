@@ -7396,6 +7396,14 @@ export interface Locale extends ILocale {
          * Testers
          */
         "testers": string;
+        /**
+         * Misskey Contributors
+         */
+        "misskeyContributors": string;
+        /**
+         * Our lovely Sponsors
+         */
+        "ourLovelySponsors": string;
     };
     "_displayOfSensitiveMedia": {
         /**

@@ -274,8 +274,8 @@ describe(SkRateLimiterService, () => {
 			it('should scale limit by factor', async () => {
 				counter = { c: 1, t: 0 };
 
-				const i1 = await serviceUnderTest().limit(limit, actor, 2); // 1 + 1 = 2
-				const i2 = await serviceUnderTest().limit(limit, actor, 2); // 2 + 1 = 3
+				const i1 = await serviceUnderTest().limit(limit, actor, 0.5); // 1 + 1 = 2
+				const i2 = await serviceUnderTest().limit(limit, actor, 0.5); // 2 + 1 = 3
 
 				expect(i1.blocked).toBeFalsy();
 				expect(i2.blocked).toBeTruthy();
@@ -514,7 +514,7 @@ describe(SkRateLimiterService, () => {
 				minCounter = { c: 1, t: 0 };
 				mockTimeService.now += 500;
 
-				const info = await serviceUnderTest().limit(limit, actor, 2);
+				const info = await serviceUnderTest().limit(limit, actor, 0.5);
 
 				expect(info.blocked).toBeFalsy();
 			});
@@ -657,7 +657,7 @@ describe(SkRateLimiterService, () => {
 			it('should scale limit by factor', async () => {
 				counter = { c: 10, t: 0 };
 
-				const info = await serviceUnderTest().limit(limit, actor, 2); // 10 + 1 = 11
+				const info = await serviceUnderTest().limit(limit, actor, 0.5); // 10 + 1 = 11
 
 				expect(info.blocked).toBeTruthy();
 			});
@@ -825,7 +825,7 @@ describe(SkRateLimiterService, () => {
 				minCounter = { c: 1, t: 0 };
 				mockTimeService.now += 500;
 
-				const info = await serviceUnderTest().limit(limit, actor, 2);
+				const info = await serviceUnderTest().limit(limit, actor, 0.5);
 
 				expect(info.blocked).toBeFalsy();
 			});

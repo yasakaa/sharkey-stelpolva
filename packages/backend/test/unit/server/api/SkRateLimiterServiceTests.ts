@@ -424,14 +424,13 @@ describe(SkRateLimiterService, () => {
 				expect(info.blocked).toBeFalsy();
 			});
 
-			it('should scale limit by factor', async () => {
+			it('should scale interval by factor', async () => {
 				minCounter = { c: 1, t: 0 };
+				mockTimeService.now += 500;
 
-				const i1 = await serviceUnderTest().limit(limit, actor, 2); // 1 + 1 = 2
-				const i2 = await serviceUnderTest().limit(limit, actor, 2); // 2 + 1 = 3
+				const info = await serviceUnderTest().limit(limit, actor, 2);
 
-				expect(i1.blocked).toBeFalsy();
-				expect(i2.blocked).toBeTruthy();
+				expect(info.blocked).toBeFalsy();
 			});
 
 			it('should set key expiration', async () => {
@@ -662,12 +661,14 @@ describe(SkRateLimiterService, () => {
 				expect(info.blocked).toBeFalsy();
 			});
 
-			it('should scale limit by factor', async () => {
-				minCounter = { c: 5, t: 0 };
+			it('should scale limit and interval by factor', async () => {
+				counter = { c: 5, t: 0 };
+				minCounter = { c: 1, t: 0 };
+				mockTimeService.now += 500;
 
 				const info = await serviceUnderTest().limit(limit, actor, 2);
 
-				expect(info.blocked).toBeTruthy();
+				expect(info.blocked).toBeFalsy();
 			});
 
 			it('should set key expiration', async () => {

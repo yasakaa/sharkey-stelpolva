@@ -173,35 +173,31 @@ export class SkRateLimiterService {
 
 	private async limitMin(limit: LegacyRateLimit & { minInterval: number }, actor: string, factor: number): Promise<LimitInfo | null> {
 		const counter = await this.getLimitCounter(limit, actor, 'min');
-		const maxCalls = Math.max(Math.ceil(factor), 1);
+		const minInterval = Math.max(Math.ceil(limit.minInterval / factor), 0);
 
 		// Update expiration
-		if (counter.c >= maxCalls) {
-			const isCleared = this.timeService.now - counter.t >= limit.minInterval;
+		if (counter.c > 0) {
+			const isCleared = this.timeService.now - counter.t >= minInterval;
 			if (isCleared) {
 				counter.c = 0;
 			}
 		}
 
-		const blocked = counter.c >= maxCalls;
+		const blocked = counter.c > 0;
 		if (!blocked) {
 			counter.c++;
 			counter.t = this.timeService.now;
 		}
 
 		// Calculate limit status
-		const remaining = Math.max(maxCalls - counter.c, 0);
-		const fullResetMs = Math.max(Math.ceil(limit.minInterval - (this.timeService.now - counter.t)), 0);
-		const fullResetSec = Math.ceil(fullResetMs / 1000);
-		const resetMs = remaining < 1 ? fullResetMs : 0;
-		const resetSec = remaining < 1 ? fullResetSec : 0;
-		const limitInfo: LimitInfo = { blocked, remaining, resetSec, resetMs, fullResetSec, fullResetMs,
-		};
+		const resetMs = Math.max(Math.ceil(minInterval - (this.timeService.now - counter.t)), 0);
+		const resetSec = Math.ceil(resetMs / 1000);
+		const limitInfo: LimitInfo = { blocked, remaining: 0, resetSec, resetMs, fullResetSec: resetSec, fullResetMs: resetMs };
 
 		// Update the limit counter, but not if blocked
 		if (!blocked) {
 			// Don't await, or we will slow down the API.
-			this.setLimitCounter(limit, actor, counter, fullResetSec, 'min')
+			this.setLimitCounter(limit, actor, counter, resetSec, 'min')
 				.catch(err => this.logger.error(`Failed to update limit ${limit.key}:min for ${actor}:`, err));
 		}
 
@@ -210,9 +206,9 @@ export class SkRateLimiterService {
 
 	private async limitBucket(limit: RateLimit, actor: string, factor: number): Promise<LimitInfo> {
 		const counter = await this.getLimitCounter(limit, actor, 'bucket');
+		const bucketSize = Math.max(Math.ceil(limit.size * factor), 1);
 		const dripRate = (limit.dripRate ?? 1000);
 		const dripSize = (limit.dripSize ?? 1);
-		const bucketSize = (limit.size * factor);
 
 		// Update drips
 		if (counter.c > 0) {

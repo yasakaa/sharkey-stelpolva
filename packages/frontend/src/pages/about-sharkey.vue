@@ -202,7 +202,7 @@ const everyone = ref<Section[]>([
 		],
 	},
 	{
-		heading: 'Misskey Contributors',
+		heading: i18n.ts._aboutMisskey.misskeyContributors,
 		people: [
 			{
 				handle: '@syuilo',
@@ -271,7 +271,7 @@ const containerEl = shallowRef<HTMLElement>();
 
 await misskeyApi('sponsors', { forceUpdate: false }).then((res) => {
 	const section: Section = {
-		heading: 'Our lovely Sponsors',
+		heading: i18n.ts._aboutMisskey.ourLovelySponsors,
 		people: [],
 	};
 	for (const sponsor of res.sponsor_data) {

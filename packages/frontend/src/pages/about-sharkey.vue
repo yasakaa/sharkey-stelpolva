@@ -133,7 +133,7 @@ const everyone = ref<Section[]>([
 			label: i18n.ts._aboutMisskey.allContributors,
 			url: 'https://activitypub.software/TransFem-org/Sharkey/-/graphs/develop',
 		},
-		people: [
+		people: fisher_yates([
 			{
 				handle: '@CenTdemeern1',
 				avatar: 'https://secure.gravatar.com/avatar/e97dd57d32caf703cea556ace6304617b7420f17f5b1aac4a1eea8e4234735bb?s=1600&d=identicon',
@@ -179,7 +179,7 @@ const everyone = ref<Section[]>([
 				avatar: 'https://activitypub.software/uploads/-/system/user/avatar/132/avatar.png?width=128',
 				link: 'https://activitypub.software/tess',
 			},
-		],
+		]),
 	},
 	{
 		heading: i18n.ts._aboutMisskey.testers,
@@ -258,6 +258,19 @@ await misskeyApi('sponsors', { forceUpdate: false }).then((res) => {
 	}
 	everyone.value.push(section);
 });
+
+/**
+ * Based on the pseudocode description from Wikipedia:
+ * https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+ * Modifies the array in-place, but still returns it for the sake of convenience
+ */
+function fisher_yates<T>(array: T[]): T[] {
+	for (let i = array.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[array[i], array[j]] = [array[j], array[i]];
+	}
+	return array;
+}
 
 function iconLoaded() {
 	const emojis = defaultStore.state.reactions;

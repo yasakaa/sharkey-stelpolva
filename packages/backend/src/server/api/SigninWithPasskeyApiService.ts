@@ -22,10 +22,10 @@ import Logger from '@/logger.js';
 import { LoggerService } from '@/core/LoggerService.js';
 import type { IdentifiableError } from '@/misc/identifiable-error.js';
 import { SkRateLimiterService } from '@/server/api/SkRateLimiterService.js';
+import { sendRateLimitHeaders } from '@/misc/rate-limit-utils.js';
 import { SigninService } from './SigninService.js';
 import type { AuthenticationResponseJSON } from '@simplewebauthn/types';
 import type { FastifyReply, FastifyRequest } from 'fastify';
-import { sendRateLimitHeaders } from '@/misc/rate-limit-utils.js';
 
 @Injectable()
 export class SigninWithPasskeyApiService {

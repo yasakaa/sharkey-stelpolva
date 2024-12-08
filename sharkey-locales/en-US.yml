@@ -156,6 +156,7 @@ allowClickingNotifications: "Allow clicking on pop-up notifications"
 pinnedOnly: "Pinned"
 blockingYou: "Blocking you"
 warnExternalUrl: "Show warning when opening external URLs"
+flash: "Flash"
 _flash:
   contentHidden: "Flash Content Hidden"
   poweredByRuffle: "Powered by Ruffle."

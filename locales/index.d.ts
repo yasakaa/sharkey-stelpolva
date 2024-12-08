@@ -11004,6 +11004,10 @@ export interface Locale extends ILocale {
      * Show warning when opening external URLs
      */
     "warnExternalUrl": string;
+    /**
+     * Flash
+     */
+    "flash": string;
     "_flash": {
         /**
          * Flash Content Hidden

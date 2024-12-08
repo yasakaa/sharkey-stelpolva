@@ -32,7 +32,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		</button>
 		<input ref="progress" v-model="position" class="progress" type="range" min="0" max="1" step="0.1" @mousedown="initSeek()" @mouseup="performSeek()"/>
 		<input v-model="player.context.gain.value" type="range" min="0" max="1" step="0.1"/>
-		<a class="download" :title="i18n.ts.download" :href="module.url" target="_blank">
+		<a class="download" :title="i18n.ts.download" :href="module.url" :download="module.name" target="_blank">
 			<i class="ph-download ph-bold ph-lg"></i>
 		</a>
 	</div>

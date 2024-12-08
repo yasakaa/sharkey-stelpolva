@@ -300,10 +300,11 @@ describe(SkRateLimiterService, () => {
 				expect(counter?.t).toBe(0);
 			});
 
-			it('should throw if factor is zero', async () => {
-				const promise = serviceUnderTest().limit(limit, actor, 0);
+			it('should skip if factor is zero', async () => {
+				const info = await serviceUnderTest().limit(limit, actor, 0);
 
-				await expect(promise).rejects.toThrow(/factor is zero or negative/);
+				expect(info.blocked).toBeFalsy();
+				expect(info.remaining).toBe(Number.MAX_SAFE_INTEGER);
 			});
 
 			it('should throw if factor is negative', async () => {
@@ -537,10 +538,11 @@ describe(SkRateLimiterService, () => {
 				expect(minCounter?.t).toBe(0);
 			});
 
-			it('should throw if factor is zero', async () => {
-				const promise = serviceUnderTest().limit(limit, actor, 0);
+			it('should skip if factor is zero', async () => {
+				const info = await serviceUnderTest().limit(limit, actor, 0);
 
-				await expect(promise).rejects.toThrow(/factor is zero or negative/);
+				expect(info.blocked).toBeFalsy();
+				expect(info.remaining).toBe(Number.MAX_SAFE_INTEGER);
 			});
 
 			it('should throw if factor is negative', async () => {
@@ -693,10 +695,11 @@ describe(SkRateLimiterService, () => {
 				expect(i2.blocked).toBeFalsy();
 			});
 
-			it('should throw if factor is zero', async () => {
-				const promise = serviceUnderTest().limit(limit, actor, 0);
+			it('should skip if factor is zero', async () => {
+				const info = await serviceUnderTest().limit(limit, actor, 0);
 
-				await expect(promise).rejects.toThrow(/factor is zero or negative/);
+				expect(info.blocked).toBeFalsy();
+				expect(info.remaining).toBe(Number.MAX_SAFE_INTEGER);
 			});
 
 			it('should throw if factor is negative', async () => {

@@ -35,7 +35,7 @@ export class SkRateLimiterService {
 	}
 
 	public async limit(limit: RateLimit, actor: string, factor = 1): Promise<LimitInfo> {
-		if (this.disabled) {
+		if (this.disabled || factor === 0) {
 			return {
 				blocked: false,
 				remaining: Number.MAX_SAFE_INTEGER,
@@ -46,7 +46,7 @@ export class SkRateLimiterService {
 			};
 		}
 
-		if (factor <= 0) {
+		if (factor < 0) {
 			throw new Error(`Rate limit factor is zero or negative: ${factor}`);
 		}
 

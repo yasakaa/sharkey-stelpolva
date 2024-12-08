@@ -220,6 +220,16 @@ const everyone = ref<Section[]>([
 				link: 'https://github.com/acid-chicken',
 			},
 			{
+				handle: '@mei23',
+				avatar: 'https://avatars.githubusercontent.com/u/30769358?s=128&v=4',
+				link: 'https://github.com/mei23',
+			},
+			{
+				handle: '@AyaMorisawa',
+				avatar: 'https://avatars.githubusercontent.com/u/10798641?s=128&v=4',
+				link: 'https://github.com/AyaMorisawa',
+			},
+			{
 				handle: '@kakkokari-gtyih',
 				avatar: 'https://avatars.githubusercontent.com/u/67428053?s=128&v=4',
 				link: 'https://github.com/kakkokari-gtyih',
@@ -230,14 +240,29 @@ const everyone = ref<Section[]>([
 				link: 'https://github.com/tai-cha',
 			},
 			{
-				handle: '@samunohito',
-				avatar: 'https://avatars.githubusercontent.com/u/46447427?s=128&v=4',
-				link: 'https://github.com/samunohito',
+				handle: '@Johann150',
+				avatar: 'https://avatars.githubusercontent.com/u/20990607?s=128&v=4',
+				link: 'https://github.com/Johann150',
 			},
 			{
 				handle: '@anatawa12',
 				avatar: 'https://avatars.githubusercontent.com/u/22656849?s=128&v=4',
 				link: 'https://github.com/anatawa12',
+			},
+			{
+				handle: '@saschanaz',
+				avatar: 'https://avatars.githubusercontent.com/u/3396686?s=128&v=4',
+				link: 'https://github.com/saschanaz',
+			},
+			{
+				handle: '@zyoshoka',
+				avatar: 'https://avatars.githubusercontent.com/u/107108195?s=128&v=4',
+				link: 'https://github.com/zyoshoka',
+			},
+			{
+				handle: '@samunohito',
+				avatar: 'https://avatars.githubusercontent.com/u/46447427?s=128&v=4',
+				link: 'https://github.com/samunohito',
 			},
 		],
 	},

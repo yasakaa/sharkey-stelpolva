@@ -298,6 +298,90 @@ describe(SkRateLimiterService, () => {
 				expect(counter?.c).toBe(1);
 				expect(counter?.t).toBe(0);
 			});
+
+			it('should throw if factor is zero', async () => {
+				const promise = serviceUnderTest().limit(limit, actor, 0);
+
+				await expect(promise).rejects.toThrow(/factor is zero or negative/);
+			});
+
+			it('should throw if factor is negative', async () => {
+				const promise = serviceUnderTest().limit(limit, actor, -1);
+
+				await expect(promise).rejects.toThrow(/factor is zero or negative/);
+			});
+
+			it('should throw if size is zero', async () => {
+				limit.size = 0;
+
+				const promise = serviceUnderTest().limit(limit, actor);
+
+				await expect(promise).rejects.toThrow(/size is less than 1/);
+			});
+
+			it('should throw if size is negative', async () => {
+				limit.size = -1;
+
+				const promise = serviceUnderTest().limit(limit, actor);
+
+				await expect(promise).rejects.toThrow(/size is less than 1/);
+			});
+
+			it('should throw if size is fraction', async () => {
+				limit.size = 0.5;
+
+				const promise = serviceUnderTest().limit(limit, actor);
+
+				await expect(promise).rejects.toThrow(/size is less than 1/);
+			});
+
+			it('should throw if dripRate is zero', async () => {
+				limit.dripRate = 0;
+
+				const promise = serviceUnderTest().limit(limit, actor);
+
+				await expect(promise).rejects.toThrow(/dripRate is less than 1/);
+			});
+
+			it('should throw if dripRate is negative', async () => {
+				limit.dripRate = -1;
+
+				const promise = serviceUnderTest().limit(limit, actor);
+
+				await expect(promise).rejects.toThrow(/dripRate is less than 1/);
+			});
+
+			it('should throw if dripRate is fraction', async () => {
+				limit.dripRate = 0.5;
+
+				const promise = serviceUnderTest().limit(limit, actor);
+
+				await expect(promise).rejects.toThrow(/dripRate is less than 1/);
+			});
+
+			it('should throw if dripSize is zero', async () => {
+				limit.dripSize = 0;
+
+				const promise = serviceUnderTest().limit(limit, actor);
+
+				await expect(promise).rejects.toThrow(/dripSize is less than 1/);
+			});
+
+			it('should throw if dripSize is negative', async () => {
+				limit.dripSize = -1;
+
+				const promise = serviceUnderTest().limit(limit, actor);
+
+				await expect(promise).rejects.toThrow(/dripSize is less than 1/);
+			});
+
+			it('should throw if dripSize is fraction', async () => {
+				limit.dripSize = 0.5;
+
+				const promise = serviceUnderTest().limit(limit, actor);
+
+				await expect(promise).rejects.toThrow(/dripSize is less than 1/);
+			});
 		});
 
 		describe('with min interval', () => {
@@ -451,6 +535,35 @@ describe(SkRateLimiterService, () => {
 				expect(minCounter?.c).toBe(1);
 				expect(minCounter?.t).toBe(0);
 			});
+
+			it('should throw if factor is zero', async () => {
+				const promise = serviceUnderTest().limit(limit, actor, 0);
+
+				await expect(promise).rejects.toThrow(/factor is zero or negative/);
+			});
+
+			it('should throw if factor is negative', async () => {
+				const promise = serviceUnderTest().limit(limit, actor, -1);
+
+				await expect(promise).rejects.toThrow(/factor is zero or negative/);
+			});
+
+			it('should skip if minInterval is zero', async () => {
+				limit.minInterval = 0;
+
+				const info = await serviceUnderTest().limit(limit, actor);
+
+				expect(info.blocked).toBeFalsy();
+				expect(info.remaining).toBe(Number.MAX_SAFE_INTEGER);
+			});
+
+			it('should throw if minInterval is negative', async () => {
+				limit.minInterval = -1;
+
+				const promise = serviceUnderTest().limit(limit, actor);
+
+				await expect(promise).rejects.toThrow(/minInterval is negative/);
+			});
 		});
 
 		describe('with legacy limit', () => {
@@ -577,6 +690,34 @@ describe(SkRateLimiterService, () => {
 
 				expect(i1.blocked).toBeTruthy();
 				expect(i2.blocked).toBeFalsy();
+			});
+
+			it('should throw if factor is zero', async () => {
+				const promise = serviceUnderTest().limit(limit, actor, 0);
+
+				await expect(promise).rejects.toThrow(/factor is zero or negative/);
+			});
+
+			it('should throw if factor is negative', async () => {
+				const promise = serviceUnderTest().limit(limit, actor, -1);
+
+				await expect(promise).rejects.toThrow(/factor is zero or negative/);
+			});
+
+			it('should throw if max is zero', async () => {
+				limit.max = 0;
+
+				const promise = serviceUnderTest().limit(limit, actor);
+
+				await expect(promise).rejects.toThrow(/size is less than 1/);
+			});
+
+			it('should throw if max is negative', async () => {
+				limit.max = -1;
+
+				const promise = serviceUnderTest().limit(limit, actor);
+
+				await expect(promise).rejects.toThrow(/size is less than 1/);
 			});
 		});
 

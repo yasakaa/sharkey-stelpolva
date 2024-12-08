@@ -131,6 +131,10 @@ export class SkRateLimiterService {
 			};
 		}
 
+		if (factor <= 0) {
+			throw new Error(`Rate limit factor is zero or negative: ${factor}`);
+		}
+
 		if (isLegacyRateLimit(limit)) {
 			return await this.limitLegacy(limit, actor, factor);
 		} else {
@@ -149,7 +153,7 @@ export class SkRateLimiterService {
 		}
 
 		// Convert the "max" limit into a leaky bucket with 1 drip / second rate.
-		if (limit.max && limit.duration) {
+		if (limit.max != null && limit.duration != null) {
 			promises.push(
 				this.limitBucket({
 					type: 'bucket',
@@ -172,6 +176,9 @@ export class SkRateLimiterService {
 	}
 
 	private async limitMin(limit: LegacyRateLimit & { minInterval: number }, actor: string, factor: number): Promise<LimitInfo | null> {
+		if (limit.minInterval === 0) return null;
+		if (limit.minInterval < 0) throw new Error(`Invalid rate limit ${limit.key}: minInterval is negative (${limit.minInterval})`);
+
 		const counter = await this.getLimitCounter(limit, actor, 'min');
 		const minInterval = Math.max(Math.ceil(limit.minInterval / factor), 0);
 
@@ -205,10 +212,14 @@ export class SkRateLimiterService {
 	}
 
 	private async limitBucket(limit: RateLimit, actor: string, factor: number): Promise<LimitInfo> {
+		if (limit.size < 1) throw new Error(`Invalid rate limit ${limit.key}: size is less than 1 (${limit.size})`);
+		if (limit.dripRate != null && limit.dripRate < 1) throw new Error(`Invalid rate limit ${limit.key}: dripRate is less than 1 (${limit.dripRate})`);
+		if (limit.dripSize != null && limit.dripSize < 1) throw new Error(`Invalid rate limit ${limit.key}: dripSize is less than 1 (${limit.dripSize})`);
+
 		const counter = await this.getLimitCounter(limit, actor, 'bucket');
 		const bucketSize = Math.max(Math.ceil(limit.size * factor), 1);
-		const dripRate = (limit.dripRate ?? 1000);
-		const dripSize = (limit.dripSize ?? 1);
+		const dripRate = Math.ceil(limit.dripRate ?? 1000);
+		const dripSize = Math.ceil(limit.dripSize ?? 1);
 
 		// Update drips
 		if (counter.c > 0) {

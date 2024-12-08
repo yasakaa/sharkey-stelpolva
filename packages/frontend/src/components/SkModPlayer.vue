@@ -41,7 +41,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { ref, nextTick, computed, watch, onDeactivated, onMounted } from 'vue';
+import { ref, nextTick, watch, onDeactivated, onMounted } from 'vue';
 import * as Misskey from 'misskey-js';
 import { i18n } from '@/i18n.js';
 import { defaultStore } from '@/store.js';
@@ -70,9 +70,9 @@ const props = defineProps<{
 	module: Misskey.entities.DriveFile
 }>();
 
-const isSensitive = computed(() => { return props.module.isSensitive; });
-const url = computed(() => { return props.module.url; });
-let hide = ref((defaultStore.state.nsfw === 'force') ? true : isSensitive.value && (defaultStore.state.nsfw !== 'ignore'));
+const isSensitive = props.module.isSensitive;
+const url = props.module.url;
+let hide = ref((defaultStore.state.nsfw === 'force') ? true : isSensitive && (defaultStore.state.nsfw !== 'ignore'));
 let patternHide = ref(false);
 let playing = ref(false);
 let displayCanvas = ref<HTMLCanvasElement>();
@@ -111,7 +111,7 @@ function bakeNumberRow() {
 }
 
 onMounted(() => {
-	player.value.load(url.value).then((result) => {
+	player.value.load(url).then((result) => {
 		buffer = result;
 		try {
 			player.value.play(buffer);

@@ -18,8 +18,8 @@ import { createTemp } from '@/misc/create-temp.js';
 import { bindThis } from '@/decorators.js';
 import { RoleService } from '@/core/RoleService.js';
 import type { Config } from '@/config.js';
-import { sendRateLimitHeaders } from '@/misc/rate-limit-utils.js';
-import { LegacyRateLimit, SkRateLimiterService } from '@/server/api/SkRateLimiterService.js';
+import { RateLimit, sendRateLimitHeaders } from '@/misc/rate-limit-utils.js';
+import { SkRateLimiterService } from '@/server/api/SkRateLimiterService.js';
 import { ApiError } from './error.js';
 import { ApiLoggerService } from './ApiLoggerService.js';
 import { AuthenticateService, AuthenticationError } from './AuthenticateService.js';
@@ -304,7 +304,7 @@ export class ApiCallService implements OnApplicationShutdown {
 		}
 
 		// For endpoints without a limit, the default is 10 calls per second
-		const endpointLimit: IEndpointMeta['limit'] = ep.meta.limit ?? {
+		const endpointLimit = ep.meta.limit ?? {
 			duration: 1000,
 			max: 10,
 		};
@@ -320,18 +320,17 @@ export class ApiCallService implements OnApplicationShutdown {
 				limitActor = getIpHash(request.ip);
 			}
 
-			const limit = Object.assign({}, endpointLimit);
-
-			if (limit.key == null) {
-				(limit as any).key = ep.name;
-			}
-
 			// TODO: 毎リクエスト計算するのもあれだしキャッシュしたい
 			const factor = user ? (await this.roleService.getUserPolicies(user.id)).rateLimitFactor : 1;
 
 			if (factor > 0) {
+				const limit = {
+					key: ep.name,
+					...endpointLimit,
+				} as RateLimit;
+
 				// Rate limit
-				const info = await this.rateLimiterService.limit(limit as LegacyRateLimit, limitActor, factor);
+				const info = await this.rateLimiterService.limit(limit, limitActor, factor);
 
 				sendRateLimitHeaders(reply, info);
 

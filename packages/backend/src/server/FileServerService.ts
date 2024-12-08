@@ -31,8 +31,8 @@ import { handleRequestRedirectToOmitSearch } from '@/misc/fastify-hook-handlers.
 import { getIpHash } from '@/misc/get-ip-hash.js';
 import { AuthenticateService } from '@/server/api/AuthenticateService.js';
 import { RoleService } from '@/core/RoleService.js';
-import { RateLimit, SkRateLimiterService } from '@/server/api/SkRateLimiterService.js';
-import { sendRateLimitHeaders } from '@/misc/rate-limit-utils.js';
+import { SkRateLimiterService } from '@/server/api/SkRateLimiterService.js';
+import { RateLimit, sendRateLimitHeaders } from '@/misc/rate-limit-utils.js';
 import type { FastifyInstance, FastifyRequest, FastifyReply, FastifyPluginOptions } from 'fastify';
 
 const _filename = fileURLToPath(import.meta.url);

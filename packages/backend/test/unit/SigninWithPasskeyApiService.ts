@@ -20,7 +20,8 @@ import { SigninWithPasskeyApiService } from '@/server/api/SigninWithPasskeyApiSe
 import { WebAuthnService } from '@/core/WebAuthnService.js';
 import { SigninService } from '@/server/api/SigninService.js';
 import { IdentifiableError } from '@/misc/identifiable-error.js';
-import { LimitInfo, SkRateLimiterService } from '@/server/api/SkRateLimiterService.js';
+import { SkRateLimiterService } from '@/server/api/SkRateLimiterService.js';
+import { LimitInfo } from '@/misc/rate-limit-utils.js';
 
 const moduleMocker = new ModuleMocker(global);
 

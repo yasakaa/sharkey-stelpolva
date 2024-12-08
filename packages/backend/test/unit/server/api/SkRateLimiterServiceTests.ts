@@ -6,8 +6,9 @@
 import { KEYWORD } from 'color-convert/conversions.js';
 import { jest } from '@jest/globals';
 import type Redis from 'ioredis';
-import { LegacyRateLimit, LimitCounter, RateLimit, SkRateLimiterService } from '@/server/api/SkRateLimiterService.js';
+import { LimitCounter, SkRateLimiterService } from '@/server/api/SkRateLimiterService.js';
 import { LoggerService } from '@/core/LoggerService.js';
+import { BucketRateLimit, LegacyRateLimit } from '@/misc/rate-limit-utils.js';
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
@@ -141,7 +142,7 @@ describe(SkRateLimiterService, () => {
 		});
 
 		describe('with bucket limit', () => {
-			let limit: RateLimit = null!;
+			let limit: BucketRateLimit = null!;
 
 			beforeEach(() => {
 				limit = {

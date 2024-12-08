@@ -5,97 +5,12 @@
 
 import { Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
-import type { IEndpointMeta } from '@/server/api/endpoints.js';
 import { LoggerService } from '@/core/LoggerService.js';
 import { TimeService } from '@/core/TimeService.js';
 import { EnvService } from '@/core/EnvService.js';
 import { DI } from '@/di-symbols.js';
 import type Logger from '@/logger.js';
-
-/**
- * Metadata about the current status of a rate limiter
- */
-export interface LimitInfo {
-	/**
-	 * True if the limit has been reached, and the call should be blocked.
-	 */
-	blocked: boolean;
-
-	/**
-	 * Number of calls that can be made before the limit is triggered.
-	 */
-	remaining: number;
-
-	/**
-	 * Time in seconds until the next call can be made, or zero if the next call can be made immediately.
-	 * Rounded up to the nearest second.
-	 */
-	resetSec: number;
-
-	/**
-	 * Time in milliseconds until the next call can be made, or zero if the next call can be made immediately.
-	 * Rounded up to the nearest milliseconds.
-	 */
-	resetMs: number;
-
-	/**
-	 * Time in seconds until the limit has fully reset.
-	 * Rounded up to the nearest second.
-	 */
-	fullResetSec: number;
-
-	/**
-	 * Time in milliseconds until the limit has fully reset.
-	 * Rounded up to the nearest millisecond.
-	 */
-	fullResetMs: number;
-}
-
-/**
- * Rate limit based on "leaky bucket" logic.
- * The bucket count increases with each call, and decreases gradually at a given rate.
- * The subject is blocked until the bucket count drops below the limit.
- */
-export interface RateLimit {
-	/**
-	 * Unique key identifying the particular resource (or resource group) being limited.
-	 */
-	key: string;
-
-	/**
-	 * Constant value identifying the type of rate limit.
-	 */
-	type: 'bucket';
-
-	/**
-	 * Size of the bucket, in number of requests.
-	 * The subject will be blocked when the number of calls exceeds this size.
-	 */
-	size: number;
-
-	/**
-	 * How often the bucket should "drip" and reduce the counter, measured in milliseconds.
-	 * Defaults to 1000 (1 second).
-	 */
-	dripRate?: number;
-
-	/**
-	 * Amount to reduce the counter on each drip.
-	 * Defaults to 1.
-	 */
-	dripSize?: number;
-}
-
-export type SupportedRateLimit = RateLimit | LegacyRateLimit;
-export type LegacyRateLimit = IEndpointMeta['limit'] & { key: NonNullable<string>, type?: undefined };
-
-export function isLegacyRateLimit(limit: SupportedRateLimit): limit is LegacyRateLimit {
-	return limit.type === undefined;
-}
-
-export function hasMinLimit(limit: LegacyRateLimit): limit is LegacyRateLimit & { minInterval: number } {
-	return !!limit.minInterval;
-}
+import { BucketRateLimit, LegacyRateLimit, LimitInfo, RateLimit, hasMinLimit, isLegacyRateLimit } from '@/misc/rate-limit-utils.js';
 
 @Injectable()
 export class SkRateLimiterService {
@@ -116,10 +31,10 @@ export class SkRateLimiterService {
 		envService: EnvService,
 	) {
 		this.logger = loggerService.getLogger('limiter');
-		this.disabled = envService.env.NODE_ENV !== 'production';
+		this.disabled = envService.env.NODE_ENV !== 'production'; // TODO disable in TEST *only*
 	}
 
-	public async limit(limit: SupportedRateLimit, actor: string, factor = 1): Promise<LimitInfo> {
+	public async limit(limit: RateLimit, actor: string, factor = 1): Promise<LimitInfo> {
 		if (this.disabled) {
 			return {
 				blocked: false,
@@ -211,7 +126,7 @@ export class SkRateLimiterService {
 		return limitInfo;
 	}
 
-	private async limitBucket(limit: RateLimit, actor: string, factor: number): Promise<LimitInfo> {
+	private async limitBucket(limit: BucketRateLimit, actor: string, factor: number): Promise<LimitInfo> {
 		if (limit.size < 1) throw new Error(`Invalid rate limit ${limit.key}: size is less than 1 (${limit.size})`);
 		if (limit.dripRate != null && limit.dripRate < 1) throw new Error(`Invalid rate limit ${limit.key}: dripRate is less than 1 (${limit.dripRate})`);
 		if (limit.dripSize != null && limit.dripSize < 1) throw new Error(`Invalid rate limit ${limit.key}: dripSize is less than 1 (${limit.dripSize})`);
@@ -251,7 +166,7 @@ export class SkRateLimiterService {
 		return limitInfo;
 	}
 
-	private async getLimitCounter(limit: SupportedRateLimit, actor: string, subject: string): Promise<LimitCounter> {
+	private async getLimitCounter(limit: RateLimit, actor: string, subject: string): Promise<LimitCounter> {
 		const key = createLimitKey(limit, actor, subject);
 
 		const value = await this.redisClient.get(key);
@@ -262,7 +177,7 @@ export class SkRateLimiterService {
 		return JSON.parse(value);
 	}
 
-	private async setLimitCounter(limit: SupportedRateLimit, actor: string, counter: LimitCounter, expiration: number, subject: string): Promise<void> {
+	private async setLimitCounter(limit: RateLimit, actor: string, counter: LimitCounter, expiration: number, subject: string): Promise<void> {
 		const key = createLimitKey(limit, actor, subject);
 		const value = JSON.stringify(counter);
 		const expirationSec = Math.max(expiration, 1);
@@ -270,7 +185,7 @@ export class SkRateLimiterService {
 	}
 }
 
-function createLimitKey(limit: SupportedRateLimit, actor: string, subject: string): string {
+function createLimitKey(limit: RateLimit, actor: string, subject: string): string {
 	return `rl_${actor}_${limit.key}_${subject}`;
 }
 

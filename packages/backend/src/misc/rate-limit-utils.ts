@@ -126,14 +126,20 @@ export function hasMinLimit(limit: LegacyRateLimit): limit is LegacyRateLimit & 
 
 export function sendRateLimitHeaders(reply: FastifyReply, info: LimitInfo): void {
 	// Number of seconds until the limit has fully reset.
-	reply.header('X-RateLimit-Clear', info.fullResetSec.toString());
+	const clear = (info.fullResetMs / 1000).toFixed(3);
+	reply.header('X-RateLimit-Clear', clear);
+
 	// Number of calls that can be made before being limited.
-	reply.header('X-RateLimit-Remaining', info.remaining.toString());
+	const remaining = info.remaining.toString();
+	reply.header('X-RateLimit-Remaining', remaining);
 
 	if (info.blocked) {
 		// Number of seconds to wait before trying again. Left for backwards compatibility.
-		reply.header('Retry-After', info.resetSec.toString());
+		const retry = info.resetSec.toString();
+		reply.header('Retry-After', retry);
+
 		// Number of milliseconds to wait before trying again.
-		reply.header('X-RateLimit-Reset', info.resetMs.toString());
+		const reset = (info.resetMs / 1000).toFixed(3);
+		reply.header('X-RateLimit-Reset', reset);
 	}
 }

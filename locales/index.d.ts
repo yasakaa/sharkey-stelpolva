@@ -11448,7 +11448,7 @@ export interface Locale extends ILocale {
      * Select a follow relationship...
      */
     "selectFollowRelationship": string;
-		/**
+    /**
      * Schedule a note
      */
     "schedulePost": string;

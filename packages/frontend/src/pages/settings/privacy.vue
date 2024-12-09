@@ -43,6 +43,10 @@ SPDX-License-Identifier: AGPL-3.0-only
 		{{ i18n.ts.makeExplorable }}
 		<template #caption>{{ i18n.ts.makeExplorableDescription }}</template>
 	</MkSwitch>
+	<MkSwitch v-model="enableRss" @update:modelValue="save()">
+		{{ i18n.ts.enableRss }}
+		<template #caption>{{ i18n.ts.enableRssDescription }}</template>
+	</MkSwitch>
 
 	<FormSection>
 		<div class="_gaps_m">
@@ -89,6 +93,7 @@ const isLocked = ref($i.isLocked);
 const autoAcceptFollowed = ref($i.autoAcceptFollowed);
 const noCrawle = ref($i.noCrawle);
 const noindex = ref($i.noindex);
+const enableRss = ref($i.enableRss);
 const isExplorable = ref($i.isExplorable);
 const hideOnlineStatus = ref($i.hideOnlineStatus);
 const publicReactions = ref($i.publicReactions);
@@ -106,6 +111,7 @@ function save() {
 		autoAcceptFollowed: !!autoAcceptFollowed.value,
 		noCrawle: !!noCrawle.value,
 		noindex: !!noindex.value,
+		enableRss: !!enableRss.value,
 		isExplorable: !!isExplorable.value,
 		hideOnlineStatus: !!hideOnlineStatus.value,
 		publicReactions: !!publicReactions.value,

@@ -130,6 +130,10 @@ export const packedUserLiteSchema = {
 			type: 'boolean',
 			nullable: false, optional: false,
 		},
+		enableRss: {
+			type: 'boolean',
+			nullable: false, optional: false,
+		},
 		isBot: {
 			type: 'boolean',
 			nullable: false, optional: true,

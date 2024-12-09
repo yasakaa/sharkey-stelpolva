@@ -187,6 +187,7 @@ export const paramDef = {
 		noCrawle: { type: 'boolean' },
 		preventAiLearning: { type: 'boolean' },
 		noindex: { type: 'boolean' },
+		enableRss: { type: 'boolean' },
 		isBot: { type: 'boolean' },
 		isCat: { type: 'boolean' },
 		speakAsCat: { type: 'boolean' },
@@ -337,6 +338,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 			if (typeof ps.hideOnlineStatus === 'boolean') updates.hideOnlineStatus = ps.hideOnlineStatus;
 			if (typeof ps.publicReactions === 'boolean') profileUpdates.publicReactions = ps.publicReactions;
 			if (typeof ps.noindex === 'boolean') updates.noindex = ps.noindex;
+			if (typeof ps.enableRss === 'boolean') updates.enableRss = ps.enableRss;
 			if (typeof ps.isBot === 'boolean') updates.isBot = ps.isBot;
 			if (typeof ps.carefulBot === 'boolean') profileUpdates.carefulBot = ps.carefulBot;
 			if (typeof ps.autoAcceptFollowed === 'boolean') profileUpdates.autoAcceptFollowed = ps.autoAcceptFollowed;

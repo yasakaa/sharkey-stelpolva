@@ -491,12 +491,12 @@ const preview_fade = ref(`$[fade 🍮] $[fade.out 🍮] $[fade.speed=3s 🍮] $[
 		> .title {
 			position: sticky;
 			z-index: 1;
-			top: var(--stickyTop, 0px);
+			top: var(--MI-stickyTop, 0px);
 			padding: 16px;
 			font-weight: bold;
 			-webkit-backdrop-filter: var(--MI-blur, blur(10px));
 			backdrop-filter: var(--MI-blur, blur(10px));
-			background-color: var(--X16);
+			background-color: var(--MI_THEME-X16);
 		}
 
 		> .content {

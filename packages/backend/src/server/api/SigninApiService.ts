@@ -26,7 +26,6 @@ import { UserAuthService } from '@/core/UserAuthService.js';
 import { CaptchaService } from '@/core/CaptchaService.js';
 import { FastifyReplyError } from '@/misc/fastify-reply-error.js';
 import { isSystemAccount } from '@/misc/is-system-account.js';
-import type { MiMeta } from '@/models/_.js';
 import { SkRateLimiterService } from '@/server/api/SkRateLimiterService.js';
 import { sendRateLimitHeaders } from '@/misc/rate-limit-utils.js';
 import { SigninService } from './SigninService.js';

@@ -241,6 +241,8 @@ _aboutMisskey:
   translation: "Translate Sharkey"
   donate_sharkey: "Donate to Sharkey"
   testers: "Testers"
+  misskeyContributors: "Misskey Contributors"
+  ourLovelySponsors: "Our lovely Sponsors"
 _serverDisconnectedBehavior:
   disabled: "Disable warning"
 _channel:

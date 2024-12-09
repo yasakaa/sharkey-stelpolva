@@ -15,6 +15,8 @@ import { SystemWebhookService } from '@/core/SystemWebhookService.js';
 import { UserSearchService } from '@/core/UserSearchService.js';
 import { WebhookTestService } from '@/core/WebhookTestService.js';
 import { FlashService } from '@/core/FlashService.js';
+import { TimeService } from '@/core/TimeService.js';
+import { EnvService } from '@/core/EnvService.js';
 import { AccountMoveService } from './AccountMoveService.js';
 import { AccountUpdateService } from './AccountUpdateService.js';
 import { AnnouncementService } from './AnnouncementService.js';
@@ -384,6 +386,8 @@ const $SponsorsService: Provider = { provide: 'SponsorsService', useExisting: Sp
 		ChannelFollowingService,
 		RegistryApiService,
 		ReversiService,
+		TimeService,
+		EnvService,
 
 		ChartLoggerService,
 		FederationChart,
@@ -685,6 +689,8 @@ const $SponsorsService: Provider = { provide: 'SponsorsService', useExisting: Sp
 		ChannelFollowingService,
 		RegistryApiService,
 		ReversiService,
+		TimeService,
+		EnvService,
 
 		FederationChart,
 		NotesChart,

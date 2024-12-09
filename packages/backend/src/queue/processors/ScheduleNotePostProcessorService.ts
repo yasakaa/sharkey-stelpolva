@@ -10,6 +10,7 @@ import { NoteCreateService } from '@/core/NoteCreateService.js';
 import type { ChannelsRepository, DriveFilesRepository, MiDriveFile, NoteScheduleRepository, NotesRepository, UsersRepository } from '@/models/_.js';
 import { DI } from '@/di-symbols.js';
 import { NotificationService } from '@/core/NotificationService.js';
+import { IdentifiableError } from '@/misc/identifiable-error.js';
 import { QueueLoggerService } from '../QueueLoggerService.js';
 import type * as Bull from 'bullmq';
 import type { ScheduleNotePostJobData } from '../types.js';
@@ -119,6 +120,12 @@ export class ScheduleNotePostProcessorService {
 					reply,
 					renote,
 					channel,
+				}).catch(async (err: IdentifiableError) => {
+					this.notificationService.createNotification(me.id, 'scheduledNoteFailed', {
+						reason: err.message,
+					});
+					await this.noteScheduleRepository.remove(data);
+					throw this.logger.error(`Schedule Note Failed Reason: ${err.message}`);
 				});
 				await this.noteScheduleRepository.remove(data);
 				this.notificationService.createNotification(me.id, 'scheduledNotePosted', {

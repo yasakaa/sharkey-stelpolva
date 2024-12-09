@@ -821,7 +821,7 @@ async function post(ev?: MouseEvent) {
 		const filesData = toRaw(files.value);
 
 		const isMissingAltText = filesData.filter(
-			file => file.type.startsWith('image/') || file.type.startsWith('video/') || file.type.startsWith('audio/')
+			file => file.type.startsWith('image/') || file.type.startsWith('video/') || file.type.startsWith('audio/'),
 		).some(file => !file.comment);
 
 		if (isMissingAltText) {
@@ -913,8 +913,6 @@ async function post(ev?: MouseEvent) {
 			if (notesCount === 1) {
 				claimAchievement('notes1');
 			}
-
-			poll.value = null;
 
 			const text = postData.text ?? '';
 			const lowerCase = text.toLowerCase();

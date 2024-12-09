@@ -360,7 +360,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				}, {
 					delay,
 					removeOnComplete: true,
-					jobId: noteId,
+					jobId: `schedNote:${noteId}`,
 				});
 			}
 

@@ -49,11 +49,7 @@ function get() {
 		return new Date(`${ atDate.value } ${ atTime.value }`).getTime();
 	};
 
-	return {
-		...(
-			{ scheduledAt: calcAt() }
-		),
-	};
+	return { scheduledAt: calcAt() };
 }
 
 watch([

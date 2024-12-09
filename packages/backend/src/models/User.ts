@@ -32,7 +32,7 @@ export class MiUser {
 	public lastActiveDate: Date | null;
 
 	@Column('boolean', {
-		default: false,
+		default: true,
 	})
 	public hideOnlineStatus: boolean;
 
@@ -160,7 +160,7 @@ export class MiUser {
 		length: 128, nullable: true,
 	})
 	public backgroundBlurhash: string | null;
-	
+
 	@Column('jsonb', {
 		default: [],
 	})

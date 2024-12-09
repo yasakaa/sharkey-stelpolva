@@ -11,6 +11,7 @@ import type { ChannelsRepository, DriveFilesRepository, MiDriveFile, NoteSchedul
 import { DI } from '@/di-symbols.js';
 import { NotificationService } from '@/core/NotificationService.js';
 import { IdentifiableError } from '@/misc/identifiable-error.js';
+import type { MiScheduleNoteType } from '@/models/NoteSchedule.js';
 import { QueueLoggerService } from '../QueueLoggerService.js';
 import type * as Bull from 'bullmq';
 import type { ScheduleNotePostJobData } from '../types.js';
@@ -39,7 +40,36 @@ export class ScheduleNotePostProcessorService {
 		this.logger = this.queueLoggerService.logger.createSubLogger('schedule-note-post');
 	}
 
-    @bindThis
+	@bindThis
+	private async isValidNoteSchedule(note: MiScheduleNoteType, id: string): Promise<boolean> {
+		const reply = note.reply ? await this.notesRepository.findOneBy({ id: note.reply }) : undefined;
+		const renote = note.reply ? await this.notesRepository.findOneBy({ id: note.renote }) : undefined;
+		const channel = note.channel ? await this.channelsRepository.findOneBy({ id: note.channel, isArchived: false }) : undefined;
+		if (note.reply && !reply) {
+			this.logger.warn('Schedule Note Failed Reason: parent note to reply does not exist');
+			this.notificationService.createNotification(id, 'scheduledNoteFailed', {
+				reason: 'Replied to note on your scheduled note no longer exists',
+			});
+			return false;
+		}
+		if (note.renote && !renote) {
+			this.logger.warn('Schedule Note Failed Reason: attached quote note no longer exists');
+			this.notificationService.createNotification(id, 'scheduledNoteFailed', {
+				reason: 'A quoted note from one of your scheduled notes no longer exists',
+			});
+			return false;
+		}
+		if (note.channel && !channel) {
+			this.logger.warn('Schedule Note Failed Reason: Channel does not exist');
+			this.notificationService.createNotification(id, 'scheduledNoteFailed', {
+				reason: 'An attached channel on your scheduled note no longer exists',
+			});
+			return false;
+		}
+		return true;
+	}
+
+	@bindThis
 	public async process(job: Bull.Job<ScheduleNotePostJobData>): Promise<void> {
 		this.noteScheduleRepository.findOneBy({ id: job.data.scheduleNoteId }).then(async (data) => {
 			if (!data) {
@@ -47,11 +77,10 @@ export class ScheduleNotePostProcessorService {
 			} else {
 				const me = await this.usersRepository.findOneBy({ id: data.userId });
 				const note = data.note;
-
-				//idの形式でキューに積んであったのをDBから取り寄せる
 				const reply = note.reply ? await this.notesRepository.findOneBy({ id: note.reply }) : undefined;
 				const renote = note.reply ? await this.notesRepository.findOneBy({ id: note.renote }) : undefined;
 				const channel = note.channel ? await this.channelsRepository.findOneBy({ id: note.channel, isArchived: false }) : undefined;
+
 				let files: MiDriveFile[] = [];
 				const fileIds = note.files;
 
@@ -72,37 +101,15 @@ export class ScheduleNotePostProcessorService {
 					return;
 				}
 
+				if (!await this.isValidNoteSchedule(note, me.id)) {
+					await this.noteScheduleRepository.remove(data);
+					return;
+				}
+
 				if (note.files.length !== files.length) {
 					this.logger.warn('Schedule Note Failed Reason: files are missing in the user\'s drive');
 					this.notificationService.createNotification(me.id, 'scheduledNoteFailed', {
 						reason: 'Some attached files on your scheduled note no longer exist',
-					});
-					await this.noteScheduleRepository.remove(data);
-					return;
-				}
-
-				if (note.reply && !reply) {
-					this.logger.warn('Schedule Note Failed Reason: parent note to reply does not exist');
-					this.notificationService.createNotification(me.id, 'scheduledNoteFailed', {
-						reason: 'Replied to note on your scheduled note no longer exists',
-					});
-					await this.noteScheduleRepository.remove(data);
-					return;
-				}
-
-				if (note.renote && !renote) {
-					this.logger.warn('Schedule Note Failed Reason: attached quote note no longer exists');
-					this.notificationService.createNotification(me.id, 'scheduledNoteFailed', {
-						reason: 'A quoted note from one of your scheduled notes no longer exists',
-					});
-					await this.noteScheduleRepository.remove(data);
-					return;
-				}
-
-				if (note.channel && !channel) {
-					this.logger.warn('Schedule Note Failed Reason: Channel does not exist');
-					this.notificationService.createNotification(me.id, 'scheduledNoteFailed', {
-						reason: 'An attached channel on your scheduled note no longer exists',
 					});
 					await this.noteScheduleRepository.remove(data);
 					return;

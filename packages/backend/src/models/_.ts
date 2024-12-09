@@ -82,8 +82,8 @@ import { NoteEdit } from '@/models/NoteEdit.js';
 import { MiBubbleGameRecord } from '@/models/BubbleGameRecord.js';
 import { MiReversiGame } from '@/models/ReversiGame.js';
 import { MiNoteSchedule } from '@/models/NoteSchedule.js';
-import { SkActivityLog } from '@/models/SkActivityLog.js';
-import { SkActivityContext } from './SkActivityContext.js';
+import { SkApInboxLog } from '@/models/SkApInboxLog.js';
+import { SkApContext } from '@/models/SkApContext.js';
 import type { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
 export interface MiRepository<T extends ObjectLiteral> {
@@ -131,8 +131,8 @@ export const miRepository = {
 
 export {
 	SkLatestNote,
-	SkActivityContext,
-	SkActivityLog,
+	SkApContext,
+	SkApInboxLog,
 	MiAbuseUserReport,
 	MiAbuseReportNotificationRecipient,
 	MiAccessToken,
@@ -233,8 +233,8 @@ export type HashtagsRepository = Repository<MiHashtag> & MiRepository<MiHashtag>
 export type InstancesRepository = Repository<MiInstance> & MiRepository<MiInstance>;
 export type MetasRepository = Repository<MiMeta> & MiRepository<MiMeta>;
 export type LatestNotesRepository = Repository<SkLatestNote> & MiRepository<SkLatestNote>;
-export type ActivityContextRepository = Repository<SkActivityContext> & MiRepository<SkActivityContext>;
-export type ActivityLogsRepository = Repository<SkActivityLog> & MiRepository<SkActivityLog>;
+export type ApContextsRepository = Repository<SkApContext> & MiRepository<SkApContext>;
+export type ApInboxLogsRepository = Repository<SkApInboxLog> & MiRepository<SkApInboxLog>;
 export type ModerationLogsRepository = Repository<MiModerationLog> & MiRepository<MiModerationLog>;
 export type MutingsRepository = Repository<MiMuting> & MiRepository<MiMuting>;
 export type RenoteMutingsRepository = Repository<MiRenoteMuting> & MiRepository<MiRenoteMuting>;

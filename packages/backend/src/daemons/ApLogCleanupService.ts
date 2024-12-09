@@ -8,7 +8,7 @@ import { LessThan } from 'typeorm';
 import { DI } from '@/di-symbols.js';
 import type { Config } from '@/config.js';
 import { bindThis } from '@/decorators.js';
-import type { ActivityLogsRepository } from '@/models/_.js';
+import type { ApInboxLogsRepository } from '@/models/_.js';
 import { LoggerService } from '@/core/LoggerService.js';
 import Logger from '@/logger.js';
 
@@ -16,7 +16,7 @@ import Logger from '@/logger.js';
 export const scanInterval = 1000 * 60 * 10;
 
 @Injectable()
-export class ActivityLogCleanupService implements OnApplicationShutdown {
+export class ApLogCleanupService implements OnApplicationShutdown {
 	private readonly logger: Logger;
 	private scanTimer: NodeJS.Timeout | null = null;
 
@@ -24,8 +24,8 @@ export class ActivityLogCleanupService implements OnApplicationShutdown {
 		@Inject(DI.config)
 		private readonly config: Config,
 
-		@Inject(DI.activityLogsRepository)
-		private readonly activityLogsRepository: ActivityLogsRepository,
+		@Inject(DI.apInboxLogsRepository)
+		private readonly apInboxLogsRepository: ApInboxLogsRepository,
 
 		loggerService: LoggerService,
 	) {
@@ -51,7 +51,7 @@ export class ActivityLogCleanupService implements OnApplicationShutdown {
 		const oldestAllowed = new Date(Date.now() - this.config.activityLogging.maxAge);
 
 		// Delete all logs older than the threshold.
-		const { affected } = await this.activityLogsRepository.delete({
+		const { affected } = await this.apInboxLogsRepository.delete({
 			at: LessThan(oldestAllowed),
 		});
 

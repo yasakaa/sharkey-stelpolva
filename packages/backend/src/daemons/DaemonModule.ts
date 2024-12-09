@@ -8,7 +8,7 @@ import { CoreModule } from '@/core/CoreModule.js';
 import { GlobalModule } from '@/GlobalModule.js';
 import { QueueStatsService } from './QueueStatsService.js';
 import { ServerStatsService } from './ServerStatsService.js';
-import { ActivityLogCleanupService } from './ActivityLogCleanupService.js';
+import { ApLogCleanupService } from './ApLogCleanupService.js';
 
 @Module({
 	imports: [
@@ -18,12 +18,12 @@ import { ActivityLogCleanupService } from './ActivityLogCleanupService.js';
 	providers: [
 		QueueStatsService,
 		ServerStatsService,
-		ActivityLogCleanupService,
+		ApLogCleanupService,
 	],
 	exports: [
 		QueueStatsService,
 		ServerStatsService,
-		ActivityLogCleanupService,
+		ApLogCleanupService,
 	],
 })
 export class DaemonModule {}

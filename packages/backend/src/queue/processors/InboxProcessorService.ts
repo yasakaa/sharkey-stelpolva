@@ -32,8 +32,8 @@ import { MiMeta } from '@/models/Meta.js';
 import { DI } from '@/di-symbols.js';
 import { IdService } from '@/core/IdService.js';
 import { JsonValue } from '@/misc/json-value.js';
-import { SkActivityLog, SkActivityContext } from '@/models/_.js';
-import type { ActivityLogsRepository, ActivityContextRepository } from '@/models/_.js';
+import { SkApInboxLog, SkApContext } from '@/models/_.js';
+import type { ApInboxLogsRepository, ApContextsRepository } from '@/models/_.js';
 import type { Config } from '@/config.js';
 import { QueueLoggerService } from '../QueueLoggerService.js';
 import type { InboxJobData } from '../types.js';
@@ -68,11 +68,11 @@ export class InboxProcessorService implements OnApplicationShutdown {
 		private queueLoggerService: QueueLoggerService,
 		private idService: IdService,
 
-		@Inject(DI.activityContextRepository)
-		private activityContextRepository: ActivityContextRepository,
+		@Inject(DI.apContextsRepository)
+		private apContextsRepository: ApContextsRepository,
 
-		@Inject(DI.activityLogsRepository)
-		private activityLogsRepository: ActivityLogsRepository,
+		@Inject(DI.apInboxLogsRepository)
+		private apInboxLogsRepository: ApInboxLogsRepository,
 	) {
 		this.logger = this.queueLoggerService.logger.createSubLogger('inbox');
 		this.updateInstanceQueue = new CollapsedQueue(process.env.NODE_ENV !== 'test' ? 60 * 1000 * 5 : 0, this.collapseUpdateInstanceJobs, this.performUpdateInstance);
@@ -132,7 +132,7 @@ export class InboxProcessorService implements OnApplicationShutdown {
 		}
 	}
 
-	private async _process(job: Bull.Job<InboxJobData>, log?: SkActivityLog): Promise<string> {
+	private async _process(job: Bull.Job<InboxJobData>, log?: SkApInboxLog): Promise<string> {
 		const signature = job.data.signature;	// HTTP-signature
 		let activity = job.data.activity;
 
@@ -369,11 +369,11 @@ export class InboxProcessorService implements OnApplicationShutdown {
 		await this.dispose();
 	}
 
-	private createLog(payload: IActivity, keyId: string): SkActivityLog {
+	private createLog(payload: IActivity, keyId: string): SkApInboxLog {
 		const activity = Object.assign({}, payload, { '@context': undefined }) as unknown as JsonValue;
 		const host = this.utilityService.extractDbHost(keyId);
 
-		const log = new SkActivityLog({
+		const log = new SkApInboxLog({
 			id: this.idService.gen(),
 			at: new Date(),
 			verified: false,
@@ -387,7 +387,7 @@ export class InboxProcessorService implements OnApplicationShutdown {
 		if (context) {
 			const md5 = createHash('md5').update(JSON.stringify(context)).digest('base64');
 			log.contextHash = md5;
-			log.context = new SkActivityContext({
+			log.context = new SkApContext({
 				md5,
 				json: context,
 			});
@@ -396,18 +396,18 @@ export class InboxProcessorService implements OnApplicationShutdown {
 		return log;
 	}
 
-	private async recordLog(log: SkActivityLog): Promise<void> {
+	private async recordLog(log: SkApInboxLog): Promise<void> {
 		if (log.context) {
 			// https://stackoverflow.com/a/47064558
-			await this.activityContextRepository
-				.createQueryBuilder('context_body')
+			await this.apContextsRepository
+				.createQueryBuilder('activity_context')
 				.insert()
-				.into(SkActivityContext)
+				.into(SkApContext)
 				.values(log.context)
 				.orIgnore('md5')
 				.execute();
 		}
 
-		await this.activityLogsRepository.upsert(log, ['id']);
+		await this.apInboxLogsRepository.upsert(log, ['id']);
 	}
 }

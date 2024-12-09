@@ -4,19 +4,22 @@
  */
 
 import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
-import { SkActivityContext } from '@/models/SkActivityContext.js';
+import { SkApContext } from '@/models/SkApContext.js';
 import { MiUser } from '@/models/_.js';
 import { id } from './util/id.js';
 
-@Entity('activity_log')
-export class SkActivityLog {
+/**
+ * Records activities received in the inbox
+ */
+@Entity('ap_inbox_log')
+export class SkApInboxLog {
 	@PrimaryColumn({
 		...id(),
-		primaryKeyConstraintName: 'PK_activity_log',
+		primaryKeyConstraintName: 'PK_ap_inbox_log',
 	})
 	public id: string;
 
-	@Index('IDX_activity_log_at')
+	@Index('IDX_ap_inbox_log_at')
 	@Column('timestamptz')
 	public at: Date;
 
@@ -26,13 +29,21 @@ export class SkActivityLog {
 	@Column('double precision', { nullable: true })
 	public duration: number | null = null;
 
+	/**
+	 * Key ID that was used to sign this request.
+	 * Untrusted unless verified is true.
+	 */
 	@Column({
 		type: 'text',
 		name: 'key_id',
 	})
 	public keyId: string;
 
-	@Index('IDX_activity_log_host')
+	/**
+	 * Instance that the activity was sent from.
+	 * Untrusted unless verified is true.
+	 */
+	@Index('IDX_ap_inbox_log_host')
 	@Column('text')
 	public host: string;
 
@@ -57,16 +68,19 @@ export class SkActivityLog {
 	})
 	public contextHash: string | null;
 
-	@ManyToOne(() => SkActivityContext, {
+	@ManyToOne(() => SkApContext, {
 		onDelete: 'CASCADE',
 		nullable: true,
 	})
 	@JoinColumn({
 		name: 'context_hash',
-		foreignKeyConstraintName: 'FK_activity_log_context_hash',
+		foreignKeyConstraintName: 'FK_ap_inbox_log_context_hash',
 	})
-	public context: SkActivityContext | null;
+	public context: SkApContext | null;
 
+	/**
+	 * ID of the user who signed this request.
+	 */
 	@Column({
 		...id(),
 		name: 'auth_user_id',
@@ -74,17 +88,20 @@ export class SkActivityLog {
 	})
 	public authUserId: string | null;
 
+	/**
+	 * User who signed this request.
+	 */
 	@ManyToOne(() => MiUser, {
 		onDelete: 'CASCADE',
 		nullable: true,
 	})
 	@JoinColumn({
 		name: 'auth_user_id',
-		foreignKeyConstraintName: 'FK_activity_log_auth_user_id',
+		foreignKeyConstraintName: 'FK_ap_inbox_log_auth_user_id',
 	})
 	public authUser: MiUser | null;
 
-	constructor(data?: Partial<SkActivityLog>) {
+	constructor(data?: Partial<SkApInboxLog>) {
 		if (data) {
 			Object.assign(this, data);
 		}

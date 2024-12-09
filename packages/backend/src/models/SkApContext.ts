@@ -5,10 +5,10 @@
 
 import { Column, PrimaryColumn, Entity } from 'typeorm';
 
-@Entity('activity_context')
-export class SkActivityContext {
+@Entity('ap_context')
+export class SkApContext {
 	@PrimaryColumn('text', {
-		primaryKeyConstraintName: 'PK_activity_context',
+		primaryKeyConstraintName: 'PK_ap_context',
 	})
 	public md5: string;
 
@@ -17,7 +17,7 @@ export class SkActivityContext {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	public json: any;
 
-	constructor(data?: Partial<SkActivityContext>) {
+	constructor(data?: Partial<SkApContext>) {
 		if (data) {
 			Object.assign(this, data);
 		}

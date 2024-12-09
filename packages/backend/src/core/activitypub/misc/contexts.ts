@@ -564,6 +564,7 @@ const extension_context_definition = {
 	speakAsCat: 'firefish:speakAsCat',
 	// Sharkey
 	sharkey: 'https://joinsharkey.org/ns#',
+	hideOnlineStatus: 'sharkey:hideOnlineStatus',
 	backgroundUrl: 'sharkey:backgroundUrl',
 	listenbrainz: 'sharkey:listenbrainz',
 	// vcard

@@ -24,7 +24,7 @@ export class SkRateLimiterService {
 		@Inject(EnvService)
 		envService: EnvService,
 	) {
-		this.disabled = envService.env.NODE_ENV !== 'production';
+		this.disabled = envService.env.NODE_ENV === 'test';
 	}
 
 	public async limit(limit: Keyed<RateLimit>, actor: string, factor = 1): Promise<LimitInfo> {

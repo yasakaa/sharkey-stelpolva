@@ -120,7 +120,7 @@ describe(SkRateLimiterService, () => {
 			});
 		});
 
-		it('should bypass in non-production', async () => {
+		it('should bypass in test environment', async () => {
 			mockEnvironment.NODE_ENV = 'test';
 
 			const info = await serviceUnderTest().limit({ key: 'l', type: undefined, max: 0 }, actor);

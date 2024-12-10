@@ -195,6 +195,12 @@ onMounted(() => {
 
 					textBox.textContent = pswp.currSlide?.data.comment;
 				});
+
+				// `passive: true` is for Safari compatibility, apparently
+				const stopEvent = name => textBox.addEventListener(name, event => event.stopPropagation(), { passive: true });
+				stopEvent('wheel');
+				stopEvent('pointerdown');
+				stopEvent('pointercancel');
 			},
 		});
 	});

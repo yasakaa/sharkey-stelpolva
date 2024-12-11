@@ -55,15 +55,15 @@ export class SkRateLimiterService {
 
 	private async limitLegacy(limit: Keyed<LegacyRateLimit>, actor: string, factor: number): Promise<LimitInfo> {
 		if (hasMaxLimit(limit)) {
-			return await this.limitMaxLegacy(limit, actor, factor);
+			return await this.limitLegacyMinMax(limit, actor, factor);
 		} else if (hasMinLimit(limit)) {
-			return await this.limitMinLegacy(limit, actor, factor);
+			return await this.limitLegacyMinOnly(limit, actor, factor);
 		} else {
 			return disabledLimitInfo;
 		}
 	}
 
-	private async limitMaxLegacy(limit: Keyed<MaxLegacyLimit>, actor: string, factor: number): Promise<LimitInfo> {
+	private async limitLegacyMinMax(limit: Keyed<MaxLegacyLimit>, actor: string, factor: number): Promise<LimitInfo> {
 		if (limit.duration === 0) return disabledLimitInfo;
 		if (limit.duration < 0) throw new Error(`Invalid rate limit ${limit.key}: duration is negative (${limit.duration})`);
 		if (limit.max < 1) throw new Error(`Invalid rate limit ${limit.key}: max is less than 1 (${limit.max})`);
@@ -87,7 +87,7 @@ export class SkRateLimiterService {
 		return await this.limitBucket(bucketLimit, actor, factor);
 	}
 
-	private async limitMinLegacy(limit: Keyed<MinLegacyLimit>, actor: string, factor: number): Promise<LimitInfo> {
+	private async limitLegacyMinOnly(limit: Keyed<MinLegacyLimit>, actor: string, factor: number): Promise<LimitInfo> {
 		if (limit.minInterval === 0) return disabledLimitInfo;
 		if (limit.minInterval < 0) throw new Error(`Invalid rate limit ${limit.key}: minInterval is negative (${limit.minInterval})`);
 

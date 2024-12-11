@@ -6,6 +6,8 @@
 import type Redis from 'ioredis';
 import { SkRateLimiterService } from '@/server/api/SkRateLimiterService.js';
 import { BucketRateLimit, Keyed, LegacyRateLimit } from '@/misc/rate-limit-utils.js';
+import { RedisConnectionPool } from '@/core/RedisConnectionPool.js';
+import { Timeout, TimeoutHandler, TimeoutService } from '@/core/TimeoutService.js';
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
@@ -24,28 +26,50 @@ describe(SkRateLimiterService, () => {
 			},
 		};
 
+		function callMockRedis(command: [string, ...unknown[]]) {
+			const handlerResults = mockRedis.map(handler => handler(command));
+			const finalResult = handlerResults.findLast(result => result != null);
+			return finalResult ?? [null, null];
+		}
+
+		// I apologize to anyone who tries to read this later 🥲
 		mockRedis = [];
 		mockRedisExec = (batch) => {
 			const results: [Error | null, unknown][] = batch.map(command => {
-				const handlerResults = mockRedis.map(handler => handler(command));
-				const finalResult = handlerResults.findLast(result => result != null);
-				return finalResult ?? [new Error('test error: no handler'), null];
+				return callMockRedis(command);
 			});
 			return Promise.resolve(results);
 		};
 		const mockRedisClient = {
+			watch(...args: unknown[]) {
+				const result = callMockRedis(['watch', ...args]);
+				return Promise.resolve(result[0] ?? result[1]);
+			},
+			get(...args: unknown[]) {
+				const result = callMockRedis(['get', ...args]);
+				return Promise.resolve(result[0] ?? result[1]);
+			},
+			set(...args: unknown[]) {
+				const result = callMockRedis(['set', ...args]);
+				return Promise.resolve(result[0] ?? result[1]);
+			},
 			multi(batch: [string, ...unknown[]][]) {
 				return {
-					watch() {
-						return {
-							exec() {
-								return mockRedisExec(batch);
-							},
-						};
+					exec() {
+						return mockRedisExec(batch);
 					},
 				};
 			},
+			reset() {
+				return Promise.resolve();
+			},
 		} as unknown as Redis.Redis;
+		const mockRedisPool = {
+			alloc() {
+				return Promise.resolve(mockRedisClient);
+			},
+			free() {},
+		} as unknown as RedisConnectionPool;
 
 		mockEnvironment = Object.create(process.env);
 		mockEnvironment.NODE_ENV = 'production';
@@ -53,9 +77,22 @@ describe(SkRateLimiterService, () => {
 			env: mockEnvironment,
 		};
 
+		const mockTimeoutService = new class extends TimeoutService {
+			setTimeout(handler: TimeoutHandler): Timeout {
+				handler();
+				return 0;
+			}
+			setInterval(handler: TimeoutHandler): Timeout {
+				handler();
+				return 0;
+			}
+			clearTimeout() {}
+			clearInterval() {}
+		};
+
 		let service: SkRateLimiterService | undefined = undefined;
 		serviceUnderTest = () => {
-			return service ??= new SkRateLimiterService(mockTimeService, mockRedisClient, mockEnvService);
+			return service ??= new SkRateLimiterService(mockTimeService, mockTimeoutService, mockRedisPool, mockEnvService);
 		};
 	});
 
@@ -65,56 +102,22 @@ describe(SkRateLimiterService, () => {
 
 		let limitCounter: number | undefined = undefined;
 		let limitTimestamp: number | undefined = undefined;
-		let minCounter: number | undefined = undefined;
-		let minTimestamp: number | undefined = undefined;
 
 		beforeEach(() => {
 			limitCounter = undefined;
 			limitTimestamp = undefined;
-			minCounter = undefined;
-			minTimestamp = undefined;
 
 			mockRedis.push(([command, ...args]) => {
-				if (command === 'set' && args[0] === 'rl_actor_test_bucket_t') {
-					limitTimestamp = parseInt(args[1] as string);
+				if (command === 'set' && args[0] === 'rl_actor_test') {
+					const parts = (args[1] as string).split(':');
+					limitCounter = parseInt(parts[0] as string);
+					limitTimestamp = parseInt(parts[1] as string);
 					return [null, args[1]];
 				}
-				if (command === 'get' && args[0] === 'rl_actor_test_bucket_t') {
-					return [null, limitTimestamp?.toString() ?? null];
+				if (command === 'get' && args[0] === 'rl_actor_test') {
+					const data = `${limitCounter ?? 0}:${limitTimestamp ?? 0}`;
+					return [null, data];
 				}
-				// if (command === 'incr' && args[0] === 'rl_actor_test_bucket_c') {
-				// 	limitCounter = (limitCounter ?? 0) + 1;
-				// 	return [null, null];
-				// }
-				if (command === 'set' && args[0] === 'rl_actor_test_bucket_c') {
-					limitCounter = parseInt(args[1] as string);
-					return [null, args[1]];
-				}
-				if (command === 'get' && args[0] === 'rl_actor_test_bucket_c') {
-					return [null, limitCounter?.toString() ?? null];
-				}
-
-				if (command === 'set' && args[0] === 'rl_actor_test_min_t') {
-					minTimestamp = parseInt(args[1] as string);
-					return [null, args[1]];
-				}
-				if (command === 'get' && args[0] === 'rl_actor_test_min_t') {
-					return [null, minTimestamp?.toString() ?? null];
-				}
-				// if (command === 'incr' && args[0] === 'rl_actor_test_min_c') {
-				// 	minCounter = (minCounter ?? 0) + 1;
-				// 	return [null, null];
-				// }
-				if (command === 'set' && args[0] === 'rl_actor_test_min_c') {
-					minCounter = parseInt(args[1] as string);
-					return [null, args[1]];
-				}
-				if (command === 'get' && args[0] === 'rl_actor_test_min_c') {
-					return [null, minCounter?.toString() ?? null];
-				}
-				// if (command === 'expire') {
-				// 	return [null, null];
-				// }
 
 				return null;
 			});
@@ -266,19 +269,7 @@ describe(SkRateLimiterService, () => {
 
 				await serviceUnderTest().limit(limit, actor);
 
-				expect(commands).toContainEqual(['set', 'rl_actor_test_bucket_c', '1', 'EX', 1]);
-			});
-
-			it('should set timestamp expiration', async () => {
-				const commands: unknown[][] = [];
-				mockRedis.push(command => {
-					commands.push(command);
-					return null;
-				});
-
-				await serviceUnderTest().limit(limit, actor);
-
-				expect(commands).toContainEqual(['set', 'rl_actor_test_bucket_t', '0', 'EX', 1]);
+				expect(commands).toContainEqual(['set', 'rl_actor_test', '1:0', 'EX', 1]);
 			});
 
 			it('should not increment when already blocked', async () => {
@@ -379,12 +370,12 @@ describe(SkRateLimiterService, () => {
 
 			it('should retry when redis conflicts', async () => {
 				let numCalls = 0;
-				const realMockRedisExec = mockRedisExec;
+				const originalExec = mockRedisExec;
 				mockRedisExec = () => {
-					if (numCalls > 0) {
-						mockRedisExec = realMockRedisExec;
-					}
 					numCalls++;
+					if (numCalls > 1) {
+						mockRedisExec = originalExec;
+					}
 					return Promise.resolve(null);
 				};
 
@@ -393,7 +384,7 @@ describe(SkRateLimiterService, () => {
 				expect(numCalls).toBe(2);
 			});
 
-			it('should bail out after 3 tries', async () => {
+			it('should bail out after 5 tries', async () => {
 				let numCalls = 0;
 				mockRedisExec = () => {
 					numCalls++;
@@ -403,7 +394,7 @@ describe(SkRateLimiterService, () => {
 				const promise = serviceUnderTest().limit(limit, actor);
 
 				await expect(promise).rejects.toThrow(/transaction conflict/);
-				expect(numCalls).toBe(3);
+				expect(numCalls).toBe(5);
 			});
 
 			it('should apply correction if extra calls slip through', async () => {
@@ -450,8 +441,8 @@ describe(SkRateLimiterService, () => {
 			it('should increment counter when called', async () => {
 				await serviceUnderTest().limit(limit, actor);
 
-				expect(minCounter).not.toBeUndefined();
-				expect(minCounter).toBe(1);
+				expect(limitCounter).not.toBeUndefined();
+				expect(limitCounter).toBe(1);
 			});
 
 			it('should set timestamp when called', async () => {
@@ -459,30 +450,19 @@ describe(SkRateLimiterService, () => {
 
 				await serviceUnderTest().limit(limit, actor);
 
-				expect(minCounter).not.toBeUndefined();
-				expect(minTimestamp).toBe(1000);
+				expect(limitCounter).not.toBeUndefined();
+				expect(limitTimestamp).toBe(1000);
 			});
 
 			it('should decrement counter when minInterval has passed', async () => {
-				minCounter = 1;
-				minTimestamp = 0;
+				limitCounter = 1;
+				limitTimestamp = 0;
 				mockTimeService.now = 1000;
 
 				await serviceUnderTest().limit(limit, actor);
 
-				expect(minCounter).not.toBeUndefined();
-				expect(minCounter).toBe(1); // 1 (starting) - 1 (interval) + 1 (call) = 1
-			});
-
-			it('should reset counter entirely', async () => {
-				minCounter = 2;
-				minTimestamp = 0;
-				mockTimeService.now = 1000;
-
-				await serviceUnderTest().limit(limit, actor);
-
-				expect(minCounter).not.toBeUndefined();
-				expect(minCounter).toBe(1); // 2 (starting) - 2 (interval) + 1 (call) = 1
+				expect(limitCounter).not.toBeUndefined();
+				expect(limitCounter).toBe(1); // 1 (starting) - 1 (interval) + 1 (call) = 1
 			});
 
 			it('should maintain counter between calls over time', async () => {
@@ -495,13 +475,13 @@ describe(SkRateLimiterService, () => {
 				mockTimeService.now += 1000; // 0 - 1 = 0
 				await serviceUnderTest().limit(limit, actor); // 0 + 1 = 1
 
-				expect(minCounter).toBe(1);
-				expect(minTimestamp).toBe(3000);
+				expect(limitCounter).toBe(1);
+				expect(limitTimestamp).toBe(3000);
 			});
 
 			it('should block when interval exceeded', async () => {
-				minCounter = 1;
-				minTimestamp = 0;
+				limitCounter = 1;
+				limitTimestamp = 0;
 
 				const info = await serviceUnderTest().limit(limit, actor);
 
@@ -509,8 +489,8 @@ describe(SkRateLimiterService, () => {
 			});
 
 			it('should calculate correct info when blocked', async () => {
-				minCounter = 1;
-				minTimestamp = 0;
+				limitCounter = 1;
+				limitTimestamp = 0;
 
 				const info = await serviceUnderTest().limit(limit, actor);
 
@@ -521,8 +501,8 @@ describe(SkRateLimiterService, () => {
 			});
 
 			it('should allow when bucket is filled but interval has passed', async () => {
-				minCounter = 1;
-				minTimestamp = 0;
+				limitCounter = 1;
+				limitTimestamp = 0;
 				mockTimeService.now = 1000;
 
 				const info = await serviceUnderTest().limit(limit, actor);
@@ -531,8 +511,8 @@ describe(SkRateLimiterService, () => {
 			});
 
 			it('should scale interval by factor', async () => {
-				minCounter = 1;
-				minTimestamp = 0;
+				limitCounter = 1;
+				limitTimestamp = 0;
 				mockTimeService.now += 500;
 
 				const info = await serviceUnderTest().limit(limit, actor, 0.5);
@@ -549,30 +529,18 @@ describe(SkRateLimiterService, () => {
 
 				await serviceUnderTest().limit(limit, actor);
 
-				expect(commands).toContainEqual(['set', 'rl_actor_test_min_c', '1', 'EX', 1]);
-			});
-
-			it('should set timestamp expiration', async () => {
-				const commands: unknown[][] = [];
-				mockRedis.push(command => {
-					commands.push(command);
-					return null;
-				});
-
-				await serviceUnderTest().limit(limit, actor);
-
-				expect(commands).toContainEqual(['set', 'rl_actor_test_min_t', '0', 'EX', 1]);
+				expect(commands).toContainEqual(['set', 'rl_actor_test', '1:0', 'EX', 1]);
 			});
 
 			it('should not increment when already blocked', async () => {
-				minCounter = 1;
-				minTimestamp = 0;
+				limitCounter = 1;
+				limitTimestamp = 0;
 				mockTimeService.now += 100;
 
 				await serviceUnderTest().limit(limit, actor);
 
-				expect(minCounter).toBe(1);
-				expect(minTimestamp).toBe(0);
+				expect(limitCounter).toBe(1);
+				expect(limitTimestamp).toBe(0);
 			});
 
 			it('should skip if factor is zero', async () => {
@@ -605,17 +573,17 @@ describe(SkRateLimiterService, () => {
 				await expect(promise).rejects.toThrow(/minInterval is negative/);
 			});
 
-			it('should not apply correction to extra calls', async () => {
-				minCounter = 2;
+			it('should apply correction if extra calls slip through', async () => {
+				limitCounter = 2;
 
 				const info = await serviceUnderTest().limit(limit, actor);
 
 				expect(info.blocked).toBeTruthy();
 				expect(info.remaining).toBe(0);
-				expect(info.resetMs).toBe(1000);
-				expect(info.resetSec).toBe(1);
-				expect(info.fullResetMs).toBe(1000);
-				expect(info.fullResetSec).toBe(1);
+				expect(info.resetMs).toBe(2000);
+				expect(info.resetSec).toBe(2);
+				expect(info.fullResetMs).toBe(2000);
+				expect(info.fullResetSec).toBe(2);
 			});
 		});
 
@@ -720,19 +688,7 @@ describe(SkRateLimiterService, () => {
 
 				await serviceUnderTest().limit(limit, actor);
 
-				expect(commands).toContainEqual(['set', 'rl_actor_test_bucket_c', '1', 'EX', 1]);
-			});
-
-			it('should set timestamp expiration', async () => {
-				const commands: unknown[][] = [];
-				mockRedis.push(command => {
-					commands.push(command);
-					return null;
-				});
-
-				await serviceUnderTest().limit(limit, actor);
-
-				expect(commands).toContainEqual(['set', 'rl_actor_test_bucket_t', '0', 'EX', 1]);
+				expect(commands).toContainEqual(['set', 'rl_actor_test', '1:0', 'EX', 1]);
 			});
 
 			it('should not increment when already blocked', async () => {
@@ -774,12 +730,21 @@ describe(SkRateLimiterService, () => {
 				await expect(promise).rejects.toThrow(/factor is zero or negative/);
 			});
 
+			it('should skip if duration is zero', async () => {
+				limit.duration = 0;
+
+				const info = await serviceUnderTest().limit(limit, actor);
+
+				expect(info.blocked).toBeFalsy();
+				expect(info.remaining).toBe(Number.MAX_SAFE_INTEGER);
+			});
+
 			it('should throw if max is zero', async () => {
 				limit.max = 0;
 
 				const promise = serviceUnderTest().limit(limit, actor);
 
-				await expect(promise).rejects.toThrow(/size is less than 1/);
+				await expect(promise).rejects.toThrow(/max is less than 1/);
 			});
 
 			it('should throw if max is negative', async () => {
@@ -787,7 +752,7 @@ describe(SkRateLimiterService, () => {
 
 				const promise = serviceUnderTest().limit(limit, actor);
 
-				await expect(promise).rejects.toThrow(/size is less than 1/);
+				await expect(promise).rejects.toThrow(/max is less than 1/);
 			});
 
 			it('should apply correction if extra calls slip through', async () => {
@@ -811,7 +776,7 @@ describe(SkRateLimiterService, () => {
 				limit = {
 					type: undefined,
 					key,
-					max: 5,
+					max: 10,
 					duration: 5000,
 					minInterval: 1000,
 				};
@@ -824,17 +789,8 @@ describe(SkRateLimiterService, () => {
 			});
 
 			it('should block when limit exceeded', async () => {
-				limitCounter = 5;
+				limitCounter = 10;
 				limitTimestamp = 0;
-
-				const info = await serviceUnderTest().limit(limit, actor);
-
-				expect(info.blocked).toBeTruthy();
-			});
-
-			it('should block when minInterval exceeded', async () => {
-				minCounter = 1;
-				minTimestamp = 0;
 
 				const info = await serviceUnderTest().limit(limit, actor);
 
@@ -842,20 +798,7 @@ describe(SkRateLimiterService, () => {
 			});
 
 			it('should calculate correct info when allowed', async () => {
-				limitCounter = 1;
-				limitTimestamp = 0;
-
-				const info = await serviceUnderTest().limit(limit, actor);
-
-				expect(info.remaining).toBe(0);
-				expect(info.resetSec).toBe(1);
-				expect(info.resetMs).toBe(1000);
-				expect(info.fullResetSec).toBe(2);
-				expect(info.fullResetMs).toBe(2000);
-			});
-
-			it('should calculate correct info when blocked by limit', async () => {
-				limitCounter = 5;
+				limitCounter = 9;
 				limitTimestamp = 0;
 
 				const info = await serviceUnderTest().limit(limit, actor);
@@ -867,17 +810,17 @@ describe(SkRateLimiterService, () => {
 				expect(info.fullResetMs).toBe(5000);
 			});
 
-			it('should calculate correct info when blocked by minInterval', async () => {
-				minCounter = 1;
-				minTimestamp = 0;
+			it('should calculate correct info when blocked', async () => {
+				limitCounter = 10;
+				limitTimestamp = 0;
 
 				const info = await serviceUnderTest().limit(limit, actor);
 
 				expect(info.remaining).toBe(0);
 				expect(info.resetSec).toBe(1);
 				expect(info.resetMs).toBe(1000);
-				expect(info.fullResetSec).toBe(1);
-				expect(info.fullResetMs).toBe(1000);
+				expect(info.fullResetSec).toBe(5);
+				expect(info.fullResetMs).toBe(5000);
 			});
 
 			it('should allow when counter is filled but interval has passed', async () => {
@@ -890,21 +833,23 @@ describe(SkRateLimiterService, () => {
 				expect(info.blocked).toBeFalsy();
 			});
 
-			it('should allow when minCounter is filled but interval has passed', async () => {
-				minCounter = 1;
-				minTimestamp = 0;
-				mockTimeService.now = 1000;
+			it('should drip according to minInterval', async () => {
+				limitCounter = 10;
+				limitTimestamp = 0;
+				mockTimeService.now += 1000;
 
-				const info = await serviceUnderTest().limit(limit, actor);
+				const i1 = await serviceUnderTest().limit(limit, actor);
+				const i2 = await serviceUnderTest().limit(limit, actor);
+				const i3 = await serviceUnderTest().limit(limit, actor);
 
-				expect(info.blocked).toBeFalsy();
+				expect(i1.blocked).toBeFalsy();
+				expect(i2.blocked).toBeFalsy();
+				expect(i3.blocked).toBeTruthy();
 			});
 
 			it('should scale limit and interval by factor', async () => {
 				limitCounter = 5;
 				limitTimestamp = 0;
-				minCounter = 1;
-				minTimestamp = 0;
 				mockTimeService.now += 500;
 
 				const info = await serviceUnderTest().limit(limit, actor, 0.5);
@@ -912,7 +857,7 @@ describe(SkRateLimiterService, () => {
 				expect(info.blocked).toBeFalsy();
 			});
 
-			it('should set bucket counter expiration', async () => {
+			it('should set counter expiration', async () => {
 				const commands: unknown[][] = [];
 				mockRedis.push(command => {
 					commands.push(command);
@@ -921,63 +866,22 @@ describe(SkRateLimiterService, () => {
 
 				await serviceUnderTest().limit(limit, actor);
 
-				expect(commands).toContainEqual(['set', 'rl_actor_test_bucket_c', '1', 'EX', 1]);
-			});
-
-			it('should set bucket timestamp expiration', async () => {
-				const commands: unknown[][] = [];
-				mockRedis.push(command => {
-					commands.push(command);
-					return null;
-				});
-
-				await serviceUnderTest().limit(limit, actor);
-
-				expect(commands).toContainEqual(['set', 'rl_actor_test_bucket_t', '0', 'EX', 1]);
-			});
-
-			it('should set min counter expiration', async () => {
-				const commands: unknown[][] = [];
-				mockRedis.push(command => {
-					commands.push(command);
-					return null;
-				});
-
-				await serviceUnderTest().limit(limit, actor);
-
-				expect(commands).toContainEqual(['set', 'rl_actor_test_min_c', '1', 'EX', 1]);
-			});
-
-			it('should set min timestamp expiration', async () => {
-				const commands: unknown[][] = [];
-				mockRedis.push(command => {
-					commands.push(command);
-					return null;
-				});
-
-				await serviceUnderTest().limit(limit, actor);
-
-				expect(commands).toContainEqual(['set', 'rl_actor_test_min_t', '0', 'EX', 1]);
+				expect(commands).toContainEqual(['set', 'rl_actor_test', '1:0', 'EX', 1]);
 			});
 
 			it('should not increment when already blocked', async () => {
-				limitCounter = 5;
+				limitCounter = 10;
 				limitTimestamp = 0;
-				minCounter = 1;
-				minTimestamp = 0;
 				mockTimeService.now += 100;
 
 				await serviceUnderTest().limit(limit, actor);
 
-				expect(limitCounter).toBe(5);
+				expect(limitCounter).toBe(10);
 				expect(limitTimestamp).toBe(0);
-				expect(minCounter).toBe(1);
-				expect(minTimestamp).toBe(0);
 			});
 
 			it('should apply correction if extra calls slip through', async () => {
-				limitCounter = 6;
-				minCounter = 6;
+				limitCounter = 12;
 
 				const info = await serviceUnderTest().limit(limit, actor);
 

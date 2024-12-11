@@ -155,6 +155,8 @@ import { QueueModule } from './QueueModule.js';
 import { QueueService } from './QueueService.js';
 import { LoggerService } from './LoggerService.js';
 import { SponsorsService } from './SponsorsService.js';
+import { RedisConnectionPool } from './RedisConnectionPool.js';
+import { TimeoutService } from './TimeoutService.js';
 import type { Provider } from '@nestjs/common';
 
 //#region 文字列ベースでのinjection用(循環参照対応のため)
@@ -383,6 +385,8 @@ const $SponsorsService: Provider = { provide: 'SponsorsService', useExisting: Sp
 		ChannelFollowingService,
 		RegistryApiService,
 		ReversiService,
+		RedisConnectionPool,
+		TimeoutService,
 		TimeService,
 		EnvService,
 
@@ -684,6 +688,8 @@ const $SponsorsService: Provider = { provide: 'SponsorsService', useExisting: Sp
 		ChannelFollowingService,
 		RegistryApiService,
 		ReversiService,
+		RedisConnectionPool,
+		TimeoutService,
 		TimeService,
 		EnvService,
 

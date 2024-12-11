@@ -908,7 +908,7 @@ describe(SkRateLimiterService, () => {
 
 				await serviceUnderTest().limit(limit, actor);
 
-				expect(commands).toContainEqual(['expire', 'rl_actor_test_c', 1]);
+				expect(commands).toContainEqual(['expire', 'rl_actor_test_c', 5]);
 			});
 
 			it('should set timestamp expiration', async () => {
@@ -920,7 +920,7 @@ describe(SkRateLimiterService, () => {
 
 				await serviceUnderTest().limit(limit, actor);
 
-				expect(commands).toContainEqual(['expire', 'rl_actor_test_t', 1]);
+				expect(commands).toContainEqual(['expire', 'rl_actor_test_t', 5]);
 			});
 
 			it('should not increment when already blocked', async () => {

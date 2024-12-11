@@ -16,9 +16,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<div v-if="appearNote.reply && inReplyToCollapsed && !renoteCollapsed" :class="$style.collapsedInReplyTo">
 		<div :class="$style.collapsedInReplyToLine"></div>
 		<MkAvatar :class="$style.collapsedInReplyToAvatar" :user="appearNote.reply.user" link preview/>
-		<MkA v-user-preview="appearNote.reply.userId" :class="$style.name" :to="userPage(appearNote.reply.user)">
-			<MkAcct :user="appearNote.reply.user"/>
-		</MkA>:
+		<MkAcct :user="appearNote.reply.user" :class="$style.collapsedInReplyToText" @click="inReplyToCollapsed = false"/>:
 		<Mfm :text="getNoteSummary(appearNote.reply)" :plain="true" :nowrap="true" :author="appearNote.reply.user" :nyaize="'respect'" :class="$style.collapsedInReplyToText" @click="inReplyToCollapsed = false"/>
 	</div>
 	<div v-if="pinned" :class="$style.tip"><i class="ti ti-pin"></i> {{ i18n.ts.pinnedNote }}</div>

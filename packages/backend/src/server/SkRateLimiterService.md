@@ -8,13 +8,13 @@ The prime feature is an implementation of Leaky Bucket - a flexible rate limitin
 
 The API is backwards-compatible with existing limit definitions, but it's preferred to use the new BucketRateLimit interface.
 Legacy limits will be "translated" into a bucket limit in a way that attempts to respect max, duration, and minInterval (if present).
-SkRateLimiterService is quite not plug-and-play compatible with existing call sites, because it no longer throws when a limit is exceeded.
-Instead, the returned LimitInfo object will have "blocked" set to true.
+SkRateLimiterService is not quite plug-and-play compatible with existing call sites, as it no longer throws when a limit is exceeded.
+Instead, the returned LimitInfo object will have `blocked` set to true.
 Callers are responsible for checking this property and taking any desired action, such as rejecting a request or returning limit details.
 
 ## Headers
 
-LimitInfo objects (returned by SkRateLimitService.limit()) can be passed to rate-limit-utils.attachHeaders() to send standard rate limit headers with an HTTP response.
+LimitInfo objects (returned by `SkRateLimitService.limit()`) can be passed to `rate-limit-utils.sendRateLimitHeaders()` to send standard rate limit headers with an HTTP response.
 The defined headers are:
 
 | Header                  | Definition                                                                                                                                                                                                     | Example                    |
@@ -25,28 +25,28 @@ The defined headers are:
 | `Retry-After`           | Like `X-RateLimit-Reset`, but measured in seconds (rounded up). Preserved for backwards compatibility, and only included if the rate limit has already been exceeded.                                          | `Retry-After: 2`           |
 
 Note: rate limit headers are not standardized, except for `Retry-After`.
-Header meanings and usage have been devised by adapting common patterns to work with a leaky bucket model instead.
+Header meanings and usage have been devised by adapting common patterns to work with a leaky bucket rate limit model.
 
 ## Performance
 
 SkRateLimiterService makes between 1 and 4 redis transactions per rate limit check.
-One call is read-only, while the others perform at least one write operation.
+The first call is read-only, while the others perform at least one write operation.
 Two integer keys are stored per client/subject, and both expire together after the maximum duration of the limit.
-While performance has not been formally tested, it's expected that SkRateLimiterService will perform roughly on par with the legacy RateLimiterService.
+While performance has not been formally tested, it's expected that SkRateLimiterService has an impact roughly on par with the legacy RateLimiterService.
 Redis memory usage should be notably lower due to the reduced number of keys and avoidance of set / array constructions.
 
 ## Concurrency and Multi-Node Correctness
 
-To provide consistency across multi-node environments, leaky bucket is implemented with only atomic operations (Increment, Decrement, Add, and Subtract).
-This allows the use of Optimistic Locking via modify-check-rollback logic.
-If a data conflict is detected during the "drip" operation, then it's safely reverted by executing its inverse (Increment <-> Decrement, Add <-> Subtract).
-We don't need to check for conflicts when adding the current request, as all checks account for the case where the bucket has been "overfilled".
-Should that happen, the limit delay will be extended until the bucket size is back within limits.
+To provide consistency across multi-node environments, leaky bucket is implemented with only atomic operations (`Increment`, `Decrement`, `Add`, and `Subtract`).
+This allows the use of Optimistic Locking with read-modify-check logic.
+If a data conflict is detected during the "drip" phase, then it's safely reverted by executing its inverse (`Increment` <-> `Decrement`, `Add` <-> `Subtract`).
+We don't need to check for conflicts when adding the current request to the bucket, as all other logic already accounts for the case where the bucket has been "overfilled".
+Should an extra request slip through, the limit delay will be extended until the bucket size is back within limits.
 
-There is one non-atomic `SET` operation used to populate the initial Timestamp value, but we can safely ignore data races there.
+There is one non-atomic `Set` operation used to populate the initial Timestamp value, but we can safely ignore data races there.
 Any possible conflict would have to occur within a few-milliseconds window, which means that the final value can be no more than a few milliseconds off from the expected value.
 This error does not compound, as all further operations are relative (Increment and Add).
-Thus, it's considered an acceptable tradeoff given the limitations imposed by Redis and IORedis library.
+Thus, it's considered an acceptable tradeoff given the limitations imposed by Redis and ioredis.
 
 ## Algorithm Pseudocode
 

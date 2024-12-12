@@ -587,7 +587,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 	// these two methods need to be kept in sync with
 	// `ApRendererService.renderPerson`
 	private userNeedsPublishing(oldUser: MiLocalUser, newUser: Partial<MiUser>): boolean {
-		for (const field of ['avatarId', 'bannerId', 'backgroundId', 'isBot', 'username', 'name', 'isLocked', 'isExplorable', 'isCat', 'noindex', 'speakAsCat', 'movedToUri', 'alsoKnownAs'] as (keyof MiUser)[]) {
+		for (const field of ['avatarId', 'bannerId', 'backgroundId', 'isBot', 'username', 'name', 'isLocked', 'isExplorable', 'isCat', 'noindex', 'speakAsCat', 'movedToUri', 'alsoKnownAs', 'hideOnlineStatus'] as (keyof MiUser)[]) {
 			if ((field in newUser) && oldUser[field] !== newUser[field]) {
 				return true;
 			}

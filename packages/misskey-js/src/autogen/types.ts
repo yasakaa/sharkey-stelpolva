@@ -3931,6 +3931,7 @@ export type components = {
       /** @default false */
       isSystem?: boolean;
       noindex: boolean;
+      enableRss: boolean;
       isBot?: boolean;
       isCat?: boolean;
       speakAsCat?: boolean;
@@ -21482,6 +21483,7 @@ export type operations = {
           requireSigninToViewContents?: boolean;
           makeNotesFollowersOnlyBefore?: number | null;
           makeNotesHiddenBefore?: number | null;
+          enableRss?: boolean;
           isBot?: boolean;
           isCat?: boolean;
           speakAsCat?: boolean;

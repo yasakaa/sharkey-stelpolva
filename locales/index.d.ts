@@ -10978,6 +10978,14 @@ export interface Locale extends ILocale {
      */
     "makeIndexableDescription": string;
     /**
+     * Enable RSS feed
+     */
+    "enableRss": string;
+    /**
+     * Generate an RSS feed containing your basic profile details and public notes. Users can subscribe to the feed without a follow request or approval.
+     */
+    "enableRssDescription": string;
+    /**
      * Require approval for new users
      */
     "approvalRequiredForSignup": string;

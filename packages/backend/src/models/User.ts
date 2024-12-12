@@ -32,7 +32,7 @@ export class MiUser {
 	public lastActiveDate: Date | null;
 
 	@Column('boolean', {
-		default: false,
+		default: true,
 	})
 	public hideOnlineStatus: boolean;
 
@@ -160,7 +160,7 @@ export class MiUser {
 		length: 128, nullable: true,
 	})
 	public backgroundBlurhash: string | null;
-	
+
 	@Column('jsonb', {
 		default: [],
 	})
@@ -327,6 +327,17 @@ export class MiUser {
 		length: 1000, nullable: true,
 	})
 	public signupReason: string | null;
+
+	/**
+	 * True if profile RSS feeds are enabled for this user.
+	 * Enabled by default (opt-out) for existing users, to avoid breaking any existing feeds.
+	 * Disabled by default (opt-in) for newly created users, for privacy.
+	 */
+	@Column('boolean', {
+		name: 'enable_rss',
+		default: true,
+	})
+	public enableRss: boolean;
 
 	constructor(data: Partial<MiUser>) {
 		if (data == null) return;

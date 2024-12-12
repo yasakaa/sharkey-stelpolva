@@ -198,6 +198,7 @@ export const paramDef = {
 		requireSigninToViewContents: { type: 'boolean' },
 		makeNotesFollowersOnlyBefore: { type: 'integer', nullable: true },
 		makeNotesHiddenBefore: { type: 'integer', nullable: true },
+		enableRss: { type: 'boolean' },
 		isBot: { type: 'boolean' },
 		isCat: { type: 'boolean' },
 		speakAsCat: { type: 'boolean' },
@@ -352,6 +353,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 			if (typeof ps.hideOnlineStatus === 'boolean') updates.hideOnlineStatus = ps.hideOnlineStatus;
 			if (typeof ps.publicReactions === 'boolean') profileUpdates.publicReactions = ps.publicReactions;
 			if (typeof ps.noindex === 'boolean') updates.noindex = ps.noindex;
+			if (typeof ps.enableRss === 'boolean') updates.enableRss = ps.enableRss;
 			if (typeof ps.isBot === 'boolean') updates.isBot = ps.isBot;
 			if (typeof ps.carefulBot === 'boolean') profileUpdates.carefulBot = ps.carefulBot;
 			if (typeof ps.autoAcceptFollowed === 'boolean') profileUpdates.autoAcceptFollowed = ps.autoAcceptFollowed;
@@ -619,12 +621,15 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 	// these two methods need to be kept in sync with
 	// `ApRendererService.renderPerson`
 	private userNeedsPublishing(oldUser: MiLocalUser, newUser: Partial<MiUser>): boolean {
-		for (const field of ['avatarId', 'bannerId', 'backgroundId', 'isBot', 'username', 'name', 'isLocked', 'isExplorable', 'isCat', 'noindex', 'speakAsCat', 'movedToUri', 'alsoKnownAs'] as (keyof MiUser)[]) {
+		const basicFields: (keyof MiUser)[] = ['avatarId', 'bannerId', 'backgroundId', 'isBot', 'username', 'name', 'isLocked', 'isExplorable', 'isCat', 'noindex', 'speakAsCat', 'movedToUri', 'alsoKnownAs', 'hideOnlineStatus', 'enableRss'];
+		for (const field of basicFields) {
 			if ((field in newUser) && oldUser[field] !== newUser[field]) {
 				return true;
 			}
 		}
-		for (const arrayField of ['emojis', 'tags'] as (keyof MiUser)[]) {
+
+		const arrayFields: (keyof MiUser)[] = ['emojis', 'tags'];
+		for (const arrayField of arrayFields) {
 			if ((arrayField in newUser) !== (arrayField in oldUser)) {
 				return true;
 			}
@@ -634,7 +639,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 			if (!Array.isArray(oldArray) || !Array.isArray(newArray)) {
 				return true;
 			}
-			if (oldArray.join("\0") !== newArray.join("\0")) {
+			if (oldArray.join('\0') !== newArray.join('\0')) {
 				return true;
 			}
 		}
@@ -642,12 +647,15 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 	}
 
 	private profileNeedsPublishing(oldProfile: MiUserProfile, newProfile: Partial<MiUserProfile>): boolean {
-		for (const field of ['description', 'followedMessage', 'birthday', 'location', 'listenbrainz'] as (keyof MiUserProfile)[]) {
+		const basicFields: (keyof MiUserProfile)[] = ['description', 'followedMessage', 'birthday', 'location', 'listenbrainz'];
+		for (const field of basicFields) {
 			if ((field in newProfile) && oldProfile[field] !== newProfile[field]) {
 				return true;
 			}
 		}
-		for (const arrayField of ['fields'] as (keyof MiUserProfile)[]) {
+
+		const arrayFields: (keyof MiUserProfile)[] = ['fields'];
+		for (const arrayField of arrayFields) {
 			if ((arrayField in newProfile) !== (arrayField in oldProfile)) {
 				return true;
 			}
@@ -657,7 +665,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 			if (!Array.isArray(oldArray) || !Array.isArray(newArray)) {
 				return true;
 			}
-			if (oldArray.join("\0") !== newArray.join("\0")) {
+			if (oldArray.join('\0') !== newArray.join('\0')) {
 				return true;
 			}
 		}

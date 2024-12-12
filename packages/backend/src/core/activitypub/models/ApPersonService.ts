@@ -391,10 +391,13 @@ export class ApPersonService implements OnModuleInit {
 					lastFetchedAt: new Date(),
 					name: truncate(person.name, nameLength),
 					noindex: (person as any).noindex ?? false,
+					enableRss: person.enableRss === true,
 					isLocked: person.manuallyApprovesFollowers,
 					movedToUri: person.movedTo,
 					movedAt: person.movedTo ? new Date() : null,
 					alsoKnownAs: person.alsoKnownAs,
+					// We use "!== false" to handle incorrect types, missing / null values, and "default to true" logic.
+					hideOnlineStatus: person.hideOnlineStatus !== false,
 					isExplorable: person.discoverable,
 					username: person.preferredUsername,
 					approved: true,
@@ -593,9 +596,12 @@ export class ApPersonService implements OnModuleInit {
 			isCat: (person as any).isCat === true,
 			speakAsCat: (person as any).speakAsCat != null ? (person as any).speakAsCat === true : (person as any).isCat === true,
 			noindex: (person as any).noindex ?? false,
+			enableRss: person.enableRss === true,
 			isLocked: person.manuallyApprovesFollowers,
 			movedToUri: person.movedTo ?? null,
 			alsoKnownAs: person.alsoKnownAs ?? null,
+			// We use "!== false" to handle incorrect types, missing / null values, and "default to true" logic.
+			hideOnlineStatus: person.hideOnlineStatus !== false,
 			isExplorable: person.discoverable,
 			...(await this.resolveAvatarAndBanner(exist, person.icon, person.image, person.backgroundUrl).catch(() => ({}))),
 		} as Partial<MiRemoteUser> & Pick<MiRemoteUser, 'isBot' | 'isCat' | 'speakAsCat' | 'isLocked' | 'movedToUri' | 'alsoKnownAs' | 'isExplorable'>;

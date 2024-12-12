@@ -320,7 +320,7 @@ export class MiUser {
 		name: 'enable_rss',
 		default: true,
 	})
-	public enableRss = true;
+	public enableRss: boolean;
 
 	constructor(data: Partial<MiUser>) {
 		if (data == null) return;

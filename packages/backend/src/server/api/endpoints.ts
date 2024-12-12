@@ -318,6 +318,9 @@ import * as ep___notes_reactions_delete from './endpoints/notes/reactions/delete
 import * as ep___notes_like from './endpoints/notes/like.js';
 import * as ep___notes_renotes from './endpoints/notes/renotes.js';
 import * as ep___notes_replies from './endpoints/notes/replies.js';
+import * as ep___notes_schedule_create from './endpoints/notes/schedule/create.js';
+import * as ep___notes_schedule_delete from './endpoints/notes/schedule/delete.js';
+import * as ep___notes_schedule_list from './endpoints/notes/schedule/list.js';
 import * as ep___notes_searchByTag from './endpoints/notes/search-by-tag.js';
 import * as ep___notes_search from './endpoints/notes/search.js';
 import * as ep___notes_show from './endpoints/notes/show.js';
@@ -720,6 +723,9 @@ const eps = [
 	['notes/like', ep___notes_like],
 	['notes/renotes', ep___notes_renotes],
 	['notes/replies', ep___notes_replies],
+	['notes/schedule/create', ep___notes_schedule_create],
+	['notes/schedule/delete', ep___notes_schedule_delete],
+	['notes/schedule/list', ep___notes_schedule_list],
 	['notes/search-by-tag', ep___notes_searchByTag],
 	['notes/search', ep___notes_search],
 	['notes/show', ep___notes_show],

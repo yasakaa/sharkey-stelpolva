@@ -14,7 +14,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		</p>
 		<footer>
 			<img class="icon" :src="flash.user.avatarUrl"/>
-			<p>{{ userName(flash.user) }}</p>
+			<MkUserName :key="flash.user.id" :user="flash.user"/>
 		</footer>
 	</article>
 </MkA>

@@ -21,7 +21,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<p v-if="page.summary" :title="page.summary">{{ page.summary.length > 85 ? page.summary.slice(0, 85) + '…' : page.summary }}</p>
 		<footer>
 			<img v-if="page.user.avatarUrl" class="icon" :src="page.user.avatarUrl"/>
-			<p>{{ userName(page.user) }}</p>
+			<MkUserName :key="page.user.id" :user="page.user"/>
 		</footer>
 	</article>
 </MkA>

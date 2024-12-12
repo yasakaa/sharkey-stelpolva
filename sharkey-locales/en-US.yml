@@ -88,6 +88,8 @@ searchEngineCustomURIDescription: "The custom URI must be input in the format li
 searchEngineCusomURI: "Custom URI"
 makeIndexable: "Make public notes not indexable"
 makeIndexableDescription: "Stop note search from indexing your public notes."
+enableRss: "Enable RSS feed"
+enableRssDescription: "Generate an RSS feed containing your basic profile details and public notes. Users can subscribe to the feed without a follow request or approval."
 sendErrorReportsDescription: "When turned on, detailed error information will be shared with Sharkey when a problem occurs, helping to improve the quality of Sharkey.\nThis will include information such the version of your OS, what browser you're using, your activity in Sharkey, etc."
 noInquiryUrlWarning: "Contact URL is not set."
 misskeyUpdated: "Sharkey has been updated!"

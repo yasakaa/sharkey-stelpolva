@@ -3913,6 +3913,7 @@ export type components = {
       /** @default false */
       isSystem?: boolean;
       noindex: boolean;
+      enableRss: boolean;
       isBot?: boolean;
       isCat?: boolean;
       speakAsCat?: boolean;
@@ -21320,6 +21321,7 @@ export type operations = {
           noCrawle?: boolean;
           preventAiLearning?: boolean;
           noindex?: boolean;
+          enableRss?: boolean;
           isBot?: boolean;
           isCat?: boolean;
           speakAsCat?: boolean;

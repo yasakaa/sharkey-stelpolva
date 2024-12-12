@@ -531,6 +531,7 @@ export class ApRendererService {
 			hideOnlineStatus: user.hideOnlineStatus,
 			noindex: user.noindex,
 			indexable: !user.noindex,
+			enableRss: user.enableRss,
 			speakAsCat: user.speakAsCat,
 			attachment: attachment.length ? attachment : undefined,
 		};

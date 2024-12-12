@@ -95,8 +95,8 @@ watch(() => props.expandAllCws, (expandAllCws) => {
 }
 
 .button{
-	margin-right: var(--margin);
-	margin-bottom: var(--margin);
+	margin-right: var(--MI-margin);
+	margin-bottom: var(--MI-margin);
 }
 
 .avatar {

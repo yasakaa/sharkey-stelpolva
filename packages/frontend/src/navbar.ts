@@ -3,7 +3,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { computed, reactive } from 'vue';
+import { computed, defineAsyncComponent, reactive } from 'vue';
+import { ui } from '@@/js/config.js';
 import { clearCache } from './scripts/clear-cache.js';
 import { instance } from './instance.js';
 import { $i } from '@/account.js';
@@ -12,7 +13,6 @@ import { openInstanceMenu } from '@/ui/_common_/common.js';
 import { lookup } from '@/scripts/lookup.js';
 import * as os from '@/os.js';
 import { i18n } from '@/i18n.js';
-import { ui } from '@@/js/config.js';
 import { unisonReload } from '@/scripts/unison-reload.js';
 
 export const navbarItemDef = reactive({
@@ -73,6 +73,18 @@ export const navbarItemDef = reactive({
 		icon: 'ph-user-check ph-bold ph-lg',
 		show: computed(() => $i != null && !$i.movedTo),
 		to: '/following-feed',
+	},
+	scheduledNotes: {
+		title: i18n.ts.scheduledNotes,
+		icon: 'ti ti-calendar-event',
+		show: computed(() => $i != null),
+		action: (ev) => {
+			const { dispose } = os.popup(defineAsyncComponent(() => import('@/components/MkSchedulePostListDialog.vue')), {}, {
+				closed: () => {
+					dispose();
+				},
+			});
+		},
 	},
 	lists: {
 		title: i18n.ts.lists,

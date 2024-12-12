@@ -687,6 +687,13 @@ seems to do a decent job)
     `packages/frontend/src/pages/timeline.vue`,
     `packages/frontend/src/ui/deck/tl-column.vue`,
     `packages/frontend/src/widgets/WidgetTimeline.vue`)
+* if there have been any changes to the federated user data (the
+  `renderPerson` function in
+  `packages/backend/src/core/activitypub/ApRendererService.ts`), make
+  sure that the set of fields in `userNeedsPublishing` and
+  `profileNeedsPublishing` in
+  `packages/backend/src/server/api/endpoints/i/update.ts` are still
+  correct
 * check the changes against our `develop` (`git diff develop`) and
   against Misskey (`git diff misskey/develop`)
 * re-generate `misskey-js` (`pnpm build-misskey-js-with-types`) and commit

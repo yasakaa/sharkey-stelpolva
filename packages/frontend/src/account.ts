@@ -147,6 +147,13 @@ function fetchAccount(token: string, id?: string, forceShowDialog?: boolean): Pr
 								text: i18n.ts.tokenRevokedDescription,
 							});
 						}
+					} else if (res.error.id === 'd5826d14-3982-4d2e-8011-b9e9f02499ef') {
+						// rate limited
+						const timeToWait = res.error.info?.resetMs ?? 1000;
+						window.setTimeout(timeToWait, () => {
+							fetchAccount(token, id, forceShowDialog).then(done, fail);
+						});
+						return;
 					} else {
 						await alert({
 							type: 'error',

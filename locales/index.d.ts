@@ -11464,6 +11464,14 @@ export interface Locale extends ILocale {
      * List of scheduled notes
      */
     "schedulePostList": string;
+    /**
+     * Post on
+     */
+    "postOn": string;
+    /**
+     * Scheduled Notes
+     */
+    "scheduledNotes": string;
 }
 declare const locales: {
     [lang: string]: Locale;

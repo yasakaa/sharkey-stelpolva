@@ -7,7 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 <div style="padding: 8px 16px;">
 	<section>
 		<MkInput v-model="atDate" small type="date" class="input">
-			<template #label>{{ i18n.ts._poll.deadlineDate }}</template>
+			<template #label>{{ i18n.ts.postOn }}</template>
 		</MkInput>
 		<MkInput v-model="atTime" small type="time" class="input">
 			<template #label>{{ i18n.ts._poll.deadlineTime }}</template>

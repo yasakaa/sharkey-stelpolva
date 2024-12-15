@@ -422,6 +422,8 @@ selectFollowRelationship: "Select a follow relationship..."
 
 schedulePost: "Schedule a note"
 schedulePostList: "List of scheduled notes"
+postOn: "Post on"
+scheduledNotes: "Scheduled Notes"
 
 _permissions:
   "read:notes-schedule": "View your list of scheduled notes"

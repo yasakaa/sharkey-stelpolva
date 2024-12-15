@@ -156,7 +156,7 @@ const everyone = ref<Section[]>([
 			},
 			{
 				handle: '@Leah',
-				avatar: 'https://secure.gravatar.com/avatar/3b35b921b284ccfd1fe348508f6f705b?s=128&d=identicon',
+				avatar: 'https://activitypub.software/uploads/-/system/user/avatar/9/avatar.png?width=128',
 				link: 'https://activitypub.software/Leah',
 			},
 			{

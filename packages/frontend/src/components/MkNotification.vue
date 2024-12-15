@@ -7,13 +7,12 @@ SPDX-License-Identifier: AGPL-3.0-only
 <div :class="$style.root">
 	<div :class="$style.head">
 		<MkAvatar v-if="['pollEnded', 'note', 'edited', 'scheduledNotePosted'].includes(notification.type) && 'note' in notification" :class="$style.icon" :user="notification.note.user" link preview/>
-		<MkAvatar v-else-if="['roleAssigned', 'achievementEarned', 'scheduledNoteFailed'].includes(notification.type)" :class="$style.icon" :user="$i" link preview/>
-		<div v-else-if="notification.type === 'reaction:grouped' && notification.note.reactionAcceptance === 'likeOnly'" :class="[$style.icon, $style.icon_reactionGroup]"><i class="ph-smiley ph-bold ph-lg" style="line-height: 1;"></i></div>
+		<MkAvatar v-else-if="['roleAssigned', 'achievementEarned', 'exportCompleted', 'login', 'scheduledNoteFailed'].includes(notification.type)" :class="$style.icon" :user="$i" link preview/>
+		<div v-else-if="notification.type === 'reaction:grouped' && notification.note.reactionAcceptance === 'likeOnly'" :class="[$style.icon, $style.icon_reactionGroupHeart]"><i class="ph-smiley ph-bold ph-lg" style="line-height: 1;"></i></div>
 		<div v-else-if="notification.type === 'reaction:grouped'" :class="[$style.icon, $style.icon_reactionGroup]"><i class="ph-smiley ph-bold ph-lg" style="line-height: 1;"></i></div>
 		<div v-else-if="notification.type === 'renote:grouped'" :class="[$style.icon, $style.icon_renoteGroup]"><i class="ti ti-repeat" style="line-height: 1;"></i></div>
 		<img v-else-if="notification.type === 'test'" :class="$style.icon" :src="infoImageUrl"/>
 		<MkAvatar v-else-if="'user' in notification" :class="$style.icon" :user="notification.user" link preview/>
-		<MkAvatar v-else-if="notification.type === 'exportCompleted'" :class="$style.icon" :user="$i" link preview/>
 		<img v-else-if="'icon' in notification && notification.icon != null" :class="[$style.icon, $style.icon_app]" :src="notification.icon" alt=""/>
 		<div
 			:class="[$style.subIcon, {
@@ -27,6 +26,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				[$style.t_pollEnded]: notification.type === 'pollEnded',
 				[$style.t_achievementEarned]: notification.type === 'achievementEarned',
 				[$style.t_exportCompleted]: notification.type === 'exportCompleted',
+				[$style.t_login]: notification.type === 'login',
 				[$style.t_roleAssigned]: notification.type === 'roleAssigned' && notification.role.iconUrl == null,
 				[$style.t_pollEnded]: notification.type === 'edited',
 				[$style.t_roleAssigned]: notification.type === 'scheduledNoteFailed',
@@ -43,6 +43,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<i v-else-if="notification.type === 'pollEnded'" class="ti ti-chart-arrows"></i>
 			<i v-else-if="notification.type === 'achievementEarned'" class="ti ti-medal"></i>
 			<i v-else-if="notification.type === 'exportCompleted'" class="ti ti-archive"></i>
+			<i v-else-if="notification.type === 'login'" class="ti ti-login-2"></i>
 			<template v-else-if="notification.type === 'roleAssigned'">
 				<img v-if="notification.role.iconUrl" style="height: 1.3em; vertical-align: -22%;" :src="notification.role.iconUrl" alt=""/>
 				<i v-else class="ti ti-badges"></i>
@@ -66,6 +67,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<span v-else-if="notification.type === 'note'">{{ i18n.ts._notification.newNote }}: <MkUserName :user="notification.note.user"/></span>
 			<span v-else-if="notification.type === 'roleAssigned'">{{ i18n.ts._notification.roleAssigned }}</span>
 			<span v-else-if="notification.type === 'achievementEarned'">{{ i18n.ts._notification.achievementEarned }}</span>
+			<span v-else-if="notification.type === 'login'">{{ i18n.ts._notification.login }}</span>
 			<span v-else-if="notification.type === 'test'">{{ i18n.ts._notification.testNotification }}</span>
 			<span v-else-if="notification.type === 'exportCompleted'">{{ i18n.tsx._notification.exportOfXCompleted({ x: exportEntityName[notification.exportedEntity] }) }}</span>
 			<MkA v-else-if="notification.type === 'follow' || notification.type === 'mention' || notification.type === 'reply' || notification.type === 'renote' || notification.type === 'quote' || notification.type === 'reaction' || notification.type === 'receiveFollowRequest' || notification.type === 'followRequestAccepted'" v-user-preview="notification.user.id" :class="$style.headerName" :to="userPage(notification.user)"><MkUserName :user="notification.user"/></MkA>
@@ -243,13 +245,16 @@ function getActualReactedUsersCount(notification: Misskey.entities.Notification)
 	overflow-wrap: break-word;
 	display: flex;
 	contain: content;
+	content-visibility: auto;
+	contain-intrinsic-size: 0 100px;
 
 	--eventFollow: #36aed2;
 	--eventRenote: #36d298;
 	--eventReply: #007aff;
-	--eventReactionHeart: var(--love);
+	--eventReactionHeart: var(--MI_THEME-love);
 	--eventReaction: #e99a0b;
 	--eventAchievement: #cb9a11;
+	--eventLogin: #007aff;
 	--eventOther: #88a6b7;
 }
 
@@ -277,7 +282,7 @@ function getActualReactedUsersCount(notification: Misskey.entities.Notification)
 	width: 80%;
 	height: 80%;
 	font-size: 15px;
-	border-radius: var(--radius-full);
+	border-radius: var(--MI-radius-full);
 	color: #fff;
 }
 
@@ -294,7 +299,7 @@ function getActualReactedUsersCount(notification: Misskey.entities.Notification)
 }
 
 .icon_app {
-	border-radius: var(--radius-sm);
+	border-radius: var(--MI-radius-sm);
 }
 
 .subIcon {
@@ -305,9 +310,9 @@ function getActualReactedUsersCount(notification: Misskey.entities.Notification)
 	width: 20px;
 	height: 20px;
 	box-sizing: border-box;
-	border-radius: var(--radius-full);
-	background: var(--panel);
-	box-shadow: 0 0 0 3px var(--panel);
+	border-radius: var(--MI-radius-full);
+	background: var(--MI_THEME-panel);
+	box-shadow: 0 0 0 3px var(--MI_THEME-panel);
 	font-size: 11px;
 	text-align: center;
 	color: #fff;
@@ -368,6 +373,12 @@ function getActualReactedUsersCount(notification: Misskey.entities.Notification)
 .t_roleAssigned {
 	padding: 3px;
 	background: var(--eventOther);
+	pointer-events: none;
+}
+
+.t_login {
+	padding: 3px;
+	background: var(--eventLogin);
 	pointer-events: none;
 }
 
@@ -452,9 +463,9 @@ function getActualReactedUsersCount(notification: Misskey.entities.Notification)
 	width: 20px;
 	height: 20px;
 	box-sizing: border-box;
-	border-radius: var(--radius-full);
-	background: var(--panel);
-	box-shadow: 0 0 0 3px var(--panel);
+	border-radius: var(--MI-radius-full);
+	background: var(--MI_THEME-panel);
+	box-shadow: 0 0 0 3px var(--MI_THEME-panel);
 	font-size: 11px;
 	text-align: center;
 	color: #fff;

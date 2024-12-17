@@ -80,7 +80,7 @@ export class FeedService {
 		for (const note of notes) {
 			const createdAt = new Date(this.idService.parse(note.id).date);
 
-			if (this.compareDates(followersOnlyBefore, createdAt) || this.compareDates(hiddenBefore, createdAt)) {
+			if (this.shouldHideNote(followersOnlyBefore, createdAt) || this.shouldHideNote(hiddenBefore, createdAt)) {
 				continue;
 			}
 
@@ -104,13 +104,13 @@ export class FeedService {
 	}
 
 	// this logic is copied from NoteEntityService.hideNote
-	private compareDates(reference: number | null, createdAt: Date): boolean {
-		if ((reference != null)
+	private shouldHideNote(reference: number | null, createdAt: Date): boolean {
+		if ((reference !== null)
 				&& (
 					(reference <= 0 && (Date.now() - createdAt.getTime() > 0 - (reference * 1000)))
 						|| (reference > 0 && (createdAt.getTime() < reference * 1000))
 				)
-			) {
+		) {
 			return true;
 		}
 		return false;

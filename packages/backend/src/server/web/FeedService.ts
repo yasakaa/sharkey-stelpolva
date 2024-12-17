@@ -104,13 +104,13 @@ export class FeedService {
 	}
 
 	// this logic is copied from NoteEntityService.hideNote
-	private compareDates(reference, createdAt: Date): boolean {
+	private compareDates(reference: number | null, createdAt: Date): boolean {
 		if ((reference != null)
 				&& (
 					(reference <= 0 && (Date.now() - createdAt.getTime() > 0 - (reference * 1000)))
 						|| (reference > 0 && (createdAt.getTime() < reference * 1000))
 				)
-			 ) {
+			) {
 			return true;
 		}
 		return false;

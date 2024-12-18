@@ -43,7 +43,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		</MkButton>
 	</div>
 </template>
-<div v-else-if="theNote" :class="$style.quote"><XNoteSimple :note="theNote" :class="$style.quoteNote"/></div>
+<div v-else-if="theNote" :class="[$style.link, { [$style.compact]: compact }]"><XNoteSimple :note="theNote" :class="$style.body"/></div>
 <div v-else>
 	<component :is="self ? 'MkA' : 'a'" :class="[$style.link, { [$style.compact]: compact }]" :[attr]="self ? url.substring(local.length) : url" rel="nofollow noopener" :target="target" :title="url">
 		<div v-if="thumbnail && !sensitive" :class="$style.thumbnail" :style="defaultStore.state.dataSaver.urlPreview ? '' : `background-image: url('${thumbnail}')`">
@@ -418,17 +418,5 @@ onUnmounted(() => {
 		width: 12px;
 		height: 12px;
 	}
-}
-
-.quote {
-	padding: 8px 0;
-}
-
-.quoteNote {
-	padding: 16px;
-	// Made border solid, stylistic choice
-	border: solid 1px var(--MI_THEME-renote);
-	border-radius: var(--MI-radius-sm);
-	overflow: clip;
 }
 </style>

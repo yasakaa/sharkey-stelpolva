@@ -157,7 +157,9 @@ watch(activityPub, async (uri) => {
 			if (response.type !== 'Note') return;
 			theNote.value = response['object'];
 		} catch (err) {
-			console.error(err);
+			if (_DEV_) {
+				console.error(`failed to extract note for preview of ${uri}`, err);
+			}
 		}
 });
 

@@ -2741,6 +2741,6 @@ _selfXssPrevention:
   description2: "If you do not understand exactly what you are trying to paste, %cstop working right now and close this window."
   description3: "For more information, please refer to this. {link}"
 _followRequest:
-  receive: "Received"
+  recieved: "Received"
   sent: "Sent"
 acknowledgeNotesAndEnable: "Be sure you have understood the warnings before turning this on"

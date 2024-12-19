@@ -10,6 +10,7 @@ import { envOption } from '@/env.js';
 import { loadConfig } from '@/config.js';
 import { jobQueue, server } from './common.js';
 import { fileURLToPath } from 'node:url';
+import { dirname } from 'node:path';
 import * as fs from 'node:fs';
 const _filename = fileURLToPath(import.meta.url);
 const _dirname = dirname(_filename);

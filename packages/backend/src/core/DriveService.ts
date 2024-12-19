@@ -148,7 +148,6 @@ export class DriveService {
 	@bindThis
 	private async save(file: MiDriveFile, path: string, name: string, info: FileInfo): Promise<MiDriveFile> {
 		const type = info.type.mime;
-		const ext = info.type.ext;
 		const hash = info.md5;
 		const size = info.size;
 
@@ -228,9 +227,11 @@ export class DriveService {
 
 			return await this.driveFilesRepository.insertOne(file);
 		} else { // use internal storage
-			const accessKey = `${randomUUID()}.${ext}`;
-			const thumbnailAccessKey = `thumbnail-${randomUUID()}.${ext}`;
-			const webpublicAccessKey = `webpublic-${randomUUID()}.${ext}`;
+			const ext = FILE_TYPE_BROWSERSAFE.includes(type) ? info.type.ext : null;
+
+			const accessKey = makeFileKey(ext);
+			const thumbnailAccessKey = makeFileKey(ext, 'thumbnail');
+			const webpublicAccessKey = makeFileKey(ext, 'webpublic');
 
 			// Ugly type is just to help TS figure out that 2nd / 3rd promises are optional.
 			const promises: [Promise<string>, ...(Promise<string> | undefined)[]] = [
@@ -866,4 +867,17 @@ export class DriveService {
 			cleanup();
 		}
 	}
+}
+
+function makeFileKey(ext: string | null, prefix?: string): string {
+	const parts: string[] = [randomUUID()];
+
+	if (prefix) {
+		parts.unshift(prefix, '-');
+	}
+	if (ext) {
+		parts.push('.', ext);
+	}
+
+	return parts.join('');
 }

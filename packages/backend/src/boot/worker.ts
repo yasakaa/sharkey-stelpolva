@@ -9,6 +9,9 @@ import { nodeProfilingIntegration } from '@sentry/profiling-node';
 import { envOption } from '@/env.js';
 import { loadConfig } from '@/config.js';
 import { jobQueue, server } from './common.js';
+import * as fs from 'node:fs';
+const _filename = fileURLToPath(import.meta.url);
+const _dirname = dirname(_filename);
 const meta = JSON.parse(fs.readFileSync(`${_dirname}/../../../../built/meta.json`, 'utf-8'));
 
 /**

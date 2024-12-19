@@ -9,6 +9,7 @@ import { nodeProfilingIntegration } from '@sentry/profiling-node';
 import { envOption } from '@/env.js';
 import { loadConfig } from '@/config.js';
 import { jobQueue, server } from './common.js';
+const meta = JSON.parse(fs.readFileSync(`${_dirname}/../../../../built/meta.json`, 'utf-8'));
 
 /**
  * Init worker process

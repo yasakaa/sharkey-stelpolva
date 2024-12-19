@@ -37,6 +37,7 @@ import { InternalStorageService } from '@/core/InternalStorageService.js';
 import { DriveFileEntityService } from '@/core/entities/DriveFileEntityService.js';
 import { UserEntityService } from '@/core/entities/UserEntityService.js';
 import { FileInfoService } from '@/core/FileInfoService.js';
+import type { FileInfo } from '@/core/FileInfoService.js';
 import { bindThis } from '@/decorators.js';
 import { RoleService } from '@/core/RoleService.js';
 import { correctFilename } from '@/misc/correct-filename.js';
@@ -139,15 +140,19 @@ export class DriveService {
 
 	/***
 	 * Save file
+	 * @param file
 	 * @param path Path for original
 	 * @param name Name for original (should be extention corrected)
-	 * @param type Content-Type for original
-	 * @param hash Hash for original
-	 * @param size Size for original
+	 * @param info File metadata
 	 */
 	@bindThis
-	private async save(file: MiDriveFile, path: string, name: string, type: string, hash: string, size: number): Promise<MiDriveFile> {
-	// thunbnail, webpublic を必要なら生成
+	private async save(file: MiDriveFile, path: string, name: string, info: FileInfo): Promise<MiDriveFile> {
+		const type = info.type.mime;
+		const ext = info.type.ext;
+		const hash = info.md5;
+		const size = info.size;
+
+		// thunbnail, webpublic を必要なら生成
 		const alts = await this.generateAlts(path, type, !file.uri);
 
 		if (this.meta.useObjectStorage) {
@@ -223,9 +228,9 @@ export class DriveService {
 
 			return await this.driveFilesRepository.insertOne(file);
 		} else { // use internal storage
-			const accessKey = randomUUID();
-			const thumbnailAccessKey = 'thumbnail-' + randomUUID();
-			const webpublicAccessKey = 'webpublic-' + randomUUID();
+			const accessKey = `${randomUUID()}.${ext}`;
+			const thumbnailAccessKey = `thumbnail-${randomUUID()}.${ext}`;
+			const webpublicAccessKey = `webpublic-${randomUUID()}.${ext}`;
 
 			// Ugly type is just to help TS figure out that 2nd / 3rd promises are optional.
 			const promises: [Promise<string>, ...(Promise<string> | undefined)[]] = [
@@ -616,7 +621,7 @@ export class DriveService {
 				}
 			}
 		} else {
-			file = await (this.save(file, path, detectedName, info.type.mime, info.md5, info.size));
+			file = await (this.save(file, path, detectedName, info));
 		}
 
 		this.registerLogger.succ(`drive file has been created ${file.id}`);

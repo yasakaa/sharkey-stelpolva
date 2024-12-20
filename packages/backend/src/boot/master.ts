@@ -90,6 +90,9 @@ export async function masterMain() {
 
 			maxBreadcrumbs: 0,
 
+			// Set release version
+			release: "Sharkey@" + meta.version,
+
 			...config.sentryForBackend.options,
 		});
 	}

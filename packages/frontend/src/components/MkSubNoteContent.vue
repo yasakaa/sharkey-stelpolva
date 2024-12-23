@@ -152,7 +152,7 @@ watch(() => props.expandAllCws, (expandAllCws) => {
 	width: 100%;
 	margin-top: 14px;
 	position: sticky;
-	bottom: calc(var(--stickyBottom, 0px) - 100px);
+	bottom: calc(var(--stickyBottom, 0px) + 1em);
 }
 
 .playMFMButton {

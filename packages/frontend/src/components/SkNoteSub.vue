@@ -512,9 +512,10 @@ if (props.detail) {
 	min-width: 0;
 }
 
-.content {
-	overflow: hidden;
-}
+// for sticky showless button
+// .content {
+// 	overflow: hidden;
+// }
 
 .text {
 	margin: 0;

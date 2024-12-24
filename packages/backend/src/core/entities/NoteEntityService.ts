@@ -529,6 +529,7 @@ export class NoteEntityService implements OnModuleInit {
 			const oldId = this.idService.gen(Date.now() - 2000);
 
 			for (const note of notes) {
+				// get my reaction for a renote.
 				if (isPureRenote(note)) {
 					const reactionsCount = Object.values(this.reactionsBufferingService.mergeReactions(note.renote.reactions, bufferedReactions?.get(note.renote.id)?.deltas ?? {})).reduce((a, b) => a + b, 0);
 					if (reactionsCount === 0) {
@@ -543,6 +544,39 @@ export class NoteEntityService implements OnModuleInit {
 						}
 					} else {
 						idsNeedFetchMyReaction.add(note.renote.id);
+					}
+					// get my reaction for OP if this is a renote of a reply.
+					if (note.renote.reply) {
+						const reactionsCount = Object.values(this.reactionsBufferingService.mergeReactions(note.renote.reply.reactions, bufferedReactions?.get(note.renote.reply.id)?.deltas ?? {})).reduce((a, b) => a + b, 0);
+						if (reactionsCount === 0) {
+							myReactionsMap.set(note.renote.reply.id, null);
+						} else if (reactionsCount <= note.renote.reply.reactionAndUserPairCache.length + (bufferedReactions?.get(note.renote.reply.id)?.pairs.length ?? 0)) {
+							const pairInBuffer = bufferedReactions?.get(note.renote.reply.id)?.pairs.find(p => p[0] === meId);
+							if (pairInBuffer) {
+								myReactionsMap.set(note.renote.reply.id, pairInBuffer[1]);
+							} else {
+								const pair = note.renote.reply.reactionAndUserPairCache.find(p => p.startsWith(meId));
+								myReactionsMap.set(note.renote.reply.id, pair ? pair.split('/')[1] : null);
+							}
+						} else {
+							idsNeedFetchMyReaction.add(note.renote.reply.id);
+						}
+					}
+				// get my reaction for OP if this is a reply.
+				} else if (note.reply) {
+					const reactionsCount = Object.values(this.reactionsBufferingService.mergeReactions(note.reply.reactions, bufferedReactions?.get(note.reply.id)?.deltas ?? {})).reduce((a, b) => a + b, 0);
+					if (reactionsCount === 0) {
+						myReactionsMap.set(note.reply.id, null);
+					} else if (reactionsCount <= note.reply.reactionAndUserPairCache.length + (bufferedReactions?.get(note.reply.id)?.pairs.length ?? 0)) {
+						const pairInBuffer = bufferedReactions?.get(note.reply.id)?.pairs.find(p => p[0] === meId);
+						if (pairInBuffer) {
+							myReactionsMap.set(note.reply.id, pairInBuffer[1]);
+						} else {
+							const pair = note.reply.reactionAndUserPairCache.find(p => p.startsWith(meId));
+							myReactionsMap.set(note.reply.id, pair ? pair.split('/')[1] : null);
+						}
+					} else {
+						idsNeedFetchMyReaction.add(note.reply.id);
 					}
 				} else {
 					if (note.id < oldId) {

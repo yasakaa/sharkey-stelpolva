@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.4
 
-ARG NODE_VERSION=20.16.0-alpine3.20
+ARG NODE_VERSION=22.11.0-alpine3.20
 
 FROM node:${NODE_VERSION} as build
 
@@ -40,6 +40,8 @@ RUN apk add ffmpeg tini jemalloc \
 	&& corepack enable \
 	&& addgroup -g "${GID}" sharkey \
 	&& adduser -D -u "${UID}" -G sharkey -h /sharkey sharkey \
+	&& mkdir /sharkey/files \
+	&& chown sharkey:sharkey /sharkey/files \
 	&& find / -type d -path /sys -prune -o -type d -path /proc -prune -o -type f -perm /u+s -exec chmod u-s {} \; \
 	&& find / -type d -path /sys -prune -o -type d -path /proc -prune -o -type f -perm /g+s -exec chmod g-s {} \;
 

@@ -109,6 +109,15 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 							sub.andWhere('latest.is_quote = false');
 						}
 
+						// Select the appropriate collection of users
+						if (ps.list === 'followers') {
+							addFollower(sub);
+						} else if (ps.list === 'following') {
+							addFollowee(sub);
+						} else {
+							addMutual(sub);
+						}
+
 						return sub;
 					},
 					'latest',
@@ -123,15 +132,6 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				.leftJoinAndSelect('renote.user', 'renoteUser')
 				.leftJoinAndSelect('note.channel', 'channel')
 			;
-
-			// Select the appropriate collection of users
-			if (ps.list === 'followers') {
-				addFollower(query);
-			} else if (ps.list === 'following') {
-				addFollowee(query);
-			} else {
-				addMutual(query);
-			}
 
 			// Limit to files, if requested
 			if (ps.filesOnly) {

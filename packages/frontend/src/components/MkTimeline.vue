@@ -8,6 +8,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<MkNotes
 		v-if="paginationQuery"
 		ref="tlComponent"
+		class="MkTimeline"
+		:data-timeline-src="src"
 		:pagination="paginationQuery"
 		:noGap="!defaultStore.state.showGapBetweenNotesInTimeline"
 		@queue="emit('queue', $event)"

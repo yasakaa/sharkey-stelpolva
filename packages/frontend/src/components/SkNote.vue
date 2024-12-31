@@ -9,7 +9,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 	v-show="!isDeleted"
 	ref="rootEl"
 	v-hotkey="keymap"
-	:class="[$style.root, { [$style.showActionsOnlyHover]: defaultStore.state.showNoteActionsOnlyHover, [$style.skipRender]: defaultStore.state.skipNoteRender }]"
+	:class="[$style.root, { [$style.showActionsOnlyHover]: defaultStore.state.showNoteActionsOnlyHover, [$style.skipRender]: defaultStore.state.skipNoteRender }, ...stpvClassBindings]"
 	:tabindex="isDeleted ? '-1' : '0'"
 >
 	<SkNoteSub v-if="appearNote.reply" v-show="!renoteCollapsed && !inReplyToCollapsed" :note="appearNote.reply" :class="$style.replyTo"/>
@@ -282,6 +282,16 @@ const inChannel = inject('inChannel', null);
 const currentClip = inject<Ref<Misskey.entities.Clip> | null>('currentClip', null);
 
 const note = ref(deepClone(props.note));
+
+const stpvClassBindings = computed(() => {
+	const res: string[] = [];
+	if (note.value.renoteId) res.push('d-is-renote');
+	if (note.value.replyId) res.push('d-is-reply');
+	if (note.value.userId === $i?.id) res.push('d-is-mine');
+	if (note.value.user.host) res.push('d-is-remote');
+	if (!note.value.user.host) res.push('d-is-local');
+	return res;
+});
 
 function noteclick(id: string) {
 	const selection = document.getSelection();

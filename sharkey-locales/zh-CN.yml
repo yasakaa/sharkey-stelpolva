@@ -180,6 +180,6 @@ _signup:
   approvalPending: "您的账户已经创建，正在等待批准"
   reasonInfo: "请填写您想加入此实例的原因"
 schedulePost: "定时发帖"
-schedulePostList: 预定的帖子列表"
+schedulePostList: "预定的帖子列表"
 postOn: "发帖于…"
 scheduledNotes: "预定的帖子"

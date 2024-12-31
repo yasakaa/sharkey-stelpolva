@@ -44,7 +44,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 	</div>
 </template>
 <!-- never compact -->
-<div v-else-if="theNote && apExpanded" :class="[$style.link]">
+<div v-else-if="theNote && apExpanded" :class="$style.linkNote">
 	<XNoteSimple :note="theNote" :class="$style.body"/>
 	<div :class="$style.action">
 		<MkButton :small="true" inline @click.stop="apExpanded = false">
@@ -283,9 +283,9 @@ onUnmounted(() => {
 
 .linkNote {
 	margin-top: 5px;
-	padding: 16px;
-	border: solid 1px var(--renote);
-	border-radius: var(--radius-sm);
+	// padding: 5px;
+	border: solid 1px var(--MI_THEME-renote);
+	border-radius: var(--MI-radius-sm);
 	overflow: clip;
 }
 

@@ -98,7 +98,6 @@ SPDX-License-Identifier: AGPL-3.0-only
 <script lang="ts" setup>
 import { defineAsyncComponent, onDeactivated, onUnmounted, ref, watch } from 'vue';
 import SkNoteSimple from './SkNoteSimple.vue';
-import type { summaly } from '@misskey-dev/summaly';
 import { url as local } from '@@/js/config.js';
 import { versatileLang } from '@@/js/intl-const.js';
 import type { summaly } from '@misskey-dev/summaly';

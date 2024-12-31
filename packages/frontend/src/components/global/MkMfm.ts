@@ -452,6 +452,7 @@ export default function (props: MfmProps, { emit }: { emit: SetupContext<MfmEven
 					host: mentionHost ?? host,
 					username: token.props.username,
 					navigationBehavior: props.linkNavigationBehavior,
+					noNavigate: props.stpvInline,
 				}))];
 			}
 

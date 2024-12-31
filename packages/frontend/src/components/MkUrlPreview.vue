@@ -43,7 +43,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 		</MkButton>
 	</div>
 </template>
-<div v-else-if="theNote && apExpanded" :class="[$style.link, { [$style.compact]: compact }]">
+<!-- never compact -->
+<div v-else-if="theNote && apExpanded" :class="[$style.link]">
 	<XNoteSimple :note="theNote" :class="$style.body"/>
 	<div :class="$style.action">
 		<MkButton :small="true" inline @click.stop="apExpanded = false">
@@ -86,7 +87,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<i class="ti ti-picture-in-picture"></i> {{ i18n.ts.openInWindow }}
 			</MkButton>
 		</div>
-		<div v-else-if="!apExpanded && apNote" :class="$style.action">
+		<div v-else-if="!apExpanded && theNote" :class="$style.action">
 			<MkButton :small="true" inline @click.stop="apExpanded = true">
 				<i class="ti ti-world-x"></i> {{ i18n.ts.expandTweet }}
 			</MkButton>

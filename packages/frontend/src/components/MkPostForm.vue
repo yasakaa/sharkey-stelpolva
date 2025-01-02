@@ -88,16 +88,16 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<button v-tooltip="i18n.ts.attachFile" class="_button" :class="$style.footerButton" @click="chooseFileFrom"><i class="ti ti-photo-plus"></i></button>
 			<button v-tooltip="i18n.ts.poll" class="_button" :class="[$style.footerButton, { [$style.footerButtonActive]: poll }]" @click="togglePoll"><i class="ti ti-chart-arrows"></i></button>
 			<button v-tooltip="i18n.ts.useCw" class="_button" :class="[$style.footerButton, { [$style.footerButtonActive]: useCw }]" @click="useCw = !useCw"><i class="ti ti-eye-off"></i></button>
-			<button v-tooltip="i18n.ts.mention" class="_button" :class="$style.footerButton" @click="insertMention"><i class="ti ti-at"></i></button>
+			<!-- <button v-tooltip="i18n.ts.mention" class="_button" :class="$style.footerButton" @click="insertMention"><i class="ti ti-at"></i></button> -->
 			<button v-tooltip="i18n.ts.hashtags" class="_button" :class="[$style.footerButton, { [$style.footerButtonActive]: withHashtags }]" @click="withHashtags = !withHashtags"><i class="ti ti-hash"></i></button>
-			<button v-if="postFormActions.length > 0" v-tooltip="i18n.ts.plugins" class="_button" :class="$style.footerButton" @click="showActions"><i class="ti ti-plug"></i></button>
+			<!-- <button v-if="postFormActions.length > 0" v-tooltip="i18n.ts.plugins" class="_button" :class="$style.footerButton" @click="showActions"><i class="ti ti-plug"></i></button> -->
 			<button v-tooltip="i18n.ts.emoji" :class="['_button', $style.footerButton]" @click="insertEmoji"><i class="ti ti-mood-happy"></i></button>
 			<button v-if="showAddMfmFunction" v-tooltip="i18n.ts.addMfmFunction" :class="['_button', $style.footerButton]" @click="insertMfmFunction"><i class="ti ti-palette"></i></button>
 			<button v-tooltip="i18n.ts.otherSettings" :class="['_button', $style.footerButton]" @click="showOtherMenu"><i class="ti ti-dots"></i></button>
 		</div>
 		<div :class="$style.footerRight">
 			<button v-tooltip="i18n.ts.previewNoteText" class="_button" :class="[$style.footerButton, { [$style.previewButtonActive]: showPreview }]" @click="showPreview = !showPreview"><i class="ti ti-eye"></i></button>
-			<button v-tooltip="'MFM Cheatsheet'" class="_button" :class="$style.footerButton" @click="MFMWindow"><i class="ph-notebook ph-bold ph-lg"></i></button>
+			<!-- <button v-tooltip="'MFM Cheatsheet'" class="_button" :class="$style.footerButton" @click="MFMWindow"><i class="ph-notebook ph-bold ph-lg"></i></button> -->
 			<!--<button v-tooltip="i18n.ts.more" class="_button" :class="$style.footerButton" @click="showingOptions = !showingOptions"><i class="ti ti-dots"></i></button>-->
 		</div>
 	</footer>
@@ -1086,6 +1086,40 @@ function showOtherMenu(ev: MouseEvent) {
 				});
 			},
 		});
+	}
+
+	menuItems.push({
+		type: 'divider',
+	}, {
+		type: 'button',
+		text: i18n.ts.mention,
+		icon: 'ti ti-at',
+		action: insertMention,
+	}, {
+		type: 'button',
+		text: 'MFM Cheatsheet',
+		icon: 'ph-notebook ph-bold ph-lg',
+		action: MFMWindow,
+	});
+
+	if (postFormActions.length > 0) {
+		menuItems.push({
+			type: 'divider',
+		}, ...postFormActions.map(action => ({
+			type: 'button' as const,
+			text: action.title,
+			icon: 'ti ti-plug',
+			action: () => {
+				action.handler({
+					text: text.value,
+					cw: cw.value,
+				}, (key, value) => {
+					if (typeof key !== 'string' || typeof value !== 'string') return;
+					if (key === 'text') { text.value = value; }
+					if (key === 'cw') { useCw.value = value != ''; cw.value = value; }
+				});
+			},
+		})));
 	}
 
 	os.popupMenu(menuItems, ev.currentTarget ?? ev.target);

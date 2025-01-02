@@ -323,40 +323,42 @@ const headerActions = computed(() => {
 
 const headerTabs = computed(() => [...(defaultStore.reactiveState.pinnedUserLists.value.map(l => ({
 	key: 'list:' + l.id,
+	filterKey: 'list:' + l.id,
 	title: l.name,
 	icon: 'ti ti-star',
 	iconOnly: true,
 }))), ...availableBasicTimelines().map(tl => ({
 	key: tl,
+	filterKey: tl,
 	title: i18n.ts._timelines[tl],
 	icon: basicTimelineIconClass(tl),
 	iconOnly: true,
 })), {
 	icon: 'ph-user-check ph-bold ph-lg',
 	title: i18n.ts.following,
-	key: 'following',
+	filterKey: 'following',
 	iconOnly: true,
 	onClick: () => router.push('/following-feed'),
 }, {
 	icon: 'ti ti-list',
 	title: i18n.ts.lists,
-	key: 'lists',
+	filterKey: 'lists',
 	iconOnly: true,
 	onClick: chooseList,
 }, {
 	icon: 'ti ti-antenna',
 	title: i18n.ts.antennas,
-	key: 'antennas',
+	filterKey: 'antennas',
 	iconOnly: true,
 	onClick: chooseAntenna,
 }, {
 	icon: 'ti ti-device-tv',
 	title: i18n.ts.channel,
-	key: 'channel',
+	filterKey: 'channel',
 	iconOnly: true,
 	onClick: chooseChannel,
 }]
-	.filter(tab => !defaultStore.reactiveState.stpvDisabledTimelineSwipes.value.includes(tab.key as never))
+	.filter(tab => !defaultStore.reactiveState.stpvDisabledTimelineSwipes.value.includes(tab.filterKey as never))
 	.map((tab, _, arr) => ({ ...tab, iconOnly: arr.length > 4 })) as Tab[]);
 
 const headerTabsWhenNotLogin = computed(() => [...availableBasicTimelines().map(tl => ({

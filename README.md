@@ -82,6 +82,7 @@
 - 允许在前端禁用 Reactions 功能
 - 允许搜索以 `.bsky.social` 结尾的 Bluesky 用户
 - 允许在前端折叠（Soft mute）用户/某个帖子
+- 允许禁用某些时间线来获得更清爽的首页
 
 #### Changes merged from upstream
 

@@ -11718,6 +11718,16 @@ export interface Locale extends ILocale {
              */
             "caption": string;
         };
+        "customFont": {
+            /**
+             * 自定义字体…
+             */
+            "label": string;
+            /**
+             * 从您的本地字体列表中选择字体
+             */
+            "caption": string;
+        };
         "softMutedUsers": {
             /**
              * 在时间线上折叠的用户 ID
@@ -11778,6 +11788,16 @@ export interface Locale extends ILocale {
              */
             "caption": string;
         };
+        "disableTimeline": {
+            /**
+             * 禁用时间线
+             */
+            "label": string;
+            /**
+             * 禁用 {name} 时间线
+             */
+            "caption": ParameterizedString<"name">;
+        };
     };
     /**
      * 在时间线上折叠该用户的帖子
@@ -11819,6 +11839,10 @@ export interface Locale extends ILocale {
      * ...后缀
      */
     "stpvPFsuffix": string;
+    /**
+     * 啊哦! 你的浏览器不支持 queryLocalFonts 方法，因此请在文本框中手动填写字体名。
+     */
+    "stpvWarnNoQueryLocalFonts": string;
 }
 declare const locales: {
     [lang: string]: Locale;

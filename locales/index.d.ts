@@ -11778,6 +11778,16 @@ export interface Locale extends ILocale {
              */
             "caption": string;
         };
+        "disableTimeline": {
+            /**
+             * 禁用时间线
+             */
+            "label": string;
+            /**
+             * 禁用 {name} 时间线
+             */
+            "caption": ParameterizedString<"name">;
+        };
     };
     /**
      * 在时间线上折叠该用户的帖子

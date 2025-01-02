@@ -49,6 +49,9 @@ _stpvPlus:
   combineRepliesQuotes:
     label: Combine quotes and replies
     caption: Display both quotes and replies on the post details page
+  disableTimeline:
+    label: Disable timeline
+    caption: "Disable {name} timeline"
 stpvMuteUser: "Soft mute notes in timeline"
 stpvUnmuteUser: "Don't soft mute notes in timeline"
 stpvMuteNote: "Soft mute this note later"

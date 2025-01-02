@@ -57,6 +57,19 @@ SPDX-License-Identifier: AGPL-3.0-only
 	</FormSection>
 
 	<FormSection>
+		<template #label>{{ i18n.ts._stpvPlus.disableTimeline.label }}</template>
+		<div class="_gaps_m">
+			<div class="_gaps_s">
+				<template v-for="name in TimelineSwipeKeys" :key="name">
+					<MkSwitch v-model="timelineSwipeDisabled[name]">
+						{{ i18n.tsx._stpvPlus.disableTimeline.caption({ name: getTranslatedTimelineName(name) }) }}
+					</MkSwitch>
+				</template>
+			</div>
+		</div>
+	</FormSection>
+
+	<FormSection>
 		<template #label>{{ i18n.ts.behavior }}</template>
 		<div class="_gaps_m">
 			<div class="_gaps_s">
@@ -142,6 +155,8 @@ import FormSection from '@/components/form/section.vue';
 import MkInfo from '@/components/MkInfo.vue';
 import { getDefaultFontSettings } from '@/scripts/font-settings';
 import MkTextarea from '@/components/MkTextarea.vue';
+import { TimelineSwipeKeys } from '@/stpv-store-ext';
+import { isBasicTimeline } from '@/timelines';
 
 const $i = signinRequired();
 const meId = $i.id;
@@ -175,6 +190,25 @@ const stpvMutedDomainsList = computed({
 		defaultStore.set('stpvClientMutedNotes', v.split('\n').filter(x => x.trim()).slice(0, 100));
 	},
 });
+const timelineSwipeDisabled = ref(Object.fromEntries(TimelineSwipeKeys.map(name => [
+	name,
+	computed({
+		get: () => defaultStore.reactiveState.stpvDisabledTimelineSwipes.value.includes(name),
+		set: (v) => {
+			const val = defaultStore.state.stpvDisabledTimelineSwipes;
+			if (v) {
+				defaultStore.set('stpvDisabledTimelineSwipes', val.concat([name]));
+			} else {
+				defaultStore.set('stpvDisabledTimelineSwipes', val.filter(n => n !== name));
+			}
+		},
+	}),
+])));
+console.log({ timelineSwipeDisabled });
+
+function getTranslatedTimelineName(name: string): string {
+	return isBasicTimeline(name) ? i18n.ts._timelines[name] : (i18n.ts[name] as string);
+}
 
 // const headerActions = computed(() => []);
 

@@ -334,24 +334,30 @@ const headerTabs = computed(() => [...(defaultStore.reactiveState.pinnedUserList
 })), {
 	icon: 'ph-user-check ph-bold ph-lg',
 	title: i18n.ts.following,
+	key: 'following',
 	iconOnly: true,
 	onClick: () => router.push('/following-feed'),
 }, {
 	icon: 'ti ti-list',
 	title: i18n.ts.lists,
+	key: 'lists',
 	iconOnly: true,
 	onClick: chooseList,
 }, {
 	icon: 'ti ti-antenna',
 	title: i18n.ts.antennas,
+	key: 'antennas',
 	iconOnly: true,
 	onClick: chooseAntenna,
 }, {
 	icon: 'ti ti-device-tv',
 	title: i18n.ts.channel,
+	key: 'channel',
 	iconOnly: true,
 	onClick: chooseChannel,
-}] as Tab[]);
+}]
+	.filter(tab => !defaultStore.reactiveState.stpvDisabledTimelineSwipes.value.includes(tab.key as never))
+	.map((tab, _, arr) => ({ ...tab, iconOnly: arr.length > 4 })) as Tab[]);
 
 const headerTabsWhenNotLogin = computed(() => [...availableBasicTimelines().map(tl => ({
 	key: tl,

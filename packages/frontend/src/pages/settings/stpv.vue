@@ -27,6 +27,30 @@ SPDX-License-Identifier: AGPL-3.0-only
 						{{ item.name }}
 					</option>
 				</MkSelect>
+				<template v-if="defaultFont.fontFace === 'custom'">
+					<template v-if="!canQueryLocalFonts()">
+						<MkInfo warn>
+							{{ i18n.ts.stpvWarnNoQueryLocalFonts }}
+						</MkInfo>
+						<MkInput v-model="customFontface">
+							<template #label>{{ i18n.ts._stpvPlus.customFont.label }}</template>
+							<template #caption>
+								{{ i18n.ts._stpvPlus.customFont.caption }}
+							</template>
+						</MkInput>
+					</template>
+					<MkLoading v-else-if="isAskingLocalFonts()"/>
+					<select v-else v-model="customFontface" :class="$style.customFontSelect">
+						<option
+							v-for="item in localFontsList"
+							:key="item.family"
+							:style="{ 'font-family': item.family }"
+							:value="item.family"
+						>
+							{{ item.fullName }}
+						</option>
+					</select>
+				</template>
 				<MkRadios v-if="defaultFont.availableTypes.length > 0" v-model="defaultFont.fontFaceType">
 					<template #label>{{ i18n.ts._stpvPlus.fontType.label }}</template>
 					<template #caption>
@@ -157,6 +181,8 @@ import { getDefaultFontSettings } from '@/scripts/font-settings';
 import MkTextarea from '@/components/MkTextarea.vue';
 import { TimelineSwipeKeys } from '@/stpv-store-ext';
 import { isBasicTimeline } from '@/timelines';
+import { miLocalStorage } from '@/local-storage';
+import MkInput from '@/components/MkInput.vue';
 
 const $i = signinRequired();
 const meId = $i.id;
@@ -204,10 +230,50 @@ const timelineSwipeDisabled = ref(Object.fromEntries(TimelineSwipeKeys.map(name 
 		},
 	}),
 ])));
-console.log({ timelineSwipeDisabled });
+
+/** @see https://developer.mozilla.org/zh-CN/docs/Web/API/FontData */
+type FontData = {
+	family: string,
+	fullName: string,
+	postscriptName: string,
+	style: string
+}
+
+const customFontface = ref(miLocalStorage.getItem('customFontFaceName') ?? 'Arial');
+const localFontsList = ref<FontData[]>([]);
+const localFontsStatus = ref<'didnot' | 'asking' | 'accepted' | 'refused'>('didnot');
+
+watch(customFontface, (v) => {
+	miLocalStorage.setItem('customFontFaceName', v);
+	defaultFont.value.update();
+});
 
 function getTranslatedTimelineName(name: string): string {
 	return isBasicTimeline(name) ? i18n.ts._timelines[name] : (i18n.ts[name] as string);
+}
+
+function canQueryLocalFonts() {
+	if (localFontsStatus.value === 'refused') return false;
+	return 'queryLocalFonts' in window;
+}
+
+function isAskingLocalFonts() {
+	if (localFontsList.value.length > 0) return false;
+	if (localFontsStatus.value === 'didnot') {
+		localFontsStatus.value = 'asking';
+		getLocalFontList();
+	}
+	return localFontsStatus.value === 'asking';
+}
+
+async function getLocalFontList() {
+	try {
+		localFontsList.value = await (window as unknown as { queryLocalFonts: () => Promise<FontData[]> }).queryLocalFonts();
+		localFontsStatus.value = 'accepted';
+	} catch (err) {
+		console.error(err);
+		localFontsStatus.value = 'refused';
+	}
 }
 
 // const headerActions = computed(() => []);
@@ -220,3 +286,59 @@ definePageMetadata(() => ({
 }));
 </script>
 
+<style lang="scss" module>
+.customFontSelect {
+	position: relative;
+	cursor: pointer;
+	appearance: none;
+	-webkit-appearance: none;
+	display: flex;
+	align-items: center;
+	height: 36px;
+	width: 100%;
+	margin: 0;
+	padding: 0 12px;
+	font: inherit;
+	font-weight: normal;
+	font-size: 1em;
+	color: var(--MI_THEME-fg);
+	background: var(--MI_THEME-panel);
+	border: solid 1px var(--MI_THEME-panel);
+	border-radius: var(--MI-radius-sm);
+	outline: none;
+	box-shadow: none;
+	box-sizing: border-box;
+	transition: border-color 0.1s ease-out;
+
+	&.inline {
+		display: inline-block;
+		margin: 0;
+	}
+
+	&.focused {
+		> .inputCore {
+			border-color: var(--MI_THEME-accent) !important;
+			//box-shadow: 0 0 0 4px var(--MI_THEME-focus);
+		}
+	}
+
+	&.disabled {
+		opacity: 0.7;
+
+		&,
+		> .inputCore {
+			cursor: not-allowed !important;
+		}
+	}
+
+	&:focus {
+		outline: none;
+	}
+
+	&:hover {
+		> .inputCore {
+			border-color: var(--MI_THEME-inputBorderHover) !important;
+		}
+	}
+}
+</style>

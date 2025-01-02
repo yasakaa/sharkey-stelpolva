@@ -480,7 +480,7 @@ function replaceFile(file: Misskey.entities.DriveFile, newFile: Misskey.entities
 function upload(file: File, name?: string): void {
 	if (props.mock) return;
 
-	uploadFile(file, defaultStore.state.uploadFolder, name).then(res => {
+	uploadFile(file, defaultStore.state.uploadFolder ?? undefined, name).then(res => {
 		files.value.push(res);
 	});
 }
@@ -1116,7 +1116,7 @@ function showOtherMenu(ev: MouseEvent) {
 				}, (key, value) => {
 					if (typeof key !== 'string' || typeof value !== 'string') return;
 					if (key === 'text') { text.value = value; }
-					if (key === 'cw') { useCw.value = value != ''; cw.value = value; }
+					if (key === 'cw') { useCw.value = value !== ''; cw.value = value; }
 				});
 			},
 		})));

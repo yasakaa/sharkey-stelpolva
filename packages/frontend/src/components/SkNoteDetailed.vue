@@ -9,7 +9,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 	v-show="!isDeleted"
 	ref="rootEl"
 	v-hotkey="keymap"
-	:class="$style.root"
+	:class="[$style.root, ...stpvNoteClassBindings(note)]"
 	:tabindex="isDeleted ? '-1' : '0'"
 >
 	<div v-if="appearNote.reply && appearNote.reply.replyId && !conversationLoaded" style="padding: 16px">
@@ -303,6 +303,7 @@ import { isEnabledUrlPreview } from '@/instance.js';
 import { getAppearNote } from '@/scripts/get-appear-note.js';
 import { type Keymap } from '@/scripts/hotkey.js';
 import { spacingNote } from '@/scripts/autospacing';
+import { stpvNoteClassBindings } from '@/scripts/stpv-note-class-bindings';
 
 const props = withDefaults(defineProps<{
 	note: Misskey.entities.Note;

@@ -28,7 +28,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<button
 					v-if="canRenote"
 					ref="renoteButton"
-					v-tooltip="renoted ? i18n.ts.unrenote : (!defaultStore.state.showVisibilitySelectorOnBoost ? i18n.ts.renoteShift : i18n.ts.renote)"
+					v-tooltip="renoteTooltip"
 					class="_button"
 					:class="$style.noteFooterButton"
 					:style="renoted ? 'color: var(--MI_THEME-accent) !important;' : ''"
@@ -135,6 +135,11 @@ const renoteButton = shallowRef<HTMLElement>();
 const quoteButton = shallowRef<HTMLElement>();
 const menuButton = shallowRef<HTMLElement>();
 const likeButton = shallowRef<HTMLElement>();
+
+const renoteTooltip = computed(() => {
+	if (renoted.value) return i18n.ts.unrenote;
+	return defaultStore.state.showVisibilitySelectorOnBoost ? i18n.ts.renote : i18n.ts.renoteShift;
+});
 
 let appearNote = computed(() => isRenote ? props.note.renote as Misskey.entities.Note : props.note);
 const defaultLike = computed(() => defaultStore.state.like ? defaultStore.state.like : null);

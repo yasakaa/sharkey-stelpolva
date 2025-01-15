@@ -140,7 +140,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<button
 				v-if="canRenote"
 				ref="renoteButton"
-				v-tooltip="renoted ? i18n.ts.unrenote : (!defaultStore.state.showVisibilitySelectorOnBoost ? i18n.ts.renoteShift : i18n.ts.renote)"
+				v-tooltip="renoteTooltip"
 				class="_button"
 				:class="$style.noteFooterButton"
 				:style="renoted ? 'color: var(--MI_THEME-accent) !important;' : ''"
@@ -347,6 +347,11 @@ const replies = ref<Misskey.entities.Note[]>([]);
 const quotes = ref<Misskey.entities.Note[]>([]);
 const canRenote = computed(() => ['public', 'home'].includes(appearNote.value.visibility) || (appearNote.value.visibility === 'followers' && appearNote.value.userId === $i?.id));
 const defaultLike = computed(() => defaultStore.state.like ? defaultStore.state.like : null);
+
+const renoteTooltip = computed(() => {
+	if (renoted.value) return i18n.ts.unrenote;
+	return defaultStore.state.showVisibilitySelectorOnBoost ? i18n.ts.renote : i18n.ts.renoteShift;
+});
 
 watch(() => props.expandAllCws, (expandAllCws) => {
 	if (expandAllCws !== showContent.value) showContent.value = expandAllCws;

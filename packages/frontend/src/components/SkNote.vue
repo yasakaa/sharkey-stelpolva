@@ -129,7 +129,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<button
 					v-if="canRenote"
 					ref="renoteButton"
-					v-tooltip="renoted ? i18n.ts.unrenote : (!defaultStore.state.showVisibilitySelectorOnBoost ? i18n.ts.renoteShift : i18n.ts.renote)"
+					v-tooltip="renoteTooltip"
 					:class="$style.footerButton"
 					class="_button"
 					:style="renoted ? 'color: var(--MI_THEME-accent) !important;' : ''"
@@ -333,6 +333,11 @@ const inReplyToCollapsed = ref(defaultStore.state.collapseNotesRepliedTo);
 const defaultLike = computed(() => defaultStore.state.like ? defaultStore.state.like : null);
 const animated = computed(() => parsed.value ? checkAnimationFromMfm(parsed.value) : null);
 const allowAnim = ref(defaultStore.state.advancedMfm && defaultStore.state.animatedMfm ? true : false);
+
+const renoteTooltip = computed(() => {
+	if (renoted.value) return i18n.ts.unrenote;
+	return defaultStore.state.showVisibilitySelectorOnBoost ? i18n.ts.renote : i18n.ts.renoteShift;
+});
 
 const pleaseLoginContext = computed<OpenOnRemoteOptions>(() => ({
 	type: 'lookup',

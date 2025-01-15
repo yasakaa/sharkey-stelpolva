@@ -148,7 +148,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				class="_button"
 				:class="$style.noteFooterButton"
 				:style="renoted ? 'color: var(--MI_THEME-accent) !important;' : ''"
-				@mousedown.prevent="renoted ? undoRenote() : boostVisibility()"
+				@mousedown.prevent="renoted ? undoRenote() : boostVisibility($event.shiftKey)"
 			>
 				<i class="ti ti-repeat"></i>
 				<p v-if="appearNote.renoteCount > 0" :class="$style.noteFooterButtonCount">{{ number(appearNote.renoteCount) }}</p>
@@ -484,10 +484,10 @@ useTooltip(quoteButton, async (showing) => {
 	});
 });
 
-function boostVisibility() {
+function boostVisibility(forceMenu: boolean = false) {
 	if (renoting) return;
 
-	if (!defaultStore.state.showVisibilitySelectorOnBoost) {
+	if (!defaultStore.state.showVisibilitySelectorOnBoost && !forceMenu) {
 		renote(defaultStore.state.visibilityOnBoost);
 	} else {
 		os.popupMenu(boostMenuItems(appearNote, renote), renoteButton.value);

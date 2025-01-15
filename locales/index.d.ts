@@ -10806,6 +10806,10 @@ export interface Locale extends ILocale {
      */
     "date": string;
     /**
+     * Boost (hold Shift for visibility menu)
+     */
+    "renoteShift": string;
+    /**
      * Quoted.
      */
     "quoted": string;

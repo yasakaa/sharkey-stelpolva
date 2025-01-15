@@ -129,6 +129,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<button
 					v-if="canRenote"
 					ref="renoteButton"
+					v-tooltip="renoted ? i18n.ts.unrenote : (!defaultStore.state.showVisibilitySelectorOnBoost ? i18n.ts.renoteShift : i18n.ts.renote)"
 					:class="$style.footerButton"
 					class="_button"
 					:style="renoted ? 'color: var(--MI_THEME-accent) !important;' : ''"

@@ -230,7 +230,7 @@ export class MfmService {
 					break;
 				}
 
-				case 'rp': break
+				case 'rp': break;
 				case 'rt': {
 					appendChildren(node.childNodes);
 					break;
@@ -263,7 +263,7 @@ export class MfmService {
 							(note that the `rp` are to be ignored, they only exist
 							for browsers who don't understand ruby)
 						*/
-						let nonRtNodes=[];
+						let nonRtNodes = [];
 						// scan children, ignore `rp`, split on `rt`
 						for (const child of node.childNodes) {
 							if (treeAdapter.isTextNode(child)) {
@@ -273,16 +273,16 @@ export class MfmService {
 							if (!treeAdapter.isElementNode(child)) {
 								continue;
 							}
-							if (child.nodeName == 'rp') {
+							if (child.nodeName === 'rp') {
 								continue;
 							}
-							if (child.nodeName == 'rt') {
+							if (child.nodeName === 'rt') {
 								text += '$[ruby $[group ';
 								appendChildren(nonRtNodes);
 								text += '] ';
 								analyze(child);
 								text += '] ';
-								nonRtNodes=[];
+								nonRtNodes = [];
 								continue;
 							}
 							nonRtNodes.push(child);

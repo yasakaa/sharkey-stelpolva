@@ -11526,6 +11526,14 @@ export interface Locale extends ILocale {
          */
         "backgroundDescription": string;
         /**
+         * Border
+         */
+        "border": string;
+        /**
+         * Draw a border around the content.
+         */
+        "borderDescription": string;
+        /**
          * Plain
          */
         "plain": string;

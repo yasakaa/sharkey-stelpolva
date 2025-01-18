@@ -45,6 +45,12 @@ describe('MfmService', () => {
 			const output = '<p><pre><code>&lt;p&gt;Hello, world!&lt;/p&gt;</code></pre></p>';
 			assert.equal(mfmService.toHtml(mfm.parse(input)), output);
 		});
+
+		test('ruby', () => {
+			const input = '$[ruby $[group *some* text] ignore me]';
+			const output = '<p><ruby><span><i>some</i> text</span><rp>(</rp><rt>ignore me</rt><rp>)</rp></ruby></p>';
+			assert.equal(mfmService.toHtml(mfm.parse(input)), output);
+		});
 	});
 
 	describe('fromHtml', () => {
@@ -114,6 +120,13 @@ describe('MfmService', () => {
 
 		test('hashtag', () => {
 			assert.deepStrictEqual(mfmService.fromHtml('<p>a <a href="https://example.com/tags/a">#a</a> d</p>', ['#a']), 'a #a d');
+		});
+
+		test('ruby', () => {
+			assert.deepStrictEqual(
+				mfmService.fromHtml('<ruby> <i>some</i> text <rp>(</rp><rt>ignore me</rt><rp>)</rp> and <rt>more</rt></ruby>'),
+				'$[ruby $[group  <i>some</i> text ] ignore me] $[ruby $[group  and ] more]'
+			);
 		});
 	});
 });

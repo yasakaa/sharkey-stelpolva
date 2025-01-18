@@ -230,6 +230,67 @@ export class MfmService {
 					break;
 				}
 
+				case 'rp': break
+				case 'rt': {
+					appendChildren(node.childNodes);
+					break;
+				}
+				case 'ruby': {
+					if (node.childNodes) {
+						/*
+							we get:
+							```
+							<ruby>
+							some text <rp>(</rp> <rt>annotation</rt> <rp>)</rp>
+							more text <rt>more annotation<rt>
+							</ruby>
+							```
+
+							and we want to produce:
+							```
+							$[ruby $[group some text] annotation]
+							$[ruby $[group more text] more annotation]
+							```
+
+							that `group` is a hack, because when the `ruby` render
+							sees just text inside the `$[ruby]`, it splits on
+							whitespace, considers the first "word" to be the main
+							content, and the rest the annotation
+
+							with that `group`, we force it to consider the whole
+							group as the main content
+
+							(note that the `rp` are to be ignored, they only exist
+							for browsers who don't understand ruby)
+						*/
+						let nonRtNodes=[];
+						// scan children, ignore `rp`, split on `rt`
+						for (const child of node.childNodes) {
+							if (treeAdapter.isTextNode(child)) {
+								nonRtNodes.push(child);
+								continue;
+							}
+							if (!treeAdapter.isElementNode(child)) {
+								continue;
+							}
+							if (child.nodeName == 'rp') {
+								continue;
+							}
+							if (child.nodeName == 'rt') {
+								text += '$[ruby $[group ';
+								appendChildren(nonRtNodes);
+								text += '] ';
+								analyze(child);
+								text += '] ';
+								nonRtNodes=[];
+								continue;
+							}
+							nonRtNodes.push(child);
+						}
+					}
+					break;
+				}
+
 				default:	// includes inline elements
 				{
 					appendChildren(node.childNodes);
@@ -346,6 +407,12 @@ export class MfmService {
 							rubyEl.appendChild(rpEndEl);
 							return rubyEl;
 						}
+					}
+
+					case 'group': { // this is mostly a hack for `ruby`
+						const el = doc.createElement('span');
+						appendChildren(node.children, el);
+						return el;
 					}
 
 					default: {

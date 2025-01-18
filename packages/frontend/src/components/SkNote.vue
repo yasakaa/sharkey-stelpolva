@@ -239,7 +239,7 @@ import { getNoteSummary } from '@/scripts/get-note-summary.js';
 import MkRippleEffect from '@/components/MkRippleEffect.vue';
 import { showMovedDialog } from '@/scripts/show-moved-dialog.js';
 import { useRouter } from '@/router/supplier.js';
-import { boostMenuItems, type Visibility } from '@/scripts/boost-quote.js';
+import { boostMenuItems, type Visibility, computeRenoteTooltip } from '@/scripts/boost-quote.js';
 import { isEnabledUrlPreview } from '@/instance.js';
 import { type Keymap } from '@/scripts/hotkey.js';
 import { focusPrev, focusNext } from '@/scripts/focus.js';
@@ -334,10 +334,7 @@ const defaultLike = computed(() => defaultStore.state.like ? defaultStore.state.
 const animated = computed(() => parsed.value ? checkAnimationFromMfm(parsed.value) : null);
 const allowAnim = ref(defaultStore.state.advancedMfm && defaultStore.state.animatedMfm ? true : false);
 
-const renoteTooltip = computed(() => {
-	if (renoted.value) return i18n.ts.unrenote;
-	return defaultStore.state.showVisibilitySelectorOnBoost ? i18n.ts.renote : i18n.ts.renoteShift;
-});
+const renoteTooltip = computeRenoteTooltip(renoted);
 
 const pleaseLoginContext = computed<OpenOnRemoteOptions>(() => ({
 	type: 'lookup',

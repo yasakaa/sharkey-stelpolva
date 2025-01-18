@@ -270,6 +270,7 @@ _profile:
   changeBackground: "Change background"
   updateBackground: "Update background"
   removeBackground: "Remove background"
+  listenbrainz: "ListenBrainz username"
 _timelines:
   bubble: "Bubble"
 _pages:

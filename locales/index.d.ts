@@ -9020,6 +9020,10 @@ export interface Locale extends ILocale {
          * Remove background
          */
         "removeBackground": string;
+        /**
+         * ListenBrainz username
+         */
+        "listenbrainz": string;
     };
     "_exportOrImport": {
         /**

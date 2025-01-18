@@ -431,7 +431,7 @@ const preview_center = ref(
 );
 const preview_inlineCode = ref('`<: "Hello, world!"`');
 const preview_blockCode = ref(
-	'```\n~ (#i, 100) {\n\t<: ? ((i % 15) = 0) "FizzBuzz"\n\t\t.? ((i % 3) = 0) "Fizz"\n\t\t.? ((i % 5) = 0) "Buzz"\n\t\t. i\n}\n```',
+	'```ai\n~ (#i, 100) {\n\t<: ? ((i % 15) = 0) "FizzBuzz"\n\t\t.? ((i % 3) = 0) "Fizz"\n\t\t.? ((i % 5) = 0) "Buzz"\n\t\t. i\n}\n```',
 );
 const preview_inlineMath = ref(
 	'\\(x= \\frac{-b\' \\pm \\sqrt{(b\')^2-ac}}{a}\\)',

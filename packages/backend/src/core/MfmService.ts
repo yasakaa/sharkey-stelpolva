@@ -409,7 +409,9 @@ export class MfmService {
 						}
 					}
 
-					case 'group': { // this is mostly a hack for `ruby`
+					// hack for ruby, should never be needed because we should
+					// never send this out to other instances
+					case 'group': {
 						const el = doc.createElement('span');
 						appendChildren(node.children, el);
 						return el;
@@ -593,11 +595,65 @@ export class MfmService {
 			},
 
 			async fn(node) {
-				const el = doc.createElement('span');
-				el.textContent = '*';
-				await appendChildren(node.children, el);
-				el.textContent += '*';
-				return el;
+				switch (node.props.name) {
+					case 'group': { // hack for ruby
+						const el = doc.createElement('span');
+						await appendChildren(node.children, el);
+						return el;
+					}
+					case 'ruby': {
+						if (node.children.length === 1) {
+							const child = node.children[0];
+							const text = child.type === 'text' ? child.props.text : '';
+							const rubyEl = doc.createElement('ruby');
+							const rtEl = doc.createElement('rt');
+
+							const rpStartEl = doc.createElement('rp');
+							rpStartEl.appendChild(doc.createTextNode('('));
+							const rpEndEl = doc.createElement('rp');
+							rpEndEl.appendChild(doc.createTextNode(')'));
+
+							rubyEl.appendChild(doc.createTextNode(text.split(' ')[0]));
+							rtEl.appendChild(doc.createTextNode(text.split(' ')[1]));
+							rubyEl.appendChild(rpStartEl);
+							rubyEl.appendChild(rtEl);
+							rubyEl.appendChild(rpEndEl);
+							return rubyEl;
+						} else {
+							const rt = node.children.at(-1);
+
+							if (!rt) {
+								const el = doc.createElement('span');
+								await appendChildren(node.children, el);
+								return el;
+							}
+
+							const text = rt.type === 'text' ? rt.props.text : '';
+							const rubyEl = doc.createElement('ruby');
+							const rtEl = doc.createElement('rt');
+
+							const rpStartEl = doc.createElement('rp');
+							rpStartEl.appendChild(doc.createTextNode('('));
+							const rpEndEl = doc.createElement('rp');
+							rpEndEl.appendChild(doc.createTextNode(')'));
+
+							await appendChildren(node.children.slice(0, node.children.length - 1), rubyEl);
+							rtEl.appendChild(doc.createTextNode(text.trim()));
+							rubyEl.appendChild(rpStartEl);
+							rubyEl.appendChild(rtEl);
+							rubyEl.appendChild(rpEndEl);
+							return rubyEl;
+						}
+					}
+
+					default: {
+						const el = doc.createElement('span');
+						el.textContent = '*';
+						await appendChildren(node.children, el);
+						el.textContent += '*';
+						return el;
+					}
+				}
 			},
 
 			blockCode(node) {

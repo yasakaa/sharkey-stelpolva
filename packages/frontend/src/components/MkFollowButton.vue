@@ -7,7 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 <button
 	class="_button"
 	:class="[$style.root, { [$style.wait]: wait, [$style.active]: isFollowing || hasPendingFollowRequestFromYou, [$style.full]: full, [$style.large]: large }]"
-	:disabled="wait"
+	:disabled="wait || disabled"
 	@click="onClick"
 >
 	<template v-if="!wait">
@@ -51,9 +51,11 @@ const props = withDefaults(defineProps<{
 	user: Misskey.entities.UserDetailed,
 	full?: boolean,
 	large?: boolean,
+	disabled?: boolean,
 }>(), {
 	full: false,
 	large: false,
+	disabled: false,
 });
 
 const emit = defineEmits<{

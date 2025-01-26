@@ -39,9 +39,12 @@ SPDX-License-Identifier: AGPL-3.0-only
 							<li v-if="user.isBlocking">{{ i18n.ts.blocked }}</li>
 							<li v-if="user.isBlocked && $i.isModerator">{{ i18n.ts.blockingYou }}</li>
 						</ul>
-						<div class="actions">
-							<button class="menu _button" @click="menu"><i class="ti ti-dots"></i></button>
-							<MkFollowButton v-if="$i?.id != user.id" v-model:user="user" :inline="true" :transparent="false" :full="true" class="koudoku"/>
+						<div :class="$style.actions" class="actions">
+							<button :class="$style.actionsMenu" class="menu _button" @click="menu"><i class="ti ti-dots"></i></button>
+							<MkFollowButton :class="$style.actionsFollow" v-if="$i?.id != user.id" v-model:user="user" :disabled="disableFollowControls" :inline="true" :transparent="false" :full="true" class="koudoku" @update:wait="d => disableFollowControls = d" />
+							<div v-if="user.hasPendingFollowRequestToYou" :class="$style.actionsBanner" >{{ i18n.ts.receiveFollowRequest }}</div>
+							<MkButton v-if="user.hasPendingFollowRequestToYou" :class="$style.actionsAccept" :disabled="disableFollowControls" :inline="true" :transparent="false" :full="true" rounded primary @click="acceptFollowRequest"><i class="ti ti-check"/> {{ i18n.ts.accept }}</MkButton>
+							<MkButton v-if="user.hasPendingFollowRequestToYou" :class="$style.actionsReject" :disabled="disableFollowControls" :inline="true" :transparent="false" :full="true" rounded danger @click="rejectFollowRequest"><i class="ti ti-x"/> {{ i18n.ts.reject }}</MkButton>
 						</div>
 					</div>
 					<MkAvatar class="avatar" :user="user" indicator/>
@@ -382,6 +385,29 @@ async function updateMemo() {
 		userId: props.user.id,
 	});
 	isEditingMemo.value = false;
+}
+
+// Set true to disable the follow / follow request controls
+const disableFollowControls = ref(false);
+
+async function acceptFollowRequest() {
+	try {
+		disableFollowControls.value = true;
+		await os.apiWithDialog('following/requests/accept', { userId: user.value.id });
+		user.value = await os.apiWithDialog('users/show', { userId: user.value.id });
+	} finally {
+		disableFollowControls.value = false;
+	}
+}
+
+async function rejectFollowRequest() {
+	try {
+		disableFollowControls.value = true;
+		await os.apiWithDialog('following/requests/reject', { userId: user.value.id });
+		user.value = await os.apiWithDialog('users/show', { userId: user.value.id });
+	} finally {
+		disableFollowControls.value = false;
+	}
 }
 
 watch([props.user], () => {
@@ -859,5 +885,41 @@ onUnmounted(() => {
 	> :not(:first-child) {
 		margin-left: 8px;
 	}
+}
+
+.actions {
+	display: grid;
+	grid-template-rows: min-content min-content min-content;
+	grid-template-columns: min-content auto 1fr;
+	grid-template-areas:
+		"menu follow follow"
+		"banner banner banner"
+		"accept accept reject";
+}
+
+.actionsMenu {
+	grid-area: menu;
+	width: unset;
+}
+
+.actionsFollow {
+	grid-area: follow;
+	margin-left: 8px;
+}
+
+.actionsBanner {
+	grid-area: banner;
+	justify-self: center;
+	margin-top: 8px;
+	margin-bottom: 4px;
+}
+
+.actionsAccept {
+	grid-area: accept;
+}
+
+.actionsReject {
+	grid-area: reject;
+	margin-left: 8px;
 }
 </style>

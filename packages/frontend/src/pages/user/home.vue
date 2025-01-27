@@ -41,8 +41,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 						</ul>
 						<div :class="$style.actions" class="actions">
 							<button :class="$style.actionsMenu" class="menu _button" @click="menu"><i class="ti ti-dots"></i></button>
-							<MkFollowButton :class="$style.actionsFollow" v-if="$i?.id != user.id" v-model:user="user" :disabled="disableFollowControls" :inline="true" :transparent="false" :full="true" class="koudoku" @update:wait="d => disableFollowControls = d" />
-							<div v-if="user.hasPendingFollowRequestToYou" :class="$style.actionsBanner" >{{ i18n.ts.receiveFollowRequest }}</div>
+							<MkFollowButton v-if="$i?.id != user.id" v-model:user="user" :class="$style.actionsFollow" :disabled="disableFollowControls" :inline="true" :transparent="false" :full="true" class="koudoku" @update:wait="d => disableFollowControls = d"/>
+							<div v-if="user.hasPendingFollowRequestToYou" :class="$style.actionsBanner">{{ i18n.ts.receiveFollowRequest }}</div>
 							<MkButton v-if="user.hasPendingFollowRequestToYou" :class="$style.actionsAccept" :disabled="disableFollowControls" :inline="true" :transparent="false" :full="true" rounded primary @click="acceptFollowRequest"><i class="ti ti-check"/> {{ i18n.ts.accept }}</MkButton>
 							<MkButton v-if="user.hasPendingFollowRequestToYou" :class="$style.actionsReject" :disabled="disableFollowControls" :inline="true" :transparent="false" :full="true" rounded danger @click="rejectFollowRequest"><i class="ti ti-x"/> {{ i18n.ts.reject }}</MkButton>
 						</div>
@@ -223,8 +223,8 @@ import MkSparkle from '@/components/MkSparkle.vue';
 
 const MkNote = defineAsyncComponent(() =>
 	defaultStore.state.noteDesign === 'sharkey'
-	? import('@/components/SkNote.vue')
-	: import('@/components/MkNote.vue'),
+		? import('@/components/SkNote.vue')
+		: import('@/components/MkNote.vue'),
 );
 
 function calcAge(birthdate: string): number {

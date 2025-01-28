@@ -10219,6 +10219,10 @@ export interface Locale extends ILocale {
          */
         "decline": string;
         /**
+         * Set content warning for user
+         */
+        "setMandatoryCW": string;
+        /**
          * Set remote instance as NSFW
          */
         "setRemoteInstanceNSFW": string;

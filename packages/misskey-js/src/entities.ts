@@ -118,8 +118,8 @@ export type ModerationLog = {
 	type: 'deleteUserAnnouncement';
 	info: ModerationLogPayloads['deleteUserAnnouncement'];
 } | {
-	type: 'resetPassword';
-	info: ModerationLogPayloads['resetPassword'];
+	type: 'setMandatoryCW';
+	info: ModerationLogPayloads['setMandatoryCW'];
 } | {
 	type: 'setRemoteInstanceNSFW';
 	info: ModerationLogPayloads['setRemoteInstanceNSFW'];

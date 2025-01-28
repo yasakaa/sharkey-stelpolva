@@ -304,6 +304,7 @@ _abuseReport:
 _moderationLogTypes:
   approve: "Approved"
   decline: "Declined"
+  setMandatoryCW: "Set content warning for user"
   setRemoteInstanceNSFW: "Set remote instance as NSFW"
   unsetRemoteInstanceNSFW: "Set remote instance as NSFW"
   rejectRemoteInstanceReports: "Rejected reports from remote instance"

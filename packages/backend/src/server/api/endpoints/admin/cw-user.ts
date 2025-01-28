@@ -9,6 +9,7 @@ import type { UsersRepository } from '@/models/_.js';
 import { DI } from '@/di-symbols.js';
 import { CacheService } from '@/core/CacheService.js';
 import { GlobalEventService } from '@/core/GlobalEventService.js';
+import { ModerationLogService } from '@/core/ModerationLogService.js';
 
 export const meta = {
 	tags: ['admin'],
@@ -34,17 +35,30 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 		private readonly usersRepository: UsersRepository,
 
 		private readonly globalEventService: GlobalEventService,
+		private readonly cacheService: CacheService,
+		private readonly moderationLogService: ModerationLogService,
 	) {
-		super(meta, paramDef, async ps => {
-			const result = await this.usersRepository.update(ps.userId, {
+		super(meta, paramDef, async (ps, me) => {
+			const user = await this.cacheService.findUserById(ps.userId);
+
+			// Skip if there's nothing to do
+			if (user.mandatoryCW === ps.cw) return;
+
+			// Log event first.
+			// This ensures that we don't "lose" the log if an error occurs
+			await this.moderationLogService.log(me, 'setMandatoryCW', {
+				newCW: ps.cw,
+				oldCW: user.mandatoryCW,
+				userId: user.id,
+				userUsername: user.username,
+				userHost: user.host,
+			});
+
+			await this.usersRepository.update(ps.userId, {
 				// Collapse empty strings to null
 				// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 				mandatoryCW: ps.cw || null,
 			});
-
-			if (result.affected && result.affected < 1) {
-				throw new Error('No such user');
-			}
 
 			// Synchronize caches and other processes
 			this.globalEventService.publishInternalEvent('localUserUpdated', { id: ps.userId });

@@ -53,7 +53,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 					</MkKeyValue>
 				</div>
 
-				<MkTextarea v-model="moderationNote" manualSave>
+				<MkTextarea v-model="moderationNote" manualSave @update:modelValue="onModerationNoteChanged">
 					<template #label>{{ i18n.ts.moderationNote }}</template>
 					<template #caption>{{ i18n.ts.moderationNoteDescription }}</template>
 				</MkTextarea>
@@ -83,7 +83,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 						<MkSwitch v-if="!isSystem" v-model="suspended" @update:modelValue="toggleSuspend">{{ i18n.ts.suspend }}</MkSwitch>
 						<MkSwitch v-model="markedAsNSFW" @update:modelValue="toggleNSFW">{{ i18n.ts.markAsNSFW }}</MkSwitch>
 
-						<MkInput v-model="mandatoryCW" type="text" manualSave>
+						<MkInput v-model="mandatoryCW" type="text" manualSave @update:modelValue="onMandatoryCWChanged">
 							<template #label>{{ i18n.ts.mandatoryCW }}</template>
 							<template #caption>{{ i18n.ts.mandatoryCWDescription }}</template>
 						</MkInput>
@@ -289,24 +289,21 @@ function createFetcher() {
 		suspended.value = info.value.isSuspended;
 		moderationNote.value = info.value.moderationNote;
 		mandatoryCW.value = info.value.mandatoryCW;
-
-		// These watch statements work because they're lazy-initialized.
-		// The watched values are already set, so they don't trigger any "change" just from refreshing the user.
-
-		watch(mandatoryCW, async () => {
-			await os.apiWithDialog('admin/cw-user', { userId: props.userId, cw: mandatoryCW.value });
-			refreshUser();
-		});
-
-		watch(moderationNote, async () => {
-			await misskeyApi('admin/update-user-note', { userId: user.value.id, text: moderationNote.value });
-			await refreshUser();
-		});
 	});
 }
 
 function refreshUser() {
 	init.value = createFetcher();
+}
+
+async function onMandatoryCWChanged(value: string) {
+	await os.apiWithDialog('admin/cw-user', { userId: props.userId, cw: value });
+	refreshUser();
+}
+
+async function onModerationNoteChanged(value: string) {
+	await misskeyApi('admin/update-user-note', { userId: props.userId, text: value });
+	refreshUser();
 }
 
 async function updateRemoteUser() {

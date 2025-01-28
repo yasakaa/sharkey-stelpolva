@@ -471,3 +471,6 @@ _noteSearch:
     flash: "Flash"
 
 id: "ID"
+
+mandatoryCW: "Force content warning"
+mandatoryCWDescription: "Applies a content warning to all posts created by this user. If the post already has a CW, then this is appended to the end."

@@ -234,6 +234,7 @@ export class NoteCreateService implements OnApplicationShutdown {
 		host: MiUser['host'];
 		isBot: MiUser['isBot'];
 		noindex: MiUser['noindex'];
+		mandatoryCW: MiUser['mandatoryCW'];
 	}, data: Option, silent = false): Promise<MiNote> {
 		// チャンネル外にリプライしたら対象のスコープに合わせる
 		// (クライアントサイドでやっても良い処理だと思うけどとりあえずサーバーサイドで)
@@ -368,6 +369,15 @@ export class NoteCreateService implements OnApplicationShutdown {
 			data.cw = null;
 		}
 
+		// Apply mandatory CW, if applicable
+		if (user.mandatoryCW) {
+			if (data.cw) {
+				data.cw += `, ${user.mandatoryCW}`;
+			} else {
+				data.cw = user.mandatoryCW;
+			}
+		}
+
 		let tags = data.apHashtags;
 		let emojis = data.apEmojis;
 		let mentionedUsers = data.apMentions;
@@ -441,6 +451,7 @@ export class NoteCreateService implements OnApplicationShutdown {
 		host: MiUser['host'];
 		isBot: MiUser['isBot'];
 		noindex: MiUser['noindex'];
+		mandatoryCW: MiUser['mandatoryCW'];
 	}, data: Option): Promise<MiNote> {
 		return this.create(user, data, true);
 	}

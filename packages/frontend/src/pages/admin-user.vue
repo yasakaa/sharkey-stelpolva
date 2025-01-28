@@ -83,6 +83,11 @@ SPDX-License-Identifier: AGPL-3.0-only
 						<MkSwitch v-if="!isSystem" v-model="suspended" @update:modelValue="toggleSuspend">{{ i18n.ts.suspend }}</MkSwitch>
 						<MkSwitch v-model="markedAsNSFW" @update:modelValue="toggleNSFW">{{ i18n.ts.markAsNSFW }}</MkSwitch>
 
+						<MkInput v-model="mandatoryCW" type="text" manualSave>
+							<template #label>{{ i18n.ts.mandatoryCW }}</template>
+							<template #caption>{{ i18n.ts.mandatoryCWDescription }}</template>
+						</MkInput>
+
 						<div>
 							<MkButton v-if="user.host == null && !isSystem" inline style="margin-right: 8px;" @click="resetPassword"><i class="ti ti-key"></i> {{ i18n.ts.resetPassword }}</MkButton>
 						</div>
@@ -222,6 +227,7 @@ import { i18n } from '@/i18n.js';
 import { iAmAdmin, $i, iAmModerator } from '@/account.js';
 import MkRolePreview from '@/components/MkRolePreview.vue';
 import MkPagination from '@/components/MkPagination.vue';
+import MkInput from '@/components/MkInput.vue';
 
 const props = withDefaults(defineProps<{
 	userId: string;
@@ -243,6 +249,7 @@ const approved = ref(false);
 const suspended = ref(false);
 const markedAsNSFW = ref(false);
 const moderationNote = ref('');
+const mandatoryCW = ref<string | null>(null);
 const isSystem = computed(() => info.value?.isSystem ?? false);
 const filesPagination = {
 	endpoint: 'admin/drive/files' as const,
@@ -281,6 +288,15 @@ function createFetcher() {
 		markedAsNSFW.value = info.value.alwaysMarkNsfw;
 		suspended.value = info.value.isSuspended;
 		moderationNote.value = info.value.moderationNote;
+		mandatoryCW.value = info.value.mandatoryCW;
+
+		// These watch statements work because they're lazy-initialized.
+		// The watched values are already set, so they don't trigger any "change" just from refreshing the user.
+
+		watch(mandatoryCW, async () => {
+			await os.apiWithDialog('admin/cw-user', { userId: props.userId, cw: mandatoryCW.value });
+			refreshUser();
+		});
 
 		watch(moderationNote, async () => {
 			await misskeyApi('admin/update-user-note', { userId: user.value.id, text: moderationNote.value });

@@ -83,6 +83,7 @@ export const permissions = [
 	'write:admin:decline-user',
 	'write:admin:nsfw-user',
 	'write:admin:unnsfw-user',
+	'write:admin:cw-user',
 	'write:admin:silence-user',
 	'write:admin:unsilence-user',
 	'write:admin:unset-user-avatar',

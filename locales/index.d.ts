@@ -10215,6 +10215,10 @@ export interface Locale extends ILocale {
          */
         "approve": string;
         /**
+         * Declined
+         */
+        "decline": string;
+        /**
          * Set remote instance as NSFW
          */
         "setRemoteInstanceNSFW": string;

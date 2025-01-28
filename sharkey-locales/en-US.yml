@@ -303,6 +303,7 @@ _abuseReport:
         webhook: "Send a notification to the SystemWebhook when an abuse report is received or resolved."
 _moderationLogTypes:
   approve: "Approved"
+  decline: "Declined"
   setRemoteInstanceNSFW: "Set remote instance as NSFW"
   unsetRemoteInstanceNSFW: "Set remote instance as NSFW"
   rejectRemoteInstanceReports: "Rejected reports from remote instance"

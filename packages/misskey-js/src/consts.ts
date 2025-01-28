@@ -125,6 +125,7 @@ export const moderationLogTypes = [
 	'updateServerSettings',
 	'suspend',
 	'approve',
+	'decline',
 	'unsuspend',
 	'updateUserNote',
 	'addCustomEmoji',
@@ -146,8 +147,12 @@ export const moderationLogTypes = [
 	'deleteGlobalAnnouncement',
 	'deleteUserAnnouncement',
 	'resetPassword',
+	'setRemoteInstanceNSFW',
+	'unsetRemoteInstanceNSFW',
 	'suspendRemoteInstance',
 	'unsuspendRemoteInstance',
+	'rejectRemoteInstanceReports',
+	'acceptRemoteInstanceReports',
 	'updateRemoteInstanceNote',
 	'markSensitiveDriveFile',
 	'unmarkSensitiveDriveFile',
@@ -187,7 +192,14 @@ export const reversiUpdateKeys = [
 
 export type ReversiUpdateKey = typeof reversiUpdateKeys[number];
 
-type AvatarDecoration = UserLite['avatarDecorations'][number];
+interface AvatarDecoration {
+	id: string;
+	updatedAt: string | null;
+	url: string;
+	name: string;
+	description: string;
+	roleIdsThatCanBeUsedThisDecoration: string[];
+}
 
 type ReceivedAbuseReport = {
 	reportId: AbuseReportNotificationRecipient['id'];
@@ -323,11 +335,27 @@ export type ModerationLogPayloads = {
 		userUsername: string;
 		userHost: string | null;
 	};
+	setRemoteInstanceNSFW: {
+		id: string;
+		host: string;
+	};
+	unsetRemoteInstanceNSFW: {
+		id: string;
+		host: string;
+	};
 	suspendRemoteInstance: {
 		id: string;
 		host: string;
 	};
 	unsuspendRemoteInstance: {
+		id: string;
+		host: string;
+	};
+	rejectRemoteInstanceReports: {
+		id: string;
+		host: string;
+	};
+	acceptRemoteInstanceReports: {
 		id: string;
 		host: string;
 	};

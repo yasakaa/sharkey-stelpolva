@@ -93,7 +93,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<span v-else-if="log.type === 'deleteFlash'">: @{{ log.info.flashUserUsername }}</span>
 		<span v-else-if="log.type === 'deleteGalleryPost'">: @{{ log.info.postUserUsername }}</span>
 	</template>
-	<template #icon>
+	<template v-if="log.user" #icon>
 		<MkAvatar :user="log.user" :class="$style.avatar"/>
 	</template>
 	<template #suffix>

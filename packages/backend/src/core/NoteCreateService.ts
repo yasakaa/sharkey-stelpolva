@@ -371,10 +371,10 @@ export class NoteCreateService implements OnApplicationShutdown {
 
 		// Apply mandatory CW, if applicable
 		if (user.mandatoryCW) {
-			if (data.cw) {
-				data.cw += `, ${user.mandatoryCW}`;
-			} else {
+			if (!data.cw) {
 				data.cw = user.mandatoryCW;
+			} else if (!data.cw.includes(user.mandatoryCW)) {
+				data.cw += `, ${user.mandatoryCW}`;
 			}
 		}
 

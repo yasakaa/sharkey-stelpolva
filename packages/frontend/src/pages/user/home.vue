@@ -41,7 +41,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 						</ul>
 						<div :class="$style.actions" class="actions">
 							<button :class="$style.actionsMenu" class="menu _button" @click="menu"><i class="ti ti-dots"></i></button>
-							<MkFollowButton v-if="$i?.id != user.id" v-model:user="user" :class="$style.actionsFollow" :disabled="disableFollowControls" :inline="true" :transparent="false" :full="true" class="koudoku" @update:wait="d => disableFollowControls = d"/>
+							<MkFollowButton v-if="$i?.id != user.id" v-model:user="user" :class="$style.actionsFollow" :disabled="disableFollowControls" :inline="true" :transparent="false" :full="true" class="koudoku" @update:wait="onFollowButtonDisabledChanged"/>
 							<div v-if="hasFollowRequest" :class="$style.actionsBanner">{{ i18n.ts.receiveFollowRequest }}</div>
 							<MkButton v-if="hasFollowRequest" :class="$style.actionsAccept" :disabled="disableFollowControls" :inline="true" :transparent="false" :full="true" rounded primary @click="acceptFollowRequest"><i class="ti ti-check"/> {{ i18n.ts.accept }}</MkButton>
 							<MkButton v-if="hasFollowRequest" :class="$style.actionsReject" :disabled="disableFollowControls" :inline="true" :transparent="false" :full="true" rounded danger @click="rejectFollowRequest"><i class="ti ti-x"/> {{ i18n.ts.reject }}</MkButton>
@@ -391,6 +391,17 @@ async function updateMemo() {
 const disableFollowControls = ref(false);
 const hasFollowRequest = computed(() => user.value.hasPendingFollowRequestToYou);
 const useTallBanner = computed(() => hasFollowRequest.value && narrow.value);
+
+async function onFollowButtonDisabledChanged(disabled: boolean) {
+	try {
+		// Refresh the UI after MkFollowButton changes the follow relation
+		if (!disabled) {
+			user.value = await os.apiWithDialog('users/show', { userId: user.value.id });
+		}
+	} finally {
+		disableFollowControls.value = disabled;
+	}
+}
 
 async function acceptFollowRequest() {
 	try {

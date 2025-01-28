@@ -15,7 +15,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<MkRemoteCaution v-if="user.host != null" :href="user.url ?? user.uri!" class="warn"/>
 
 				<div :key="user.id" class="main _panel">
-					<div class="banner-container" :style="style">
+					<div class="banner-container" :class="{ [$style.bannerContainerTall]: useTallBanner }" :style="style">
 						<div ref="bannerEl" class="banner" :style="style"></div>
 						<div class="fade"></div>
 						<div class="title">
@@ -42,12 +42,12 @@ SPDX-License-Identifier: AGPL-3.0-only
 						<div :class="$style.actions" class="actions">
 							<button :class="$style.actionsMenu" class="menu _button" @click="menu"><i class="ti ti-dots"></i></button>
 							<MkFollowButton v-if="$i?.id != user.id" v-model:user="user" :class="$style.actionsFollow" :disabled="disableFollowControls" :inline="true" :transparent="false" :full="true" class="koudoku" @update:wait="d => disableFollowControls = d"/>
-							<div v-if="user.hasPendingFollowRequestToYou" :class="$style.actionsBanner">{{ i18n.ts.receiveFollowRequest }}</div>
-							<MkButton v-if="user.hasPendingFollowRequestToYou" :class="$style.actionsAccept" :disabled="disableFollowControls" :inline="true" :transparent="false" :full="true" rounded primary @click="acceptFollowRequest"><i class="ti ti-check"/> {{ i18n.ts.accept }}</MkButton>
-							<MkButton v-if="user.hasPendingFollowRequestToYou" :class="$style.actionsReject" :disabled="disableFollowControls" :inline="true" :transparent="false" :full="true" rounded danger @click="rejectFollowRequest"><i class="ti ti-x"/> {{ i18n.ts.reject }}</MkButton>
+							<div v-if="hasFollowRequest" :class="$style.actionsBanner">{{ i18n.ts.receiveFollowRequest }}</div>
+							<MkButton v-if="hasFollowRequest" :class="$style.actionsAccept" :disabled="disableFollowControls" :inline="true" :transparent="false" :full="true" rounded primary @click="acceptFollowRequest"><i class="ti ti-check"/> {{ i18n.ts.accept }}</MkButton>
+							<MkButton v-if="hasFollowRequest" :class="$style.actionsReject" :disabled="disableFollowControls" :inline="true" :transparent="false" :full="true" rounded danger @click="rejectFollowRequest"><i class="ti ti-x"/> {{ i18n.ts.reject }}</MkButton>
 						</div>
 					</div>
-					<MkAvatar class="avatar" :user="user" indicator/>
+					<MkAvatar class="avatar" :class="{ [$style.avatarTall]: useTallBanner }" :user="user" indicator/>
 					<div class="title">
 						<MkUserName :user="user" :nowrap="false" class="name"/>
 						<div class="bottom">
@@ -389,6 +389,8 @@ async function updateMemo() {
 
 // Set true to disable the follow / follow request controls
 const disableFollowControls = ref(false);
+const hasFollowRequest = computed(() => user.value.hasPendingFollowRequestToYou);
+const useTallBanner = computed(() => hasFollowRequest.value && narrow.value);
 
 async function acceptFollowRequest() {
 	try {
@@ -921,5 +923,13 @@ onUnmounted(() => {
 .actionsReject {
 	grid-area: reject;
 	margin-left: 8px;
+}
+
+.bannerContainerTall {
+	height: 200px !important;
+}
+
+.avatarTall {
+	top: 150px !important;
 }
 </style>

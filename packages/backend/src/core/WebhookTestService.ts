@@ -99,6 +99,7 @@ function generateDummyUser(override?: Partial<MiUser>): MiUser {
 		signupReason: null,
 		noindex: false,
 		enableRss: true,
+		mandatoryCW: null,
 		...override,
 	};
 }

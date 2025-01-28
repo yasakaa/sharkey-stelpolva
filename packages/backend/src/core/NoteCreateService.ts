@@ -486,10 +486,10 @@ export class NoteCreateService implements OnApplicationShutdown {
 
 		// should really not happen, but better safe than sorry
 		if (data.reply?.id === insert.id) {
-			throw new Error("A note can't reply to itself");
+			throw new Error('A note can\'t reply to itself');
 		}
 		if (data.renote?.id === insert.id) {
-			throw new Error("A note can't renote itself");
+			throw new Error('A note can\'t renote itself');
 		}
 
 		if (data.uri != null) insert.uri = data.uri;

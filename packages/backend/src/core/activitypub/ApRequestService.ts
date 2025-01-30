@@ -239,7 +239,18 @@ export class ApRequestService {
 			try {
 				document.documentElement.innerHTML = html;
 
-				const alternate = document.querySelector('head > link[rel="alternate"][type="application/activity+json"]');
+				// Search for any matching value in priority order:
+				// 1. Type=AP > Type=none > Type=anything
+				// 2. Alternate > Canonical
+				// 3. Page order (fallback)
+				const alternate =
+					document.querySelector('head > link[href][rel="alternate"][type="application/activity+json"]') ??
+					document.querySelector('head > link[href][rel="canonical"][type="application/activity+json"]') ??
+					document.querySelector('head > link[href][rel="alternate"]:not([type])') ??
+					document.querySelector('head > link[href][rel="canonical"]:not([type])') ??
+					document.querySelector('head > link[href][rel="alternate"]') ??
+					document.querySelector('head > link[href][rel="canonical"]');
+
 				if (alternate) {
 					const href = alternate.getAttribute('href');
 					if (href) {

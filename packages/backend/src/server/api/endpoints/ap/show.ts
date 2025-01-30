@@ -4,7 +4,6 @@
  */
 
 import { Inject, Injectable } from '@nestjs/common';
-import ms from 'ms';
 import { Endpoint } from '@/server/api/endpoint-base.js';
 import type { MiNote } from '@/models/Note.js';
 import type { MiLocalUser, MiUser } from '@/models/User.js';
@@ -26,9 +25,10 @@ export const meta = {
 	requireCredential: true,
 	kind: 'read:account',
 
+	// Up to 30 calls, then 1 per 1/2 second
 	limit: {
-		duration: ms('1minute'),
 		max: 30,
+		dripRate: 500,
 	},
 
 	errors: {

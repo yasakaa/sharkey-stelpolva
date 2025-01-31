@@ -83,6 +83,7 @@ import { MiBubbleGameRecord } from '@/models/BubbleGameRecord.js';
 import { MiReversiGame } from '@/models/ReversiGame.js';
 import { MiNoteSchedule } from '@/models/NoteSchedule.js';
 import { SkApInboxLog } from '@/models/SkApInboxLog.js';
+import { SkApFetchLog } from '@/models/SkApFetchLog.js';
 import { SkApContext } from '@/models/SkApContext.js';
 import type { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
@@ -132,6 +133,7 @@ export const miRepository = {
 export {
 	SkLatestNote,
 	SkApContext,
+	SkApFetchLog,
 	SkApInboxLog,
 	MiAbuseUserReport,
 	MiAbuseReportNotificationRecipient,
@@ -234,6 +236,7 @@ export type InstancesRepository = Repository<MiInstance> & MiRepository<MiInstan
 export type MetasRepository = Repository<MiMeta> & MiRepository<MiMeta>;
 export type LatestNotesRepository = Repository<SkLatestNote> & MiRepository<SkLatestNote>;
 export type ApContextsRepository = Repository<SkApContext> & MiRepository<SkApContext>;
+export type ApFetchLogsRepository = Repository<SkApFetchLog> & MiRepository<SkApFetchLog>;
 export type ApInboxLogsRepository = Repository<SkApInboxLog> & MiRepository<SkApInboxLog>;
 export type ModerationLogsRepository = Repository<MiModerationLog> & MiRepository<MiModerationLog>;
 export type MutingsRepository = Repository<MiMuting> & MiRepository<MiMuting>;

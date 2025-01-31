@@ -7,7 +7,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IsNull, Not } from 'typeorm';
 import type { MiLocalUser, MiRemoteUser } from '@/models/User.js';
 import { InstanceActorService } from '@/core/InstanceActorService.js';
-import type { NotesRepository, PollsRepository, NoteReactionsRepository, UsersRepository, FollowRequestsRepository, MiMeta } from '@/models/_.js';
+import type { NotesRepository, PollsRepository, NoteReactionsRepository, UsersRepository, FollowRequestsRepository, MiMeta, SkApFetchLog } from '@/models/_.js';
 import type { Config } from '@/config.js';
 import { HttpRequestService } from '@/core/HttpRequestService.js';
 import { DI } from '@/di-symbols.js';
@@ -17,7 +17,8 @@ import { LoggerService } from '@/core/LoggerService.js';
 import type Logger from '@/logger.js';
 import { fromTuple } from '@/misc/from-tuple.js';
 import { IdentifiableError } from '@/misc/identifiable-error.js';
-import { isCollectionOrOrderedCollection } from './type.js';
+import { ApLogService, calculateDurationSince, extractObjectContext } from '@/core/ApLogService.js';
+import { getNullableApId, isCollectionOrOrderedCollection } from './type.js';
 import { ApDbResolverService } from './ApDbResolverService.js';
 import { ApRendererService } from './ApRendererService.js';
 import { ApRequestService } from './ApRequestService.js';
@@ -43,6 +44,7 @@ export class Resolver {
 		private apRendererService: ApRendererService,
 		private apDbResolverService: ApDbResolverService,
 		private loggerService: LoggerService,
+		private readonly apLogService: ApLogService,
 		private recursionLimit = 256,
 	) {
 		this.history = new Set();
@@ -81,6 +83,44 @@ export class Resolver {
 			return value;
 		}
 
+		const host = this.utilityService.extractDbHost(value);
+		if (this.config.activityLogging.enabled && !this.utilityService.isSelfHost(host)) {
+			return await this._resolveLogged(value, host);
+		} else {
+			return await this._resolve(value, host);
+		}
+	}
+
+	private async _resolveLogged(requestUri: string, host: string): Promise<IObject> {
+		const startTime = process.hrtime.bigint();
+
+		const log = await this.apLogService.createFetchLog({
+			host: host,
+			requestUri,
+		});
+
+		try {
+			const result = await this._resolve(requestUri, host, log);
+
+			log.accepted = true;
+			log.result = 'ok';
+
+			return result;
+		} catch (err) {
+			log.accepted = false;
+			log.result = String(err);
+
+			throw err;
+		} finally {
+			log.duration = calculateDurationSince(startTime);
+
+			// Save or finalize asynchronously
+			this.apLogService.saveFetchLog(log)
+				.catch(err => this.logger.error('Failed to record AP object fetch:', err));
+		}
+	}
+
+	private async _resolve(value: string, host: string, log?: SkApFetchLog): Promise<IObject> {
 		if (value.includes('#')) {
 			// URLs with fragment parts cannot be resolved correctly because
 			// the fragment part does not get transmitted over HTTP(S).
@@ -98,7 +138,6 @@ export class Resolver {
 
 		this.history.add(value);
 
-		const host = this.utilityService.extractDbHost(value);
 		if (this.utilityService.isSelfHost(host)) {
 			return await this.resolveLocal(value);
 		}
@@ -114,6 +153,20 @@ export class Resolver {
 		const object = (this.user
 			? await this.apRequestService.signedGet(value, this.user) as IObject
 			: await this.httpRequestService.getActivityJson(value)) as IObject;
+
+		if (log) {
+			const { object: objectOnly, context, contextHash } = extractObjectContext(object);
+			const objectUri = getNullableApId(object);
+
+			if (objectUri) {
+				log.objectUri = objectUri;
+				log.host = this.utilityService.extractDbHost(objectUri);
+			}
+
+			log.object = objectOnly;
+			log.context = context;
+			log.contextHash = contextHash;
+		}
 
 		if (
 			Array.isArray(object['@context']) ?
@@ -232,6 +285,7 @@ export class ApResolverService {
 		private apRendererService: ApRendererService,
 		private apDbResolverService: ApDbResolverService,
 		private loggerService: LoggerService,
+		private readonly apLogService: ApLogService,
 	) {
 	}
 
@@ -252,6 +306,7 @@ export class ApResolverService {
 			this.apRendererService,
 			this.apDbResolverService,
 			this.loggerService,
+			this.apLogService,
 		);
 	}
 }

@@ -82,6 +82,7 @@ import {
 	MiWebhook,
 	NoteEdit,
 	SkApContext,
+	SkApFetchLog,
 	SkApInboxLog,
 } from './_.js';
 import type { DataSource } from 'typeorm';
@@ -131,6 +132,12 @@ const $latestNotesRepository: Provider = {
 const $apContextRepository: Provider = {
 	provide: DI.apContextsRepository,
 	useFactory: (db: DataSource) => db.getRepository(SkApContext).extend(miRepository as MiRepository<SkApContext>),
+	inject: [DI.db],
+};
+
+const $apFetchLogsRepository: Provider = {
+	provide: DI.apFetchLogsRepository,
+	useFactory: (db: DataSource) => db.getRepository(SkApFetchLog).extend(miRepository as MiRepository<SkApFetchLog>),
 	inject: [DI.db],
 };
 
@@ -541,6 +548,7 @@ const $noteScheduleRepository: Provider = {
 		$avatarDecorationsRepository,
 		$latestNotesRepository,
 		$apContextRepository,
+		$apFetchLogsRepository,
 		$apInboxLogsRepository,
 		$noteFavoritesRepository,
 		$noteThreadMutingsRepository,
@@ -617,6 +625,7 @@ const $noteScheduleRepository: Provider = {
 		$avatarDecorationsRepository,
 		$latestNotesRepository,
 		$apContextRepository,
+		$apFetchLogsRepository,
 		$apInboxLogsRepository,
 		$noteFavoritesRepository,
 		$noteThreadMutingsRepository,

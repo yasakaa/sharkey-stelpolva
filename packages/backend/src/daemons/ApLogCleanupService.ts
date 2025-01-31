@@ -3,14 +3,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { Inject, Injectable, type OnApplicationShutdown } from '@nestjs/common';
-import { LessThan } from 'typeorm';
-import { DI } from '@/di-symbols.js';
-import type { Config } from '@/config.js';
+import { Injectable, type OnApplicationShutdown } from '@nestjs/common';
 import { bindThis } from '@/decorators.js';
-import type { ApInboxLogsRepository } from '@/models/_.js';
 import { LoggerService } from '@/core/LoggerService.js';
 import Logger from '@/logger.js';
+import { ApLogService } from '@/core/ApLogService.js';
 
 // 10 minutes
 export const scanInterval = 1000 * 60 * 10;
@@ -21,12 +18,7 @@ export class ApLogCleanupService implements OnApplicationShutdown {
 	private scanTimer: NodeJS.Timeout | null = null;
 
 	constructor(
-		@Inject(DI.config)
-		private readonly config: Config,
-
-		@Inject(DI.apInboxLogsRepository)
-		private readonly apInboxLogsRepository: ApInboxLogsRepository,
-
+		private readonly apLogService: ApLogService,
 		loggerService: LoggerService,
 	) {
 		this.logger = loggerService.getLogger('activity-log-cleanup');
@@ -47,15 +39,12 @@ export class ApLogCleanupService implements OnApplicationShutdown {
 
 	@bindThis
 	private async tick(): Promise<void> {
-		// This is the date in UTC of the oldest log to KEEP
-		const oldestAllowed = new Date(Date.now() - this.config.activityLogging.maxAge);
-
-		// Delete all logs older than the threshold.
-		const { affected } = await this.apInboxLogsRepository.delete({
-			at: LessThan(oldestAllowed),
-		});
-
-		this.logger.info(`Activity Log cleanup complete; removed ${affected ?? 0} expired logs.`);
+		try {
+			const affected = this.apLogService.deleteExpiredLogs();
+			this.logger.info(`Activity Log cleanup complete; removed ${affected} expired logs.`);
+		} catch (err) {
+			this.logger.error('Activity Log cleanup failed:', err as Error);
+		}
 	}
 
 	@bindThis

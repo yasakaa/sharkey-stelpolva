@@ -86,6 +86,7 @@ import MisskeyLogger from '@/logger.js';
 import { bindThis } from '@/decorators.js';
 import { SkLatestNote } from '@/models/LatestNote.js';
 import { SkApContext } from '@/models/SkApContext.js';
+import { SkApFetchLog } from '@/models/SkApFetchLog.js';
 import { SkApInboxLog } from '@/models/SkApInboxLog.js';
 
 pg.types.setTypeParser(20, Number);
@@ -174,6 +175,7 @@ class MyCustomLogger implements Logger {
 export const entities = [
 	SkLatestNote,
 	SkApContext,
+	SkApFetchLog,
 	SkApInboxLog,
 	MiAnnouncement,
 	MiAnnouncementRead,

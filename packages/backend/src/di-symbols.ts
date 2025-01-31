@@ -23,6 +23,7 @@ export const DI = {
 	avatarDecorationsRepository: Symbol('avatarDecorationsRepository'),
 	latestNotesRepository: Symbol('latestNotesRepository'),
 	apContextsRepository: Symbol('apContextsRepository'),
+	apFetchLogsRepository: Symbol('apFetchLogsRepository'),
 	apInboxLogsRepository: Symbol('apInboxLogsRepository'),
 	noteFavoritesRepository: Symbol('noteFavoritesRepository'),
 	noteThreadMutingsRepository: Symbol('noteThreadMutingsRepository'),

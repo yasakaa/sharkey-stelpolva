@@ -3,11 +3,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-export class RobotsTxt1738098171990 {
-    name = 'RobotsTxt1738098171990'
+export class RobotsTxt1738346484187 {
+    name = 'RobotsTxt1738346484187'
 
     async up(queryRunner) {
-        await queryRunner.query(`ALTER TABLE "meta" ADD "robotsTxt" character varying(2048)`);
+        await queryRunner.query(`ALTER TABLE "meta" ADD "robotsTxt" text`);
     }
 
     async down(queryRunner) {

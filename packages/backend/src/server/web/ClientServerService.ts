@@ -489,10 +489,8 @@ export class ClientServerService {
 
 		fastify.get('/robots.txt', async (request, reply) => {
 			if (this.meta.robotsTxt) {
-				let content = '';
-				content += this.meta.robotsTxt;
 				reply.header('Content-Type', 'text/plain');
-				return await reply.send(content);
+				return await reply.send(this.meta.robotsTxt);
 			} else {
 				return await reply.sendFile('/robots.txt', staticAssets);
 			}

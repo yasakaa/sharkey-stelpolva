@@ -97,14 +97,7 @@ export class InboxProcessorService implements OnApplicationShutdown {
 
 			throw err;
 		} finally {
-			const duration = log.duration = calculateDurationSince(startTime);
-
-			// TODO remove this
-			// Activities should time out after roughly 5 seconds.
-			// A runtime longer than 10 seconds could indicate a problem or attack.
-			if (duration > 10000) {
-				this.logger.warn(`Activity ${JSON.stringify(activity.id)} by "${keyId}" took ${(duration / 1000).toFixed(1)} seconds to complete`);
-			}
+			log.duration = calculateDurationSince(startTime);
 
 			// Save or finalize asynchronously
 			this.apLogService.saveInboxLog(log)

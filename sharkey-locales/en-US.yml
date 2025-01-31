@@ -436,4 +436,4 @@ _permissions:
   "write:notes-schedule": "Compose or delete scheduled notes"
 
 robotsTxt: "Custom robots.txt"
-robotsTxtDescription: "Adding entries here will override the default robots.txt packaged with Sharkey. Maximum 2048 characters."
+robotsTxtDescription: "Adding entries here will override the default robots.txt packaged with Sharkey."

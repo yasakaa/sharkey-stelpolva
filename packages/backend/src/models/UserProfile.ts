@@ -36,10 +36,10 @@ export class MiUserProfile {
 	})
 	public birthday: string | null;
 
-	@Column("varchar", {
+	@Column('varchar', {
 		length: 128,
 		nullable: true,
-		comment: "The ListenBrainz username of the User.",
+		comment: 'The ListenBrainz username of the User.',
 	})
 	public listenbrainz: string | null;
 
@@ -289,6 +289,12 @@ export class MiUserProfile {
 		name: string;
 		unlockedAt: number;
 	}[];
+
+	@Column('text', {
+		name: 'default_cw',
+		nullable: true,
+	})
+	public defaultCW: string | null;
 
 	//#region Denormalized fields
 	@Index()

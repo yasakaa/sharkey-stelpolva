@@ -4217,6 +4217,7 @@ export type components = {
           /** Format: date-time */
           lastUsed: string;
         }[];
+      defaultCW: string | null;
     };
     UserDetailedNotMe: components['schemas']['UserLite'] & components['schemas']['UserDetailedNotMeOnly'];
     MeDetailed: components['schemas']['UserLite'] & components['schemas']['UserDetailedNotMeOnly'] & components['schemas']['MeDetailedOnly'];
@@ -5224,6 +5225,7 @@ export type components = {
       enableFC: boolean;
       fcSiteKey: string | null;
       enableAchievements: boolean | null;
+      robotsTxt: string | null;
       enableTestcaptcha: boolean;
       swPublickey: string | null;
       /** @default /assets/ai.png */
@@ -5434,6 +5436,7 @@ export type operations = {
             enableStatsForFederatedInstances: boolean;
             enableServerMachineStats: boolean;
             enableAchievements: boolean;
+            robotsTxt: string | null;
             enableIdenticonGeneration: boolean;
             manifestJsonOverride: string;
             policies: Record<string, never>;
@@ -10163,6 +10166,7 @@ export type operations = {
           enableStatsForFederatedInstances?: boolean;
           enableServerMachineStats?: boolean;
           enableAchievements?: boolean;
+          robotsTxt?: string | null;
           enableIdenticonGeneration?: boolean;
           serverRules?: string[];
           bannedEmailDomains?: string[];
@@ -21631,6 +21635,7 @@ export type operations = {
           };
           emailNotificationTypes?: string[];
           alsoKnownAs?: string[];
+          defaultCW?: string | null;
         };
       };
     };

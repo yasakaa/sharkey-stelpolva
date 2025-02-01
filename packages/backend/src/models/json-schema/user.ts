@@ -752,6 +752,10 @@ export const packedMeDetailedOnlySchema = {
 			},
 		},
 		//#endregion
+		defaultCW: {
+			type: 'string',
+			nullable: true, optional: false,
+		},
 	},
 } as const;
 

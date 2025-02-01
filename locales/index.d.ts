@@ -11631,7 +11631,7 @@ export interface Locale extends ILocale {
      */
     "robotsTxt": string;
     /**
-     * Adding entries here will override the default robots.txt packaged with Sharkey. Maximum 2048 characters.
+     * Adding entries here will override the default robots.txt packaged with Sharkey.
      */
     "robotsTxtDescription": string;
 }

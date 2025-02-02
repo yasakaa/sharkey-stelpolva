@@ -364,6 +364,28 @@ if (defaultStore.state.keepCw && props.reply && props.reply.cw) {
 	cw.value = props.reply.cw;
 }
 
+// apply default CW
+if ($i.defaultCW) {
+	useCw.value = true;
+
+	if (!cw.value || $i.defaultCWPriority === 'default') {
+		cw.value = $i.defaultCW;
+	} else if ($i.defaultCWPriority !== 'parent') {
+		// This is a fancy way of simulating /\bsearch\b/ without a regular expression.
+		// We're checking to see whether the default CW appears inside the existing CW, but *only* if there's word boundaries.
+		const parts = cw.value.split($i.defaultCW);
+		if (parts.length !== 2 || /\w$/.test(parts[0]) || /^\w/.test(parts[1])) {
+			// We need to merge the CWs
+			if ($i.defaultCWPriority === 'defaultParent') {
+				cw.value = `${$i.defaultCW}, ${cw.value}`;
+			} else if ($i.defaultCWPriority === 'parentDefault') {
+				cw.value = `${cw.value}, ${$i.defaultCW}`;
+			}
+		}
+	}
+	// else { do nothing, because existing CW takes priority. }
+}
+
 function watchForDraft() {
 	watch(text, () => saveDraft());
 	watch(useCw, () => saveDraft());

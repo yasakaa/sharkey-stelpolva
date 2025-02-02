@@ -40,7 +40,7 @@ export class ApLogCleanupService implements OnApplicationShutdown {
 	@bindThis
 	private async tick(): Promise<void> {
 		try {
-			const affected = this.apLogService.deleteExpiredLogs();
+			const affected = await this.apLogService.deleteExpiredLogs();
 			this.logger.info(`Activity Log cleanup complete; removed ${affected} expired logs.`);
 		} catch (err) {
 			this.logger.error('Activity Log cleanup failed:', err as Error);

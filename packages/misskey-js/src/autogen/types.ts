@@ -4218,6 +4218,8 @@ export type components = {
           lastUsed: string;
         }[];
       defaultCW: string | null;
+      /** @enum {string} */
+      defaultCWPriority: 'default' | 'parent' | 'defaultParent' | 'parentDefault';
     };
     UserDetailedNotMe: components['schemas']['UserLite'] & components['schemas']['UserDetailedNotMeOnly'];
     MeDetailed: components['schemas']['UserLite'] & components['schemas']['UserDetailedNotMeOnly'] & components['schemas']['MeDetailedOnly'];
@@ -21636,6 +21638,8 @@ export type operations = {
           emailNotificationTypes?: string[];
           alsoKnownAs?: string[];
           defaultCW?: string | null;
+          /** @enum {string} */
+          defaultCWPriority?: 'default' | 'parent' | 'defaultParent' | 'parentDefault';
         };
       };
     };

@@ -250,6 +250,11 @@ export const paramDef = {
 			items: { type: 'string' },
 		},
 		defaultCW: { type: 'string', nullable: true },
+		defaultCWPriority: {
+			type: 'string',
+			enum: ['default', 'parent', 'defaultParent', 'parentDefault'],
+			nullable: false,
+		},
 	},
 } as const;
 
@@ -509,6 +514,9 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				}
 
 				profileUpdates.defaultCW = defaultCW;
+			}
+			if (ps.defaultCWPriority !== undefined) {
+				profileUpdates.defaultCWPriority = ps.defaultCWPriority;
 			}
 
 			//#region emojis/tags

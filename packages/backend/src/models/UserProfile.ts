@@ -4,7 +4,7 @@
  */
 
 import { Entity, Column, Index, OneToOne, JoinColumn, PrimaryColumn } from 'typeorm';
-import { obsoleteNotificationTypes, followingVisibilities, followersVisibilities, notificationTypes } from '@/types.js';
+import { obsoleteNotificationTypes, followingVisibilities, followersVisibilities, notificationTypes, noteVisibilities, defaultCWPriorities } from '@/types.js';
 import { id } from './util/id.js';
 import { MiUser } from './User.js';
 import { MiPage } from './Page.js';
@@ -295,6 +295,13 @@ export class MiUserProfile {
 		nullable: true,
 	})
 	public defaultCW: string | null;
+
+	@Column('enum', {
+		name: 'default_cw_priority',
+		enum: defaultCWPriorities,
+		default: 'parent',
+	})
+	public defaultCWPriority: typeof defaultCWPriorities[number];
 
 	//#region Denormalized fields
 	@Index()

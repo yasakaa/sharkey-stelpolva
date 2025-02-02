@@ -437,3 +437,13 @@ _permissions:
 
 robotsTxt: "Custom robots.txt"
 robotsTxtDescription: "Adding entries here will override the default robots.txt packaged with Sharkey."
+
+defaultCW: "Default content warning for new posts"
+defaultCWDescription: "The value here will be auto-filled as the content warning for all new posts and replies."
+defaultCWPriority: "Automatic CW priority"
+defaultCWPriorityDescription: "Select preferred action when default CW and keep CW settings are both enabled at the same time."
+_defaultCWPriority:
+  default: "Use Default (use the default CW, ignoring the inherited CW)"
+  parent: "Use Parent (use the inherited CW, ignoring the default CW)"
+  defaultParent: "Use Default, then Parent (use the default CW, and append the inherited CW)"
+  parentDefault: "Use Parent, then Default (use the inherited CW, and append the default CW)"

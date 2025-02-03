@@ -16,7 +16,7 @@ testCommit:
     - cp .config/ci.yml .config/default.yml
     - cp .config/ci.yml .config/test.yml
     - corepack enable
-    - corepack prepare pnpm@latest --activate
+    - corepack install
     - git submodule update --init
     - pnpm install --frozen-lockfile
     - pnpm run build
@@ -76,8 +76,6 @@ buildDocker:
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
-  variables:
-    COREPACK_DEFAULT_TO_LATEST: 0
   script:
     - >-
       /kaniko/executor

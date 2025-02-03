@@ -5,7 +5,7 @@
 
 import { createHash } from 'crypto';
 import { Inject, Injectable } from '@nestjs/common';
-import { LessThan } from 'typeorm';
+import { In, LessThan } from 'typeorm';
 import { DI } from '@/di-symbols.js';
 import { SkApFetchLog, SkApInboxLog, SkApContext } from '@/models/_.js';
 import type { ApContextsRepository, ApFetchLogsRepository, ApInboxLogsRepository } from '@/models/_.js';
@@ -119,6 +119,24 @@ export class ApLogService {
 			.values(context)
 			.orIgnore('md5')
 			.execute();
+	}
+
+	/**
+	 * Deletes all logged copies of an object or objects
+	 * @param objectUris URIs / AP IDs of the objects to delete
+	 */
+	public async deleteObjectLogs(objectUris: string | string[]): Promise<number> {
+		if (Array.isArray(objectUris)) {
+			const logsDeleted = await this.apFetchLogsRepository.delete({
+				objectUri: In(objectUris),
+			});
+			return logsDeleted.affected ?? 0;
+		} else {
+			const logsDeleted = await this.apFetchLogsRepository.delete({
+				objectUri: objectUris,
+			});
+			return logsDeleted.affected ?? 0;
+		}
 	}
 
 	/**

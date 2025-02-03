@@ -147,7 +147,7 @@ export class CustomEmojiService implements OnApplicationShutdown {
 	@bindThis
 	public async update(data: (
 		{ id: MiEmoji['id'], name?: string; } | { name: string; id?: MiEmoji['id'], }
-		) & {
+	) & {
 		originalUrl?: string;
 		publicUrl?: string;
 		fileType?: string;
@@ -175,17 +175,6 @@ export class CustomEmojiService implements OnApplicationShutdown {
 			if (isDuplicate) return 'SAME_NAME_EMOJI_EXISTS';
 		}
 
-		// If we're changing the file, then we need to delete the old one
-		if (data.originalUrl != null && data.originalUrl !== emoji.originalUrl) {
-			const oldFile = await this.driveFilesRepository.findOneBy({ url: emoji.originalUrl, userHost: emoji.host ? emoji.host : IsNull() });
-			const newFile = await this.driveFilesRepository.findOneBy({ url: data.originalUrl, userHost: emoji.host ? emoji.host : IsNull() });
-
-			// But DON'T delete if this is the same file reference, otherwise we'll break the emoji!
-			if (oldFile && newFile && oldFile.id !== newFile.id) {
-				await this.driveService.deleteFile(oldFile, false, moderator ? moderator : undefined);
-			}
-		}
-
 		await this.emojisRepository.update(emoji.id, {
 			updatedAt: new Date(),
 			name: data.name,
@@ -201,6 +190,17 @@ export class CustomEmojiService implements OnApplicationShutdown {
 		});
 
 		this.localEmojisCache.refresh();
+
+		// If we're changing the file, then we need to delete the old one
+		if (data.originalUrl != null && data.originalUrl !== emoji.originalUrl) {
+			const oldFile = await this.driveFilesRepository.findOneBy({ url: emoji.originalUrl, userHost: emoji.host ? emoji.host : IsNull() });
+			const newFile = await this.driveFilesRepository.findOneBy({ url: data.originalUrl, userHost: emoji.host ? emoji.host : IsNull() });
+
+			// But DON'T delete if this is the same file reference, otherwise we'll break the emoji!
+			if (oldFile && newFile && oldFile.id !== newFile.id) {
+				await this.driveService.deleteFile(oldFile, false, moderator ? moderator : undefined);
+			}
+		}
 
 		const packed = await this.emojiEntityService.packDetailed(emoji.id);
 

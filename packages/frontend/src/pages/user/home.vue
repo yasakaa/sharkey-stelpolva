@@ -138,7 +138,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<MkInfo v-if="user.pinnedNotes.length === 0 && $i?.id === user.id">{{ i18n.ts.userPagePinTip }}</MkInfo>
 				<template v-if="narrow">
 					<MkLazy>
-						<XFiles :key="user.id" :user="user" :collapsed="true"/>
+						<XFiles :key="user.id" :user="user" :collapsed="true" @unfold="emit('unfoldFiles')"/>
 					</MkLazy>
 					<MkLazy>
 						<XActivity :key="user.id" :user="user" :collapsed="true"/>
@@ -180,7 +180,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			</div>
 		</div>
 		<div v-if="!narrow" class="sub _gaps" style="container-type: inline-size;">
-			<XFiles :key="user.id" :user="user"/>
+			<XFiles :key="user.id" :user="user" @unfold="emit('unfoldFiles')"/>
 			<XActivity :key="user.id" :user="user"/>
 			<XListenBrainz v-if="user.listenbrainz && listenbrainzdata" :key="user.id" :user="user"/>
 		</div>
@@ -242,7 +242,6 @@ function calcAge(birthdate: string): number {
 const XFiles = defineAsyncComponent(() => import('./index.files.vue'));
 const XActivity = defineAsyncComponent(() => import('./index.activity.vue'));
 const XListenBrainz = defineAsyncComponent(() => import('./index.listenbrainz.vue'));
-//const XTimeline = defineAsyncComponent(() => import('./index.timeline.vue'));
 
 const props = withDefaults(defineProps<{
 	user: Misskey.entities.UserDetailed;
@@ -251,6 +250,10 @@ const props = withDefaults(defineProps<{
 }>(), {
 	disableNotes: false,
 });
+
+const emit = defineEmits<{
+	(ev: 'unfoldFiles'): void;
+}>();
 
 const router = useRouter();
 

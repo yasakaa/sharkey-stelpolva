@@ -52,6 +52,13 @@ export const meta = {
 					secretKey: { type: 'string', nullable: true },
 				},
 			},
+			fc: {
+				type: 'object',
+				properties: {
+					siteKey: { type: 'string', nullable: true },
+					secretKey: { type: 'string', nullable: true },
+				},
+			},
 		},
 	},
 } as const;

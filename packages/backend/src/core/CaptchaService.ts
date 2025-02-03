@@ -11,7 +11,7 @@ import { MiMeta } from '@/models/Meta.js';
 import Logger from '@/logger.js';
 import { LoggerService } from './LoggerService.js';
 
-export const supportedCaptchaProviders = ['none', 'hcaptcha', 'mcaptcha', 'recaptcha', 'turnstile', 'testcaptcha'] as const;
+export const supportedCaptchaProviders = ['none', 'hcaptcha', 'mcaptcha', 'recaptcha', 'turnstile', 'fc', 'testcaptcha'] as const;
 export type CaptchaProvider = typeof supportedCaptchaProviders[number];
 
 export const captchaErrorCodes = {
@@ -40,6 +40,10 @@ export type CaptchaSetting = {
 		secretKey: string | null;
 	}
 	turnstile: {
+		siteKey: string | null;
+		secretKey: string | null;
+	}
+	fc: {
 		siteKey: string | null;
 		secretKey: string | null;
 	}
@@ -141,7 +145,7 @@ export class CaptchaService {
 	@bindThis
 	public async verifyFriendlyCaptcha(secret: string, response: string | null | undefined): Promise<void> {
 		if (response == null) {
-			throw new Error('frc-failed: no response provided');
+			throw new CaptchaError(captchaErrorCodes.noResponseProvided, 'frc-failed: no response provided');
 		}
 
 		const result = await this.httpRequestService.send('https://api.friendlycaptcha.com/api/v1/siteverify', {
@@ -153,17 +157,17 @@ export class CaptchaService {
 			headers: {
 				'Content-Type': 'application/json',
 			},
-		});
+		}, { throwErrorWhenResponseNotOk: false });
 
 		if (result.status !== 200) {
-			throw new Error('frc-failed: frc didn\'t return 200 OK');
+			throw new CaptchaError(captchaErrorCodes.requestFailed, `frc-request-failed: ${result.status}`);
 		}
 
 		const resp = await result.json() as CaptchaResponse;
 
 		if (resp.success !== true) {
 			const errorCodes = resp['errors'] ? resp['errors'].join(', ') : '';
-			throw new Error(`frc-failed: ${errorCodes}`);
+			throw new CaptchaError(captchaErrorCodes.verificationFailed, `frc-failed: ${errorCodes}`);
 		}
 	}
 
@@ -253,6 +257,10 @@ export class CaptchaService {
 				provider = 'testcaptcha';
 				break;
 			}
+			case meta.enableFC: {
+				provider = 'fc';
+				break;
+			}
 			default: {
 				provider = 'none';
 				break;
@@ -277,6 +285,10 @@ export class CaptchaService {
 			turnstile: {
 				siteKey: meta.turnstileSiteKey,
 				secretKey: meta.turnstileSecretKey,
+			},
+			fc: {
+				siteKey: meta.fcSiteKey,
+				secretKey: meta.fcSecretKey,
 			},
 		};
 	}
@@ -358,6 +370,14 @@ export class CaptchaService {
 				await this.verifyTestcaptcha(params.captchaResult);
 				await this.updateMeta(provider, params);
 			},
+			fc: async () => {
+				if (!params?.secret || !params.captchaResult) {
+					throw new CaptchaError(captchaErrorCodes.invalidParameters, 'frc-failed: secret and captureResult are required');
+				}
+
+				await this.verifyFriendlyCaptcha(params.captchaResult, params.captchaResult);
+				await this.updateMeta(provider, params);
+			},
 		}[provider];
 
 		return operation()
@@ -390,7 +410,7 @@ export class CaptchaService {
 				('enableMcaptcha' | 'mcaptchaSitekey' | 'mcaptchaSecretKey' | 'mcaptchaInstanceUrl') |
 				('enableRecaptcha' | 'recaptchaSiteKey' | 'recaptchaSecretKey') |
 				('enableTurnstile' | 'turnstileSiteKey' | 'turnstileSecretKey') |
-				('enableTestcaptcha')
+				('enableTestcaptcha' | 'enableFC' | 'fcSiteKey' | 'fcSecretKey')
 			>
 		> = {
 			enableHcaptcha: provider === 'hcaptcha',
@@ -398,6 +418,7 @@ export class CaptchaService {
 			enableRecaptcha: provider === 'recaptcha',
 			enableTurnstile: provider === 'turnstile',
 			enableTestcaptcha: provider === 'testcaptcha',
+			enableFC: provider === 'fc',
 		};
 
 		const updateIfNotUndefined = <K extends keyof typeof metaPartial>(key: K, value: typeof metaPartial[K]) => {
@@ -426,6 +447,10 @@ export class CaptchaService {
 				updateIfNotUndefined('turnstileSiteKey', params?.sitekey);
 				updateIfNotUndefined('turnstileSecretKey', params?.secret);
 				break;
+			}
+			case 'fc': {
+				updateIfNotUndefined('fcSiteKey', params?.sitekey);
+				updateIfNotUndefined('fcSecretKey', params?.secret);
 			}
 		}
 

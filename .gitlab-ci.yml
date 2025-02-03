@@ -10,6 +10,7 @@ testCommit:
     - redis
   variables:
     POSTGRES_PASSWORD: ci
+    COREPACK_DEFAULT_TO_LATEST: 0
   script:
     - apt-get update && apt-get install -y git wget curl build-essential python3 ffmpeg
     - cp .config/ci.yml .config/default.yml
@@ -75,6 +76,8 @@ buildDocker:
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
+  variables:
+    COREPACK_DEFAULT_TO_LATEST: 0
   script:
     - >-
       /kaniko/executor

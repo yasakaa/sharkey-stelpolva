@@ -32,7 +32,6 @@ const themeColor = chalk.hex('#86b300');
 function greet() {
 	if (!envOption.quiet) {
 		//#region Misskey logo
-		const v = `v${meta.version}`;
 		console.log(themeColor(' _____ _                _              '));
 		console.log(themeColor('/  ___| |              | |             '));
 		console.log(themeColor('\\ `--.| |__   __ _ _ __| | _____ _   _ '));

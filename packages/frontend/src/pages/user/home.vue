@@ -310,7 +310,7 @@ const pagination = {
 	endpoint: 'users/featured-notes' as const,
 	limit: 10,
 	params: computed(() => ({
-		userId: props.user.id
+		userId: props.user.id,
 	})),
 };
 

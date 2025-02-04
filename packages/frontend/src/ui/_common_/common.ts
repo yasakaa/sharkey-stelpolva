@@ -140,7 +140,7 @@ export function openInstanceMenu(ev: MouseEvent) {
 		});
 	}
 
-	if (instance.impressumUrl != null || instance.tosUrl != null || instance.privacyPolicyUrl != null || nstance.donationUrl != null) {
+	if (instance.impressumUrl != null || instance.tosUrl != null || instance.privacyPolicyUrl != null || instance.donationUrl != null) {
 		menuItems.push({ type: 'divider' });
 	}
 

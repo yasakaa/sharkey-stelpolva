@@ -365,7 +365,6 @@ import { definePageMetadata } from '@/scripts/page-metadata.js';
 import { miLocalStorage } from '@/local-storage.js';
 import { globalEvents } from '@/events.js';
 import { claimAchievement } from '@/scripts/achievements.js';
-import { deepMerge } from '@/scripts/merge.js';
 import { worksOnInstance } from '@/scripts/favicon-dot.js';
 
 const lang = ref(miLocalStorage.getItem('lang'));

@@ -103,7 +103,7 @@ export async function removeAccount(idOrToken: Account['id']) {
 
 function fetchAccount(token: string, id?: string, forceShowDialog?: boolean): Promise<Account> {
 	document.cookie = `token=; path=/; max-age=0${ location.protocol === 'https:' ? '; Secure' : ''}`;
-	document.cookie = `token=; path=/queue; max-age=86400${ location.protocol === 'https:' ? '; SameSite=Strict; Secure' : ''}`; // bull dashboardの認証とかで使う
+	document.cookie = `token=${token}; path=/queue; max-age=86400${ location.protocol === 'https:' ? '; SameSite=Strict; Secure' : ''}`; // bull dashboardの認証とかで使う
 
 	return new Promise((done, fail) => {
 		window.fetch(`${apiUrl}/i`, {

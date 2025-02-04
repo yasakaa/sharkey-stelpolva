@@ -15,7 +15,7 @@ import { applyTheme, assertIsTheme } from '@/theme.js';
 import { fetchCustomEmojis } from '@/custom-emojis.js';
 import { DI } from '@/di.js';
 import { serverMetadata } from '@/server-metadata.js';
-import { url, version, locale, lang, updateLocale } from '@@/js/config.js';
+import { url, version, locale, lang, updateLocale, langsVersion } from '@@/js/config.js';
 import { parseEmbedParams } from '@@/js/embed-page.js';
 import { postMessageToParentWindow, setIframeId } from '@/post-message.js';
 import { serverContext } from '@/server-context.js';
@@ -71,14 +71,14 @@ if (embedParams.colorMode === 'dark') {
 
 //#region Detect language & fetch translations
 const localeVersion = localStorage.getItem('localeVersion');
-const localeOutdated = (localeVersion == null || localeVersion !== version || locale == null);
+const localeOutdated = (localeVersion == null || localeVersion !== langsVersion || locale == null);
 if (localeOutdated) {
 	const res = await window.fetch(`/assets/locales/${lang}.${version}.json`);
 	if (res.status === 200) {
 		const newLocale = await res.text();
 		const parsedNewLocale = JSON.parse(newLocale);
 		localStorage.setItem('locale', newLocale);
-		localStorage.setItem('localeVersion', version);
+		localStorage.setItem('localeVersion', langsVersion);
 		updateLocale(parsedNewLocale);
 		updateI18n(parsedNewLocale);
 	}

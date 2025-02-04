@@ -437,3 +437,5 @@ _permissions:
 
 robotsTxt: "Custom robots.txt"
 robotsTxtDescription: "Adding entries here will override the default robots.txt packaged with Sharkey."
+
+id: "ID"

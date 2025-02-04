@@ -15,10 +15,10 @@ import type { MiNoteReaction } from '@/models/NoteReaction.js';
 import { EmailService } from '@/core/EmailService.js';
 import { bindThis } from '@/decorators.js';
 import { SearchService } from '@/core/SearchService.js';
+import { ReactionService } from '@/core/ReactionService.js';
 import { QueueLoggerService } from '../QueueLoggerService.js';
 import type * as Bull from 'bullmq';
 import type { DbUserDeleteJobData } from '../types.js';
-import { ReactionService } from '@/core/ReactionService.js';
 
 @Injectable()
 export class DeleteAccountProcessorService {

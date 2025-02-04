@@ -101,7 +101,6 @@ function search() {
 		users.value = [];
 		return;
 	}
-
 	misskeyApi('users/search-by-username-and-host', {
 		username: username.value,
 		host: computedLocalOnly.value ? '.' : host.value,

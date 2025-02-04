@@ -23,7 +23,6 @@ import type { CustomEmojiService } from '../CustomEmojiService.js';
 import type { ReactionService } from '../ReactionService.js';
 import type { UserEntityService } from './UserEntityService.js';
 import type { DriveFileEntityService } from './DriveFileEntityService.js';
-import type { Config } from '@/config.js';
 
 // is-renote.tsとよしなにリンク
 function isPureRenote(note: MiNote): note is MiNote & { renoteId: MiNote['id']; renote: MiNote } {
@@ -68,9 +67,6 @@ export class NoteEntityService implements OnModuleInit {
 
 		@Inject(DI.usersRepository)
 		private usersRepository: UsersRepository,
-
-		@Inject(DI.config)
-		private config: Config,
 
 		@Inject(DI.notesRepository)
 		private notesRepository: NotesRepository,

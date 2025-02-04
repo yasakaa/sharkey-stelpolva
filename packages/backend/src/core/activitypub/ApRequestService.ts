@@ -242,10 +242,8 @@ export class ApRequestService {
 				const alternate = document.querySelector('head > link[rel="alternate"][type="application/activity+json"]');
 				if (alternate) {
 					const href = alternate.getAttribute('href');
-					if (href) {
-						if (this.utilityService.punyHostPSLDomain(url) === this.utilityService.punyHostPSLDomain(href)) {
-							return await this.signedGet(href, user, false);
-						}
+					if (href && this.utilityService.punyHostPSLDomain(url) === this.utilityService.punyHostPSLDomain(href)) {
+						return await this.signedGet(href, user, false);
 					}
 				}
 			} catch (e) {
@@ -257,7 +255,6 @@ export class ApRequestService {
 		//#endregion
 
 		validateContentTypeSetAsActivityPub(res);
-
 		const finalUrl = res.url; // redirects may have been involved
 		const activity = await res.json() as IObject;
 

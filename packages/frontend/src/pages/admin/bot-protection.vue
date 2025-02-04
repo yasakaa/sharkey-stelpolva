@@ -301,6 +301,7 @@ const canSaving = computed((): boolean => {
 		(botProtectionForm.state.provider === 'mcaptcha' && !!captchaResult.value) ||
 		(botProtectionForm.state.provider === 'recaptcha' && !!captchaResult.value) ||
 		(botProtectionForm.state.provider === 'turnstile' && !!captchaResult.value) ||
+		(botProtectionForm.state.provider === 'fc' && !!captchaResult.value) ||
 		(botProtectionForm.state.provider === 'testcaptcha' && !!captchaResult.value);
 });
 

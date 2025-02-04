@@ -3,7 +3,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { registerAsUiLib } from '@/scripts/aiscript/ui.js';
 import { errors, Interpreter, Parser, values } from '@syuilo/aiscript';
 import { describe, expect, test } from 'vitest';
 import { type Ref, ref } from 'vue';
@@ -20,12 +19,14 @@ import type {
 	AsUiTextarea,
 	AsUiTextInput,
 } from '@/scripts/aiscript/ui.js';
+import { registerAsUiLib } from '@/scripts/aiscript/ui.js';
 
 type ExeResult = {
 	root: AsUiRoot;
 	get: (id: string) => AsUiComponent;
 	outputs: values.Value[];
 }
+
 async function exe(script: string): Promise<ExeResult> {
 	const rootRef = ref<AsUiRoot>();
 	const componentRefs = ref<Ref<AsUiComponent>[]>([]);

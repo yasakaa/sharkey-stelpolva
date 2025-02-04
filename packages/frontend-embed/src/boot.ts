@@ -73,7 +73,7 @@ if (embedParams.colorMode === 'dark') {
 const localeVersion = localStorage.getItem('localeVersion');
 const localeOutdated = (localeVersion == null || localeVersion !== langsVersion || locale == null);
 if (localeOutdated) {
-	const res = await window.fetch(`/assets/locales/${lang}.${version}.json`);
+	const res = await window.fetch(`/assets/locales/${lang}.${langsVersion}.json`);
 	if (res.status === 200) {
 		const newLocale = await res.text();
 		const parsedNewLocale = JSON.parse(newLocale);

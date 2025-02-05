@@ -40,7 +40,15 @@ export class SkRateLimiterService {
 	}
 
 	/**
-	 * Check & increment a rate limit for a client
+	 * Check & increment a rate limit for a client.
+	 *
+	 * If the client (actorOrUser) is passed as a string, then it uses the default rate limit factor from the role template.
+	 * If the client (actorOrUser) is passed as an MiUser, then it queries the user's actual rate limit factor from their assigned roles.
+	 *
+	 * A factor of zero (0) will disable the limit, while any negative number will produce an error.
+	 * A factor between zero (0) and one (1) will increase the limit from its default values (allowing more actions per time interval).
+	 * A factor greater than one (1) will decrease the limit from its default values (allowing fewer actions per time interval).
+	 *
 	 * @param limit The limit definition
 	 * @param actorOrUser authenticated client user or IP hash
 	 */

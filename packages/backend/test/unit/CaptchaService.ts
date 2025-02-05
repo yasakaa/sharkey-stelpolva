@@ -204,11 +204,14 @@ describe('CaptchaService', () => {
 
 		test('values', async () => {
 			setupMeta({
+				enableFC: false,
 				enableHcaptcha: false,
 				enableMcaptcha: false,
 				enableRecaptcha: false,
 				enableTurnstile: false,
 				enableTestcaptcha: false,
+				fcSiteKey: 'fc-sitekey',
+				fcSecretKey: 'fc-secret',
 				hcaptchaSiteKey: 'hcaptcha-sitekey',
 				hcaptchaSecretKey: 'hcaptcha-secret',
 				mcaptchaSitekey: 'mcaptcha-sitekey',
@@ -222,6 +225,8 @@ describe('CaptchaService', () => {
 
 			const result = await service.get();
 			expect(result.provider).toBe('none');
+			expect(result.fc.siteKey).toBe('fc-sitekey');
+			expect(result.fc.secretKey).toBe('fc-secret');
 			expect(result.hcaptcha.siteKey).toBe('hcaptcha-sitekey');
 			expect(result.hcaptcha.secretKey).toBe('hcaptcha-secret');
 			expect(result.mcaptcha.siteKey).toBe('mcaptcha-sitekey');
@@ -236,6 +241,7 @@ describe('CaptchaService', () => {
 		describe('provider', () => {
 			test('none', async () => {
 				setupMeta({
+					enableFC: false,
 					enableHcaptcha: false,
 					enableMcaptcha: false,
 					enableRecaptcha: false,
@@ -249,6 +255,7 @@ describe('CaptchaService', () => {
 
 			test('hcaptcha', async () => {
 				setupMeta({
+					enableFC: false,
 					enableHcaptcha: true,
 					enableMcaptcha: false,
 					enableRecaptcha: false,
@@ -262,6 +269,7 @@ describe('CaptchaService', () => {
 
 			test('mcaptcha', async () => {
 				setupMeta({
+					enableFC: false,
 					enableHcaptcha: false,
 					enableMcaptcha: true,
 					enableRecaptcha: false,
@@ -275,6 +283,7 @@ describe('CaptchaService', () => {
 
 			test('recaptcha', async () => {
 				setupMeta({
+					enableFC: false,
 					enableHcaptcha: false,
 					enableMcaptcha: false,
 					enableRecaptcha: true,
@@ -288,6 +297,7 @@ describe('CaptchaService', () => {
 
 			test('turnstile', async () => {
 				setupMeta({
+					enableFC: false,
 					enableHcaptcha: false,
 					enableMcaptcha: false,
 					enableRecaptcha: false,
@@ -301,6 +311,7 @@ describe('CaptchaService', () => {
 
 			test('testcaptcha', async () => {
 				setupMeta({
+					enableFC: false,
 					enableHcaptcha: false,
 					enableMcaptcha: false,
 					enableRecaptcha: false,
@@ -334,6 +345,7 @@ describe('CaptchaService', () => {
 				await assertSuccess(
 					service.save('none'),
 					{
+						enableFC: false,
 						enableHcaptcha: false,
 						enableMcaptcha: false,
 						enableRecaptcha: false,
@@ -351,6 +363,7 @@ describe('CaptchaService', () => {
 						captchaResult: 'hcaptcha-passed',
 					}),
 					{
+						enableFC: false,
 						enableHcaptcha: true,
 						enableMcaptcha: false,
 						enableRecaptcha: false,
@@ -371,6 +384,7 @@ describe('CaptchaService', () => {
 						captchaResult: 'mcaptcha-passed',
 					}),
 					{
+						enableFC: false,
 						enableHcaptcha: false,
 						enableMcaptcha: true,
 						enableRecaptcha: false,
@@ -391,6 +405,7 @@ describe('CaptchaService', () => {
 						captchaResult: 'recaptcha-passed',
 					}),
 					{
+						enableFC: false,
 						enableHcaptcha: false,
 						enableMcaptcha: false,
 						enableRecaptcha: true,
@@ -410,6 +425,7 @@ describe('CaptchaService', () => {
 						captchaResult: 'turnstile-passed',
 					}),
 					{
+						enableFC: false,
 						enableHcaptcha: false,
 						enableMcaptcha: false,
 						enableRecaptcha: false,
@@ -429,6 +445,7 @@ describe('CaptchaService', () => {
 						captchaResult: 'testcaptcha-passed',
 					}),
 					{
+						enableFC: false,
 						enableHcaptcha: false,
 						enableMcaptcha: false,
 						enableRecaptcha: false,

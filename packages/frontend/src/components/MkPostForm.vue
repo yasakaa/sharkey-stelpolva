@@ -374,7 +374,7 @@ if ($i.defaultCW) {
 		// This is a fancy way of simulating /\bsearch\b/ without a regular expression.
 		// We're checking to see whether the default CW appears inside the existing CW, but *only* if there's word boundaries.
 		const parts = cw.value.split($i.defaultCW);
-		const hasExistingDefaultCW = parts.length === 0 && !/\w$/.test(parts[0]) && !/^\w/.test(parts[1]);
+		const hasExistingDefaultCW = parts.length === 2 && !/\w$/.test(parts[0]) && !/^\w/.test(parts[1]);
 		if (!hasExistingDefaultCW) {
 			// We need to merge the CWs
 			if ($i.defaultCWPriority === 'defaultParent') {

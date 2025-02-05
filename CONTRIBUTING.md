@@ -692,16 +692,12 @@ seems to do a decent job)
   build` (the `development` tells it to keep some of the original
   filenames in the built files)
 * make sure there aren't any new `ti-*` classes (Tabler Icons), and
-  replace them with appropriate `ph-*` ones (Phosphor Icons):
-  `grep -rP '["'\'']ti[ -](?!fw)' -- built/` should show you what to change.
-  NOTE: `ti-fw` is a special class that's defined by Misskey, leave it
-  alone
-
-  after every change, re-build the frontend and check again, until
-  there are no more `ti-*` classes in the built files (you can ignore
-  the source maps)
-
-  commit!
+  replace them with appropriate `ph-*` ones (Phosphor Icons) in [`vite.replaceicons.ts`](packages/frontend/vite.replaceIcons.ts).
+  This command should show you want to change: `grep -ohrP '(?<=["'\'']ti )(ti-(?!fw)[\w\-]+)' --exclude \*.map -- built/ | sort -u`.
+  * NOTE: `ti-fw` is a special class that's defined by Misskey, leave it alone.
+  * After every change, re-build the frontend and check again, until
+  there are no more `ti-*` classes in the built files.
+  * Commit!
 * double-check the new migration, that they won't conflict with our db
   changes: `git diff develop -- packages/backend/migration/`
 * `pnpm clean; pnpm build`

@@ -6,7 +6,7 @@
 import type Redis from 'ioredis';
 import type { MiUser } from '@/models/User.js';
 import type { RolePolicies, RoleService } from '@/core/RoleService.js';
-import { SkRateLimiterService } from '@/server/api/SkRateLimiterService.js';
+import { SkRateLimiterService } from '@/server/SkRateLimiterService.js';
 import { BucketRateLimit, Keyed, LegacyRateLimit } from '@/misc/rate-limit-utils.js';
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */

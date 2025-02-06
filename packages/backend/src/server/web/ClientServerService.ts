@@ -323,19 +323,16 @@ export class ClientServerService {
 				done();
 			});
 		} else {
-			const configUrl = new URL(this.config.url);
-			const urlOriginWithoutPort = configUrl.origin.replace(/:\d+$/, '');
-
 			const port = (process.env.VITE_PORT ?? '5173');
 			fastify.register(fastifyProxy, {
-				upstream: urlOriginWithoutPort + ':' + port,
+				upstream: `http://localhost:${port}`,
 				prefix: '/vite',
 				rewritePrefix: '/vite',
 			});
 
 			const embedPort = (process.env.EMBED_VITE_PORT ?? '5174');
 			fastify.register(fastifyProxy, {
-				upstream: urlOriginWithoutPort + ':' + embedPort,
+				upstream: `http://localhost:${embedPort}`,
 				prefix: '/embed_vite',
 				rewritePrefix: '/embed_vite',
 			});

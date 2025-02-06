@@ -660,23 +660,23 @@ seems to do a decent job)
 *after that commit*, do all the extra work, on the same branch:
 
 * copy all changes (commit after each step):
-  * in
-    `packages/backend/src/core/activitypub/models/ApNoteService.ts`,
-    from `createNote` to `updateNote`
-  * from `packages/backend/src/core/NoteCreateService.ts` to
-    `packages/backend/src/core/NoteEditService.ts`
-  * from `packages/backend/src/server/api/endpoints/notes/create.ts`
-    to `packages/backend/src/server/api/endpoints/notes/edit.ts`
-  * from `packages/frontend/src/components/MkNote*.vue` to
-    `packages/frontend/src/components/SkNote*.vue` (if sensible)
-  * from the global timeline to the bubble timeline
-    (`packages/backend/src/server/api/stream/channels/global-timeline.ts`,
-    `packages/backend/src/server/api/stream/channels/bubble-timeline.ts`,
-    `packages/frontend/src/timelines.ts`,
-    `packages/frontend/src/components/MkTimeline.vue`,
-    `packages/frontend/src/pages/timeline.vue`,
-    `packages/frontend/src/ui/deck/tl-column.vue`,
-    `packages/frontend/src/widgets/WidgetTimeline.vue`)
+    * in
+      `packages/backend/src/core/activitypub/models/ApNoteService.ts`,
+      from `createNote` to `updateNote`
+    * from `packages/backend/src/core/NoteCreateService.ts` to
+      `packages/backend/src/core/NoteEditService.ts`
+    * from `packages/backend/src/server/api/endpoints/notes/create.ts`
+      to `packages/backend/src/server/api/endpoints/notes/edit.ts`
+    * from `packages/frontend/src/components/MkNote*.vue` to
+      `packages/frontend/src/components/SkNote*.vue` (if sensible)
+    * from the global timeline to the bubble timeline
+      (`packages/backend/src/server/api/stream/channels/global-timeline.ts`,
+      `packages/backend/src/server/api/stream/channels/bubble-timeline.ts`,
+      `packages/frontend/src/timelines.ts`,
+      `packages/frontend/src/components/MkTimeline.vue`,
+      `packages/frontend/src/pages/timeline.vue`,
+      `packages/frontend/src/ui/deck/tl-column.vue`,
+      `packages/frontend/src/widgets/WidgetTimeline.vue`)
 * if there have been any changes to the federated user data (the
   `renderPerson` function in
   `packages/backend/src/core/activitypub/ApRendererService.ts`), make
@@ -692,19 +692,20 @@ seems to do a decent job)
   build` (the `development` tells it to keep some of the original
   filenames in the built files)
 * make sure there aren't any new `ti-*` classes (Tabler Icons), and
-  replace them with appropriate `ph-*` ones (Phosphor Icons) in [`vite.replaceicons.ts`](packages/frontend/vite.replaceIcons.ts).
-  This command should show you want to change: `grep -ohrP '(?<=["'\'']ti )(ti-(?!fw)[\w\-]+)' --exclude \*.map -- built/ | sort -u`.
-  * NOTE: `ti-fw` is a special class that's defined by Misskey, leave it alone.
-  * After every change, re-build the frontend and check again, until
-  there are no more `ti-*` classes in the built files.
-  * Commit!
+  replace them with appropriate `ph-*` ones (Phosphor Icons) in
+  [`vite.replaceicons.ts`](packages/frontend/vite.replaceIcons.ts).
+  This command should show you want to change: `grep -ohrP
+  '(?<=["'\'']ti )(ti-(?!fw)[\w\-]+)' --exclude \*.map -- built/ |
+  sort -u`.
+    * NOTE: `ti-fw` is a special class that's defined by Misskey, leave it alone.
+    * After every change, re-build the frontend and check again, until
+      there are no more `ti-*` classes in the built files.
+    * Commit!
 * double-check the new migration, that they won't conflict with our db
   changes: `git diff develop -- packages/backend/migration/`
 * `pnpm clean; pnpm build`
-* run tests `pnpm --filter='!megalodon' test; pnpm --filter backend
-  test:e2e` (requires a test database, [see above](#testing)) and fix
-  as much as you can
-  * right now `megalodon` doesn't pass its tests, so we skip them
+* run tests `pnpm test; pnpm --filter backend test:e2e` (requires a
+  test database, [see above](#testing)) and fix as much as you can
 * run lint `pnpm --filter=backend --filter=frontend-shared lint` +
   `pnpm --filter=frontend --filter=frontend-embed eslint` and fix as
   much as you can

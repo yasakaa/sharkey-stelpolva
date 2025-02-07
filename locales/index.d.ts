@@ -11674,7 +11674,7 @@ export interface Locale extends ILocale {
     "genKeys": string;
     "_genKeysDialog": {
         /**
-         * Are you sure that you want to generate new keys?
+         * Are you sure that you want to generate new keys? This will stop push notifications for all users who have already enabled them.
          */
         "text": string;
         /**

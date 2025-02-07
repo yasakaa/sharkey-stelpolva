@@ -138,6 +138,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 								<template #label>Private key<span v-if="serviceWorkerForm.modifiedStates.swPrivateKey" class="_modified">{{ i18n.ts.modified }}</span></template>
 								<template #prefix><i class="ti ti-key"></i></template>
 							</MkInput>
+
+							<MkButton primary @click="genKeys">{{ i18n.ts.genKeys }}</MkButton>
 						</template>
 					</div>
 				</MkFolder>
@@ -432,6 +434,23 @@ function chooseProxyAccount() {
 			fetchInstance(true);
 		});
 	});
+}
+
+async function genKeys() {
+	if (serviceWorkerForm.savedState.swPrivateKey) {
+		os.confirm({ type: 'warning', title: i18n.ts._genKeysDialog.title, text: i18n.ts._genKeysDialog.text }).then(result => {
+			if (result.canceled) return;
+			os.apiWithDialog('admin/gen-vapid-keys', {}).then(res => {
+				serviceWorkerForm.state.swPublicKey = res.public;
+				serviceWorkerForm.state.swPrivateKey = res.private;
+			});
+		});
+	} else {
+		os.apiWithDialog('admin/gen-vapid-keys', {}).then(res => {
+			serviceWorkerForm.state.swPublicKey = res.public;
+			serviceWorkerForm.state.swPrivateKey = res.private;
+		});
+	}
 }
 
 const headerTabs = computed(() => []);

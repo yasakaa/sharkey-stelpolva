@@ -447,3 +447,8 @@ _defaultCWPriority:
   parent: "Use Parent (use the inherited CW, ignoring the default CW)"
   defaultParent: "Use Default, then Parent (use the default CW, and append the inherited CW)"
   parentDefault: "Use Parent, then Default (use the inherited CW, and append the default CW)"
+
+genKeys: "Generate Keys"
+_genKeysDialog:
+  text: "Are you sure that you want to generate new keys?"
+  title: "Generate new keys"

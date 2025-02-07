@@ -438,19 +438,14 @@ function chooseProxyAccount() {
 
 async function genKeys() {
 	if (serviceWorkerForm.savedState.swPrivateKey) {
-		os.confirm({ type: 'warning', title: i18n.ts._genKeysDialog.title, text: i18n.ts._genKeysDialog.text }).then(result => {
-			if (result.canceled) return;
-			os.apiWithDialog('admin/gen-vapid-keys', {}).then(res => {
-				serviceWorkerForm.state.swPublicKey = res.public;
-				serviceWorkerForm.state.swPrivateKey = res.private;
-			});
-		});
-	} else {
-		os.apiWithDialog('admin/gen-vapid-keys', {}).then(res => {
-			serviceWorkerForm.state.swPublicKey = res.public;
-			serviceWorkerForm.state.swPrivateKey = res.private;
-		});
+		const result = await os.confirm({ type: 'warning', title: i18n.ts._genKeysDialog.title, text: i18n.ts._genKeysDialog.text });
+		if (result.canceled) return;
 	}
+
+	const keys = await os.apiWithDialog('admin/gen-vapid-keys', {});
+
+	serviceWorkerForm.state.swPublicKey = keys.public;
+	serviceWorkerForm.state.swPrivateKey = keys.private;
 }
 
 const headerTabs = computed(() => []);

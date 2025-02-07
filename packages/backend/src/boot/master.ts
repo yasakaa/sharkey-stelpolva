@@ -90,7 +90,7 @@ export async function masterMain() {
 			maxBreadcrumbs: 0,
 
 			// Set release version
-			release: "Sharkey@" + meta.version,
+			release: 'Sharkey@' + meta.version,
 
 			...config.sentryForBackend.options,
 		});
@@ -99,6 +99,11 @@ export async function masterMain() {
 	bootLogger.info(
 		`mode: [disableClustering: ${envOption.disableClustering}, onlyServer: ${envOption.onlyServer}, onlyQueue: ${envOption.onlyQueue}]`,
 	);
+
+	if (envOption.onlyServer && envOption.onlyQueue) {
+		bootLogger.error('Configuration error: onlyServer and onlyQueue cannot both be set. To run both server and queue workers, disable / remove both options.');
+		process.exit(1);
+	}
 
 	if (!envOption.disableClustering) {
 		// clusterモジュール有効時
@@ -115,7 +120,7 @@ export async function masterMain() {
 		}
 
 		if (config.clusterLimit === 0) {
-			bootLogger.error("Configuration error: we can't create workers, `config.clusterLimit` is 0 (if you don't want to use clustering, set the environment variable `MK_DISABLE_CLUSTERING` to a non-empty value instead)", null, true);
+			bootLogger.error('Configuration error: we can\'t create workers, `config.clusterLimit` is 0 (if you don\'t want to use clustering, set the environment variable `MK_DISABLE_CLUSTERING` to a non-empty value instead)', null, true);
 			process.exit(1);
 		}
 

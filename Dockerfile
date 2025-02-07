@@ -6,15 +6,6 @@ FROM node:${NODE_VERSION} as build
 
 RUN apk add git linux-headers build-base
 
-ENV COREPACK_DEFAULT_TO_LATEST=0
-
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-	--mount=type=cache,target=/var/lib/apt,sharing=locked \
-	rm -f /etc/apt/apt.conf.d/docker-clean \
-	; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache \
-	&& apt-get update \
-	&& apt-get install -yqq --no-install-recommends \
-	build-essential
 ENV PYTHONUNBUFFERED=1
 ENV COREPACK_DEFAULT_TO_LATEST=0
 RUN apk add --update python3 && ln -sf python3 /usr/bin/python

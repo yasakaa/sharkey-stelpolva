@@ -179,7 +179,8 @@ export class MfmService {
 					break;
 				}
 
-				case 'ruby': {
+					// this is here only to catch upstream changes!
+				case 'ruby--': {
 					let ruby: [string, string][] = [];
 					for (const child of node.childNodes) {
 						if (child.nodeName === 'rp') {
@@ -310,16 +311,24 @@ export class MfmService {
 								continue;
 							}
 							if (child.nodeName === 'rt') {
-								text += '$[ruby $[group ';
+								// the only case in which we don't need a `$[group ]`
+								// is when both sides of the ruby are simple words
+								const needsGroup = nonRtNodes.length > 1 ||
+									/\s|\[|\]/.test(getText(nonRtNodes[0])) ||
+									/\s|\[|\]/.test(getText(child)) ;
+								text += '$[ruby ';
+								if (needsGroup) text += '$[group ';
 								appendChildren(nonRtNodes);
-								text += '] ';
+								if (needsGroup) text += ']';
+								text += ' ';
 								analyze(child);
-								text += '] ';
+								text += ']';
 								nonRtNodes = [];
 								continue;
 							}
 							nonRtNodes.push(child);
 						}
+						appendChildren(nonRtNodes);
 					}
 					break;
 				}

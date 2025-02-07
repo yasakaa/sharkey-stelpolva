@@ -4,7 +4,7 @@ ARG NODE_VERSION=22.11.0-alpine3.20
 
 FROM node:${NODE_VERSION} as build
 
-RUN apk add git linux-headers alpine-sdk
+RUN apk add git linux-headers alpine-sdk pixman libpng freetype zlib
 
 ENV PYTHONUNBUFFERED=1
 ENV COREPACK_DEFAULT_TO_LATEST=0

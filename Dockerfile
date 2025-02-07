@@ -9,7 +9,7 @@ RUN apk add git linux-headers build-base
 ENV PYTHONUNBUFFERED=1
 ENV COREPACK_DEFAULT_TO_LATEST=0
 RUN apk add --update python3 && ln -sf python3 /usr/bin/python
-RUN apk add py3-pip py3-setuptools
+RUN apk add py3-pip py3-setuptools alpine-sdk
 
 RUN corepack enable
 

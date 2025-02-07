@@ -315,7 +315,7 @@ export class MfmService {
 								// is when both sides of the ruby are simple words
 								const needsGroup = nonRtNodes.length > 1 ||
 									/\s|\[|\]/.test(getText(nonRtNodes[0])) ||
-									/\s|\[|\]/.test(getText(child)) ;
+									/\s|\[|\]/.test(getText(child));
 								text += '$[ruby ';
 								if (needsGroup) text += '$[group ';
 								appendChildren(nonRtNodes);

@@ -11978,6 +11978,40 @@ export interface Locale extends ILocale {
      */
     "robotsTxtDescription": string;
     /**
+     * Default content warning for new posts
+     */
+    "defaultCW": string;
+    /**
+     * The value here will be auto-filled as the content warning for all new posts and replies.
+     */
+    "defaultCWDescription": string;
+    /**
+     * Automatic CW priority
+     */
+    "defaultCWPriority": string;
+    /**
+     * Select preferred action when default CW and keep CW settings are both enabled at the same time.
+     */
+    "defaultCWPriorityDescription": string;
+    "_defaultCWPriority": {
+        /**
+         * Use Default (use the default CW, ignoring the inherited CW)
+         */
+        "default": string;
+        /**
+         * Use Parent (use the inherited CW, ignoring the default CW)
+         */
+        "parent": string;
+        /**
+         * Use Default, then Parent (use the default CW, and append the inherited CW)
+         */
+        "defaultParent": string;
+        /**
+         * Use Parent, then Default (use the inherited CW, and append the default CW)
+         */
+        "parentDefault": string;
+    };
+    /**
      * ID
      */
     "id": string;

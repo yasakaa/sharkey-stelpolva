@@ -55,6 +55,8 @@ import type { NoteEntityService } from './NoteEntityService.js';
 import type { DriveFileEntityService } from './DriveFileEntityService.js';
 import type { PageEntityService } from './PageEntityService.js';
 
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+
 const Ajv = _Ajv.default;
 const ajv = new Ajv();
 
@@ -669,6 +671,8 @@ export class UserEntityService implements OnModuleInit {
 				achievements: profile!.achievements,
 				loggedInDays: profile!.loggedInDates.length,
 				policies: this.roleService.getUserPolicies(user.id),
+				defaultCW: profile!.defaultCW,
+				defaultCWPriority: profile!.defaultCWPriority,
 			} : {}),
 
 			...(opts.includeSecrets ? {

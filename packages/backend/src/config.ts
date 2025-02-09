@@ -518,7 +518,7 @@ function applyEnvOverrides(config: Source) {
 		['redis', 'redisForPubsub', 'redisForJobQueue', 'redisForTimelines', 'redisForReactions'],
 		['host', 'port', 'username', 'pass', 'db', 'prefix'],
 	]);
-	_apply_top(['fulltextSearch', ['provider']]);
+	_apply_top(['fulltextSearch', 'provider']);
 	_apply_top(['meilisearch', ['host', 'port', 'apikey', 'ssl', 'index', 'scope']]);
 	_apply_top([['sentryForFrontend', 'sentryForBackend'], 'options', ['dsn', 'profileSampleRate', 'serverName', 'includeLocalVariables', 'proxy', 'keepAlive', 'caCerts']]);
 	_apply_top(['sentryForBackend', 'enableNodeProfiling']);
@@ -527,4 +527,5 @@ function applyEnvOverrides(config: Source) {
 	_apply_top([['maxFileSize', 'maxNoteLength', 'maxRemoteNoteLength', 'maxAltTextLength', 'maxRemoteAltTextLength', 'pidFile', 'filePermissionBits']]);
 	_apply_top(['import', ['downloadTimeout', 'maxFileSize']]);
 	_apply_top([['signToActivityPubGet', 'checkActivityPubGetSignature', 'setupPassword']]);
+	_apply_top(['logging', 'sql', ['disableQueryTruncation', 'enableQueryParamLogging']]);
 }

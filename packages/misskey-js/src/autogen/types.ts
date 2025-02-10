@@ -29739,7 +29739,9 @@ export type operations = {
             isBlocked: boolean;
             isMuted: boolean;
             isRenoteMuted: boolean;
-          }, {
+            isInstanceMuted?: boolean;
+            memo?: string | null;
+          }, ({
               /** Format: id */
               id: string;
               isFollowing: boolean;
@@ -29750,7 +29752,9 @@ export type operations = {
               isBlocked: boolean;
               isMuted: boolean;
               isRenoteMuted: boolean;
-            }[]]>;
+              isInstanceMuted?: boolean;
+              memo?: string | null;
+            })[]]>;
         };
       };
       /** @description Client error */

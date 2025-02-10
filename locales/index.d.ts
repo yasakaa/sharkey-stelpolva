@@ -11668,6 +11668,20 @@ export interface Locale extends ILocale {
          */
         "parentDefault": string;
     };
+    /**
+     * Generate Keys
+     */
+    "genKeys": string;
+    "_genKeysDialog": {
+        /**
+         * Are you sure that you want to generate new keys? This will stop push notifications for all users who have already enabled them.
+         */
+        "text": string;
+        /**
+         * Generate new keys
+         */
+        "title": string;
+    };
 }
 declare const locales: {
     [lang: string]: Locale;

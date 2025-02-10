@@ -448,4 +448,9 @@ _defaultCWPriority:
   defaultParent: "Use Default, then Parent (use the default CW, and append the inherited CW)"
   parentDefault: "Use Parent, then Default (use the inherited CW, and append the default CW)"
 
+genKeys: "Generate Keys"
+_genKeysDialog:
+  text: "Are you sure that you want to generate new keys? This will stop push notifications for all users who have already enabled them."
+  title: "Generate new keys"
+
 id: "ID"

@@ -459,6 +459,15 @@ export type paths = {
      */
     post: operations['admin___forward-abuse-user-report'];
   };
+  '/admin/gen-vapid-keys': {
+    /**
+     * admin/gen-vapid-keys
+     * @description No description provided.
+     *
+     * **Credential required**: *Yes* / **Permission**: *write:admin:meta*
+     */
+    post: operations['admin___gen-vapid-keys'];
+  };
   '/admin/get-index-stats': {
     /**
      * admin/get-index-stats
@@ -8269,6 +8278,50 @@ export type operations = {
         };
       };
     };
+    responses: {
+      /** @description OK (without any results) */
+      204: {
+        content: never;
+      };
+      /** @description Client error */
+      400: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Authentication error */
+      401: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Forbidden error */
+      403: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description I'm Ai */
+      418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Internal server error */
+      500: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
+  /**
+   * admin/gen-vapid-keys
+   * @description No description provided.
+   *
+   * **Credential required**: *Yes* / **Permission**: *write:admin:meta*
+   */
+  'admin___gen-vapid-keys': {
     responses: {
       /** @description OK (without any results) */
       204: {

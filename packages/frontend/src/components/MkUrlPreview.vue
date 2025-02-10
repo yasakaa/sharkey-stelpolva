@@ -117,7 +117,6 @@ const props = withDefaults(defineProps<{
 	compact: false,
 	showAsQuote: false,
 	showActions: true,
-	skipNoteIds: [],
 });
 
 const MOBILE_THRESHOLD = 500;
@@ -159,7 +158,7 @@ watch(activityPub, async (uri) => {
 			const response = await misskeyApi('ap/show', { uri });
 			if (response.type !== 'Note') return;
 			const theNoteId = response['object'].id;
-			if (theNoteId && props.skipNoteIds.includes(theNoteId)) {
+			if (theNoteId && props.skipNoteIds && props.skipNoteIds.includes(theNoteId)) {
 				hidePreview.value = true;
 				return;
 			}

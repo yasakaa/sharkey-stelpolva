@@ -8507,6 +8507,30 @@ export interface Locale extends ILocale {
          */
         "write:report-abuse": string;
         /**
+         * Approve new users
+         */
+        "write:admin:approve-user": string;
+        /**
+         * Decline new users
+         */
+        "write:admin:decline-user": string;
+        /**
+         * Mark users as NSFW
+         */
+        "write:admin:nsfw-user": string;
+        /**
+         * Mark users an not NSFW
+         */
+        "write:admin:unnsfw-user": string;
+        /**
+         * Silence users
+         */
+        "write:admin:silence-user": string;
+        /**
+         * Un-silence users
+         */
+        "write:admin:unsilence-user": string;
+        /**
          * View your list of scheduled notes
          */
         "read:notes-schedule": string;

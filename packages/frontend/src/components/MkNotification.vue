@@ -210,6 +210,8 @@ const props = withDefaults(defineProps<{
 
 const userDetailed: Ref<UserDetailed | null> = ref(null);
 
+const followRequestDone = ref(true);
+
 // watch() is required because computed() doesn't support async.
 watch(props, async () => {
 	const type = props.notification.type;
@@ -241,8 +243,6 @@ const exportEntityName = {
 	note: i18n.ts.notes,
 	userList: i18n.ts.lists,
 } as const satisfies Record<ExportCompletedNotification['exportedEntity'], string>;
-
-const followRequestDone = ref(true);
 
 const acceptFollowRequest = () => {
 	if (!('user' in props.notification)) return;

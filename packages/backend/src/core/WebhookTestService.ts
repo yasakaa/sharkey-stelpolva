@@ -217,6 +217,7 @@ function toPackedUserLite(user: MiUser, override?: Packed<'UserLite'>): Packed<'
 		isSystem: false,
 		isSilenced: user.isSilenced,
 		enableRss: true,
+		mandatoryCW: null,
 		...override,
 	};
 }

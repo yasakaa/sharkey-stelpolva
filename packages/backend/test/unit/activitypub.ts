@@ -483,38 +483,38 @@ describe('ActivityPub', () => {
 	});
 
 	describe(ApRendererService, () => {
-		describe('renderNote', () => {
-			let note: MiNote;
-			let author: MiUser;
+		let note: MiNote;
+		let author: MiUser;
 
-			beforeEach(() => {
-				author = new MiUser({
-					id: idService.gen(),
-				});
-				note = new MiNote({
-					id: idService.gen(),
-					userId: author.id,
-					visibility: 'public',
-					localOnly: false,
-					text: 'Note text',
-					cw: null,
-					renoteCount: 0,
-					repliesCount: 0,
-					clippedCount: 0,
-					reactions: {},
-					fileIds: [],
-					attachedFileTypes: [],
-					visibleUserIds: [],
-					mentions: [],
-					// This is fucked tbh - it's JSON stored in a TEXT column that gets parsed/serialized all over the place
-					mentionedRemoteUsers: '[]',
-					reactionAndUserPairCache: [],
-					emojis: [],
-					tags: [],
-					hasPoll: false,
-				});
+		beforeEach(() => {
+			author = new MiUser({
+				id: idService.gen(),
 			});
+			note = new MiNote({
+				id: idService.gen(),
+				userId: author.id,
+				visibility: 'public',
+				localOnly: false,
+				text: 'Note text',
+				cw: null,
+				renoteCount: 0,
+				repliesCount: 0,
+				clippedCount: 0,
+				reactions: {},
+				fileIds: [],
+				attachedFileTypes: [],
+				visibleUserIds: [],
+				mentions: [],
+				// This is fucked tbh - it's JSON stored in a TEXT column that gets parsed/serialized all over the place
+				mentionedRemoteUsers: '[]',
+				reactionAndUserPairCache: [],
+				emojis: [],
+				tags: [],
+				hasPoll: false,
+			});
+		});
 
+		describe('renderNote', () => {
 			describe('summary', () => {
 				// I actually don't know why it does this, but the logic was already there so I've preserved it.
 				it('should be special character when CW is empty string', async () => {
@@ -561,6 +561,59 @@ describe('ActivityPub', () => {
 					author.mandatoryCW = 'mandatory';
 
 					const result = await rendererService.renderNote(note, author, false);
+
+					expect(result.summary).toBe('original and mandatory');
+				});
+			});
+		});
+
+		describe('renderUpnote', () => {
+			describe('summary', () => {
+				// I actually don't know why it does this, but the logic was already there so I've preserved it.
+				it('should be special character when CW is empty string', async () => {
+					note.cw = '';
+
+					const result = await rendererService.renderUpNote(note, author, false);
+
+					expect(result.summary).toBe(String.fromCharCode(0x200B));
+				});
+
+				it('should be undefined when CW is null', async () => {
+					const result = await rendererService.renderUpNote(note, author, false);
+
+					expect(result.summary).toBeUndefined();
+				});
+
+				it('should be CW when present without mandatoryCW', async () => {
+					note.cw = 'original';
+
+					const result = await rendererService.renderUpNote(note, author, false);
+
+					expect(result.summary).toBe('original');
+				});
+
+				it('should be mandatoryCW when present without CW', async () => {
+					author.mandatoryCW = 'mandatory';
+
+					const result = await rendererService.renderUpNote(note, author, false);
+
+					expect(result.summary).toBe('mandatory');
+				});
+
+				it('should be merged when CW and mandatoryCW are both present', async () => {
+					note.cw = 'original';
+					author.mandatoryCW = 'mandatory';
+
+					const result = await rendererService.renderUpNote(note, author, false);
+
+					expect(result.summary).toBe('original, mandatory');
+				});
+
+				it('should be CW when CW includes mandatoryCW', async () => {
+					note.cw = 'original and mandatory';
+					author.mandatoryCW = 'mandatory';
+
+					const result = await rendererService.renderUpNote(note, author, false);
 
 					expect(result.summary).toBe('original and mandatory');
 				});

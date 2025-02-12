@@ -8555,6 +8555,10 @@ export interface Locale extends ILocale {
          */
         "write:admin:unnsfw-user": string;
         /**
+         * Apply mandatory CW on users
+         */
+        "write:admin:cw-user": string;
+        /**
          * Silence users
          */
         "write:admin:silence-user": string;

@@ -230,7 +230,6 @@ export class NoteEditService implements OnApplicationShutdown {
 		host: MiUser['host'];
 		isBot: MiUser['isBot'];
 		noindex: MiUser['noindex'];
-		mandatoryCW: MiUser['mandatoryCW'];
 	}, editid: MiNote['id'], data: Option, silent = false): Promise<MiNote> {
 		if (!editid) {
 			throw new Error('fail');
@@ -395,15 +394,6 @@ export class NoteEditService implements OnApplicationShutdown {
 			}
 		} else {
 			data.cw = null;
-		}
-
-		// Apply mandatory CW, if applicable
-		if (user.mandatoryCW) {
-			if (!data.cw) {
-				data.cw = user.mandatoryCW;
-			} else if (!data.cw.includes(user.mandatoryCW)) {
-				data.cw += `, ${user.mandatoryCW}`;
-			}
 		}
 
 		let tags = data.apHashtags;

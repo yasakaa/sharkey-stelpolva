@@ -288,7 +288,7 @@ function createFetcher() {
 		markedAsNSFW.value = info.value.alwaysMarkNsfw;
 		suspended.value = info.value.isSuspended;
 		moderationNote.value = info.value.moderationNote;
-		mandatoryCW.value = info.value.mandatoryCW;
+		mandatoryCW.value = user.value.mandatoryCW;
 	});
 }
 

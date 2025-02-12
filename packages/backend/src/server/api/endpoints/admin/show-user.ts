@@ -144,10 +144,6 @@ export const meta = {
 				type: 'string',
 				optional: false, nullable: false,
 			},
-			mandatoryCW: {
-				type: 'string',
-				optional: false, nullable: true,
-			},
 			signins: {
 				type: 'array',
 				optional: false, nullable: false,
@@ -264,7 +260,6 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				isHibernated: user.isHibernated,
 				lastActiveDate: user.lastActiveDate ? user.lastActiveDate.toISOString() : null,
 				moderationNote: profile.moderationNote ?? '',
-				mandatoryCW: user.mandatoryCW,
 				signins,
 				policies: await this.roleService.getUserPolicies(user.id),
 				roles: await this.roleEntityService.packMany(roles, me),

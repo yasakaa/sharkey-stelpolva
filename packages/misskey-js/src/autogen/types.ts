@@ -3968,6 +3968,7 @@ export type components = {
       isSystem?: boolean;
       noindex: boolean;
       enableRss: boolean;
+      mandatoryCW: string | null;
       isBot?: boolean;
       isCat?: boolean;
       speakAsCat?: boolean;

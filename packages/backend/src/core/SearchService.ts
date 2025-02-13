@@ -112,7 +112,7 @@ const fileTypes = {
 };
 
 // Make sure to regenerate misskey-js and check search.note.vue after changing these
-export const fileTypeCategories = ['image', 'video', 'audio', 'module', 'flash'] as const;
+export const fileTypeCategories = ['image', 'video', 'audio', 'module', 'flash', null] as const;
 export type FileTypeCategory = typeof fileTypeCategories[number];
 
 @Injectable()
@@ -217,7 +217,7 @@ export class SearchService {
 		userId?: MiNote['userId'] | null;
 		channelId?: MiNote['channelId'] | null;
 		host?: string | null;
-		filetype?: FileTypeCategory | null;
+		filetype?: FileTypeCategory;
 		order?: string | null;
 		disableMeili?: boolean | null;
 	}, pagination: {

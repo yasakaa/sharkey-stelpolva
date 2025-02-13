@@ -25029,7 +25029,8 @@ export type operations = {
           offset?: number;
           /** @description The local host is represented with `.`. */
           host?: string;
-          filetype?: string | null;
+          /** @enum {string|null} */
+          filetype?: 'image' | 'video' | 'audio' | 'module' | 'flash';
           /**
            * Format: misskey:id
            * @default null

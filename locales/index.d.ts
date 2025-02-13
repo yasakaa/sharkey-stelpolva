@@ -12049,6 +12049,42 @@ export interface Locale extends ILocale {
          */
         "title": string;
     };
+    "_noteSearch": {
+        /**
+         * Sort by newest to oldest
+         */
+        "newestToOldest": string;
+        /**
+         * File Type
+         */
+        "fileType": string;
+        "_fileType": {
+            /**
+             * None
+             */
+            "none": string;
+            /**
+             * Images
+             */
+            "image": string;
+            /**
+             * Videos
+             */
+            "video": string;
+            /**
+             * Audio
+             */
+            "audio": string;
+            /**
+             * Module
+             */
+            "module": string;
+            /**
+             * Flash
+             */
+            "flash": string;
+        };
+    };
     /**
      * ID
      */

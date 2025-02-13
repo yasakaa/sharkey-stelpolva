@@ -459,4 +459,15 @@ _genKeysDialog:
   text: "Are you sure that you want to generate new keys? This will stop push notifications for all users who have already enabled them."
   title: "Generate new keys"
 
+_noteSearch:
+  newestToOldest: "Sort by newest to oldest"
+  fileType: "File Type"
+  _fileType:
+    none: "None"
+    image: "Images"
+    video: "Videos"
+    audio: "Audio"
+    module: "Module"
+    flash: "Flash"
+
 id: "ID"

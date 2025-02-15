@@ -25901,7 +25901,7 @@ export type operations = {
           /** @description The local host is represented with `.`. */
           host?: string;
           /** @enum {string|null} */
-          filetype?: 'image' | 'video' | 'audio' | 'module' | 'flash';
+          filetype?: 'image' | 'video' | 'audio' | 'module' | 'flash' | null;
           /**
            * Format: misskey:id
            * @default null

@@ -228,7 +228,13 @@ export class NoteCreateService implements OnApplicationShutdown {
 	}
 
 	@bindThis
-	public async create(user: MiUser, data: Option, silent = false): Promise<MiNote> {
+	public async create(user: MiUser & {
+		id: MiUser['id'];
+		username: MiUser['username'];
+		host: MiUser['host'];
+		isBot: MiUser['isBot'];
+		noindex: MiUser['noindex'];
+	}, data: Option, silent = false): Promise<MiNote> {
 		// チャンネル外にリプライしたら対象のスコープに合わせる
 		// (クライアントサイドでやっても良い処理だと思うけどとりあえずサーバーサイドで)
 		if (data.reply && data.channel && data.reply.channelId !== data.channel.id) {
@@ -429,7 +435,13 @@ export class NoteCreateService implements OnApplicationShutdown {
 	}
 
 	@bindThis
-	public async import(user: MiUser, data: Option): Promise<MiNote> {
+	public async import(user: MiUser & {
+		id: MiUser['id'];
+		username: MiUser['username'];
+		host: MiUser['host'];
+		isBot: MiUser['isBot'];
+		noindex: MiUser['noindex'];
+	}, data: Option): Promise<MiNote> {
 		return this.create(user, data, true);
 	}
 
@@ -540,7 +552,13 @@ export class NoteCreateService implements OnApplicationShutdown {
 	}
 
 	@bindThis
-	private async postNoteCreated(note: MiNote, user: MiUser, data: Option, silent: boolean, tags: string[], mentionedUsers: MinimumUser[]) {
+	private async postNoteCreated(note: MiNote, user: MiUser & {
+		id: MiUser['id'];
+		username: MiUser['username'];
+		host: MiUser['host'];
+		isBot: MiUser['isBot'];
+		noindex: MiUser['noindex'];
+	}, data: Option, silent: boolean, tags: string[], mentionedUsers: MinimumUser[]) {
 		this.notesChart.update(note, true);
 		if (note.visibility !== 'specified' && (this.meta.enableChartsForRemoteUser || (user.host == null))) {
 			this.perUserNotesChart.update(user, note, true);

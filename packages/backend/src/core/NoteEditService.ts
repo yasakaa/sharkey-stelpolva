@@ -224,7 +224,13 @@ export class NoteEditService implements OnApplicationShutdown {
 	}
 
 	@bindThis
-	public async edit(user: MiUser, editid: MiNote['id'], data: Option, silent = false): Promise<MiNote> {
+	public async edit(user: MiUser & {
+		id: MiUser['id'];
+		username: MiUser['username'];
+		host: MiUser['host'];
+		isBot: MiUser['isBot'];
+		noindex: MiUser['noindex'];
+	}, editid: MiNote['id'], data: Option, silent = false): Promise<MiNote> {
 		if (!editid) {
 			throw new Error('fail');
 		}
@@ -578,7 +584,13 @@ export class NoteEditService implements OnApplicationShutdown {
 	}
 
 	@bindThis
-	private async postNoteEdited(note: MiNote, oldNote: MiNote, user: MiUser, data: Option, silent: boolean, tags: string[], mentionedUsers: MinimumUser[]) {
+	private async postNoteEdited(note: MiNote, oldNote: MiNote, user: MiUser & {
+		id: MiUser['id'];
+		username: MiUser['username'];
+		host: MiUser['host'];
+		isBot: MiUser['isBot'];
+		noindex: MiUser['noindex'];
+	}, data: Option, silent: boolean, tags: string[], mentionedUsers: MinimumUser[]) {
 		// Register host
 		if (this.meta.enableStatsForFederatedInstances) {
 			if (this.userEntityService.isRemoteUser(user)) {

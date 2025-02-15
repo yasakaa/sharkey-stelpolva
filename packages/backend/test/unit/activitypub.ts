@@ -517,7 +517,7 @@ describe('ActivityPub', () => {
 		describe('renderNote', () => {
 			describe('summary', () => {
 				// I actually don't know why it does this, but the logic was already there so I've preserved it.
-				it('should be special character when CW is empty string', async () => {
+				it('should be zero-width space when CW is empty string', async () => {
 					note.cw = '';
 
 					const result = await rendererService.renderNote(note, author, false);
@@ -570,7 +570,7 @@ describe('ActivityPub', () => {
 		describe('renderUpnote', () => {
 			describe('summary', () => {
 				// I actually don't know why it does this, but the logic was already there so I've preserved it.
-				it('should be special character when CW is empty string', async () => {
+				it('should be zero-width space when CW is empty string', async () => {
 					note.cw = '';
 
 					const result = await rendererService.renderUpNote(note, author, false);

@@ -33,7 +33,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import * as Misskey from 'misskey-js';
-import { appendContentWarning } from '@@/js/append-content-warning.js';
+import { computeMergedCw } from '@@/js/compute-merged-cw.js';
 import EmA from '@/components/EmA.vue';
 import EmAvatar from '@/components/EmAvatar.vue';
 import EmNoteHeader from '@/components/EmNoteHeader.vue';
@@ -56,13 +56,7 @@ const props = withDefaults(defineProps<{
 const showContent = ref(false);
 const replies = ref<Misskey.entities.Note[]>([]);
 
-const mergedCW = computed(() => {
-	let cw = props.note.cw;
-	if (props.note.user.mandatoryCW) {
-		cw = appendContentWarning(cw, props.note.user.mandatoryCW);
-	}
-	return cw;
-});
+const mergedCW = computed(() => computeMergedCw(props.note));
 
 if (props.detail) {
 	misskeyApi('notes/children', {

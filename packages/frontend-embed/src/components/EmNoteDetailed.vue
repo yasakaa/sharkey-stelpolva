@@ -130,7 +130,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 import { computed, inject, ref } from 'vue';
 import * as mfm from '@transfem-org/sfm-js';
 import * as Misskey from 'misskey-js';
-import { appendContentWarning } from '@@/js/append-content-warning.js';
+import { computeMergedCw } from '@@/js/compute-merged-cw.js';
 import I18n from '@/components/I18n.vue';
 import EmMediaList from '@/components/EmMediaList.vue';
 import EmNoteSub from '@/components/EmNoteSub.vue';
@@ -177,13 +177,7 @@ const parsed = appearNote.value.text ? mfm.parse(appearNote.value.text) : null;
 const isLong = shouldCollapsed(appearNote.value, []);
 const collapsed = ref(appearNote.value.cw == null && isLong);
 
-const mergedCW = computed(() => {
-	let cw = appearNote.value.cw;
-	if (appearNote.value.user.mandatoryCW) {
-		cw = appendContentWarning(cw, appearNote.value.user.mandatoryCW);
-	}
-	return cw;
-});
+const mergedCW = computed(() => computeMergedCw(appearNote.value));
 </script>
 
 <style lang="scss" module>

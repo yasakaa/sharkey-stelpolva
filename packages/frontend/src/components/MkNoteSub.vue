@@ -86,7 +86,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 <script lang="ts" setup>
 import { computed, ref, shallowRef, watch } from 'vue';
 import * as Misskey from 'misskey-js';
-import { appendContentWarning } from '@@/js/append-content-warning.js';
+import { computeMergedCw } from '@@/js/compute-merged-cw.js';
 import MkNoteHeader from '@/components/MkNoteHeader.vue';
 import MkReactionsViewer from '@/components/MkReactionsViewer.vue';
 import MkSubNoteContent from '@/components/MkSubNoteContent.vue';
@@ -143,13 +143,7 @@ let appearNote = computed(() => isRenote ? props.note.renote as Misskey.entities
 const defaultLike = computed(() => defaultStore.state.like ? defaultStore.state.like : null);
 const replies = ref<Misskey.entities.Note[]>([]);
 
-const mergedCW = computed(() => {
-	let cw = appearNote.value.cw;
-	if (appearNote.value.user.mandatoryCW) {
-		cw = appendContentWarning(cw, appearNote.value.user.mandatoryCW);
-	}
-	return cw;
-});
+const mergedCW = computed(() => computeMergedCw(appearNote.value));
 
 const isRenote = (
 	props.note.renote != null &&

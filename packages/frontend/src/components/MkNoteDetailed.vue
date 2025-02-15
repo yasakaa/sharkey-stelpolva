@@ -245,7 +245,7 @@ import * as mfm from '@transfem-org/sfm-js';
 import * as Misskey from 'misskey-js';
 import { isLink } from '@@/js/is-link.js';
 import { host } from '@@/js/config.js';
-import { appendContentWarning } from '@@/js/append-content-warning.js';
+import { computeMergedCw } from '@@/js/compute-merged-cw.js';
 import MkNoteSub from '@/components/MkNoteSub.vue';
 import MkNoteSimple from '@/components/MkNoteSimple.vue';
 import MkReactionsViewer from '@/components/MkReactionsViewer.vue';
@@ -349,13 +349,7 @@ const quotes = ref<Misskey.entities.Note[]>([]);
 const canRenote = computed(() => ['public', 'home'].includes(appearNote.value.visibility) || (appearNote.value.visibility === 'followers' && appearNote.value.userId === $i?.id));
 const defaultLike = computed(() => defaultStore.state.like ? defaultStore.state.like : null);
 
-const mergedCW = computed(() => {
-	let cw = appearNote.value.cw;
-	if (appearNote.value.user.mandatoryCW) {
-		cw = appendContentWarning(cw, appearNote.value.user.mandatoryCW);
-	}
-	return cw;
-});
+const mergedCW = computed(() => computeMergedCw(appearNote.value));
 
 const renoteTooltip = computeRenoteTooltip(renoted);
 

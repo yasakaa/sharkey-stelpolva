@@ -213,7 +213,7 @@ import * as Misskey from 'misskey-js';
 import { isLink } from '@@/js/is-link.js';
 import { shouldCollapsed } from '@@/js/collapsed.js';
 import { host } from '@@/js/config.js';
-import { appendContentWarning } from '@@/js/append-content-warning.js';
+import { computeMergedCw } from '@@/js/compute-merged-cw.js';
 import type { MenuItem } from '@/types/menu.js';
 import SkNoteSub from '@/components/SkNoteSub.vue';
 import SkNoteHeader from '@/components/SkNoteHeader.vue';
@@ -346,13 +346,7 @@ const defaultLike = computed(() => defaultStore.state.like ? defaultStore.state.
 const animated = computed(() => parsed.value ? checkAnimationFromMfm(parsed.value) : null);
 const allowAnim = ref(defaultStore.state.advancedMfm && defaultStore.state.animatedMfm ? true : false);
 
-const mergedCW = computed(() => {
-	let cw = appearNote.value.cw;
-	if (appearNote.value.user.mandatoryCW) {
-		cw = appendContentWarning(cw, appearNote.value.user.mandatoryCW);
-	}
-	return cw;
-});
+const mergedCW = computed(() => computeMergedCw(appearNote.value));
 
 const renoteTooltip = computeRenoteTooltip(renoted);
 

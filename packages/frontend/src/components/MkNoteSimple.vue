@@ -28,7 +28,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 import * as Misskey from 'misskey-js';
-import { appendContentWarning } from '@@/js/append-content-warning.js';
+import { computeMergedCw } from '@@/js/compute-merged-cw.js';
 import * as os from '@/os.js';
 import MkNoteHeader from '@/components/MkNoteHeader.vue';
 import MkSubNoteContent from '@/components/MkSubNoteContent.vue';
@@ -49,13 +49,7 @@ const props = defineProps<{
 let showContent = ref(defaultStore.state.uncollapseCW);
 const isDeleted = ref(false);
 
-const mergedCW = computed(() => {
-	let cw = props.note.cw;
-	if (props.note.user.mandatoryCW) {
-		cw = appendContentWarning(cw, props.note.user.mandatoryCW);
-	}
-	return cw;
-});
+const mergedCW = computed(() => computeMergedCw(props.note));
 
 const emit = defineEmits<{
 	(ev: 'editScheduleNote'): void;

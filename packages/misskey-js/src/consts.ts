@@ -89,6 +89,7 @@ export const permissions = [
 	'write:admin:unset-user-avatar',
 	'write:admin:unset-user-banner',
 	'write:admin:unsuspend-user',
+	'write:admin:reject-quotes',
 	'write:admin:meta',
 	'write:admin:user-note',
 	'write:admin:roles',
@@ -490,5 +491,23 @@ export type ModerationLogPayloads = {
 		postUserId: string;
 		postUserUsername: string;
 		post: GalleryPost;
+	};
+	acceptQuotesUser: {
+		userId: string,
+		userUsername: string,
+		userHost: string | null,
+	};
+	rejectQuotesUser: {
+		userId: string,
+		userUsername: string,
+		userHost: string | null,
+	};
+	acceptQuotesInstance: {
+		id: string;
+		host: string;
+	};
+	rejectQuotesInstance: {
+		id: string;
+		host: string;
 	};
 };

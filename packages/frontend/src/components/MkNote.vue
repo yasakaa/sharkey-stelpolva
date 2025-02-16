@@ -142,7 +142,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 					<i class="ti ti-ban"></i>
 				</button>
 				<button
-					v-if="canRenote && !props.mock"
+					v-if="canRenote && !props.mock && !$i?.rejectQuotes"
 					ref="quoteButton"
 					:class="$style.footerButton"
 					class="_button"

@@ -445,6 +445,10 @@ export const packedUserDetailedNotMeOnlySchema = {
 			type: 'boolean',
 			nullable: false, optional: true,
 		},
+		rejectQuotes: {
+			type: 'boolean',
+			nullable: false, optional: true,
+		},
 		//#region relations
 		isFollowing: {
 			type: 'boolean',

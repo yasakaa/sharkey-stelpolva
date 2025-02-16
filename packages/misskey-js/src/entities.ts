@@ -61,6 +61,18 @@ export type ModerationLog = {
 	type: 'unsuspend';
 	info: ModerationLogPayloads['unsuspend'];
 } | {
+	type: 'acceptQuotesUser';
+	info: ModerationLogPayloads['acceptQuotesUser'];
+} | {
+	type: 'rejectQuotesUser';
+	info: ModerationLogPayloads['rejectQuotesUser'];
+} | {
+	type: 'acceptQuotesInstance';
+	info: ModerationLogPayloads['acceptQuotesInstance'];
+} | {
+	type: 'rejectQuotesInstance';
+	info: ModerationLogPayloads['rejectQuotesInstance'];
+} | {
 	type: 'updateUserNote';
 	info: ModerationLogPayloads['updateUserNote'];
 } | {

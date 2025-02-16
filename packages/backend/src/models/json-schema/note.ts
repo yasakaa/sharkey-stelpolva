@@ -256,6 +256,14 @@ export const packedNoteSchema = {
 			type: 'number',
 			optional: true, nullable: false,
 		},
+		processErrors: {
+			type: 'array',
+			optional: true, nullable: true,
+			items: {
+				type: 'string',
+				optional: false, nullable: false,
+			},
+		},
 
 		myReaction: {
 			type: 'string',

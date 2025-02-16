@@ -132,6 +132,10 @@ export const moderationLogTypes = [
 	'deletePage',
 	'deleteFlash',
 	'deleteGalleryPost',
+	'acceptQuotesUser',
+	'rejectQuotesUser',
+	'acceptQuotesInstance',
+	'rejectQuotesInstance',
 ] as const;
 
 export type ModerationLogPayloads = {
@@ -416,6 +420,24 @@ export type ModerationLogPayloads = {
 		postUserId: string;
 		postUserUsername: string;
 		post: any;
+	};
+	acceptQuotesUser: {
+		userId: string,
+		userUsername: string,
+		userHost: string | null,
+	};
+	rejectQuotesUser: {
+		userId: string,
+		userUsername: string,
+		userHost: string | null,
+	};
+	acceptQuotesInstance: {
+		id: string;
+		host: string;
+	};
+	rejectQuotesInstance: {
+		id: string;
+		host: string;
 	};
 };
 

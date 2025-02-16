@@ -674,6 +674,7 @@ export class UserEntityService implements OnModuleInit {
 				securityKeys: profile!.twoFactorEnabled
 					? this.userSecurityKeysRepository.countBy({ userId: user.id }).then(result => result >= 1)
 					: false,
+				rejectQuotes: user.rejectQuotes,
 			} : {}),
 
 			...(isDetailed && isMe ? {

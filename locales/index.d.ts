@@ -8567,6 +8567,10 @@ export interface Locale extends ILocale {
          */
         "write:admin:unsilence-user": string;
         /**
+         * Allow/Reject quote posts from a user
+         */
+        "write:admin:reject-quotes": string;
+        /**
          * View your list of scheduled notes
          */
         "read:notes-schedule": string;
@@ -10242,6 +10246,14 @@ export interface Locale extends ILocale {
          * Accepted reports from remote instance
          */
         "acceptRemoteInstanceReports": string;
+        /**
+         * Rejected quotes from user
+         */
+        "rejectQuotesUser": string;
+        /**
+         * Allowed quotes from user
+         */
+        "allowQuotesUser": string;
     };
     "_fileViewer": {
         /**
@@ -11241,6 +11253,22 @@ export interface Locale extends ILocale {
      */
     "rejectReports": string;
     /**
+     * Reject quote posts from this instance
+     */
+    "rejectQuotesInstance": string;
+    /**
+     * Reject quote posts from this user
+     */
+    "rejectQuotesUser": string;
+    /**
+     * Are you sure you wish to reject quote posts?
+     */
+    "rejectQuotesConfirm": string;
+    /**
+     * Are you sure you wish to allow quote posts?
+     */
+    "allowQuotesConfirm": string;
+    /**
      * This host is blocked implicitly because a base domain is blocked. To unblock this host, first unblock the base domain(s).
      */
     "blockedByBase": string;
@@ -12109,6 +12137,12 @@ export interface Locale extends ILocale {
      * Applies a content warning to all posts created by this user. If the post already has a CW, then this is appended to the end.
      */
     "mandatoryCWDescription": string;
+    "_processErrors": {
+        /**
+         * Unable to process quote. This post may be missing context.
+         */
+        "quoteUnavailable": string;
+    };
 }
 declare const locales: {
     [lang: string]: Locale;

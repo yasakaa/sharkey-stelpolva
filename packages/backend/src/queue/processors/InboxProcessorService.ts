@@ -248,6 +248,14 @@ export class InboxProcessorService implements OnApplicationShutdown {
 				return `skip: permanent error ${e.statusCode}`;
 			}
 
+			if (e instanceof IdentifiableError && !e.isRetryable) {
+				if (e.message) {
+					return `skip: permanent error ${e.id}: ${e.message}`;
+				} else {
+					return `skip: permanent error ${e.id}`;
+				}
+			}
+
 			throw e;
 		}
 		return 'ok';

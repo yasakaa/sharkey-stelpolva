@@ -18,7 +18,7 @@ import type { Config } from '@/config.js';
 import { IdentifiableError } from '@/misc/identifiable-error.js';
 import { ApResolverService } from '../ApResolverService.js';
 import { ApLoggerService } from '../ApLoggerService.js';
-import { isDocument, type IObject } from '../type.js';
+import { isDocument, type IObject, isApObject } from '../type.js';
 
 @Injectable()
 export class ApImageService {

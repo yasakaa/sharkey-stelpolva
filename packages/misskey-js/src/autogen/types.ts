@@ -594,6 +594,15 @@ export type paths = {
      */
     post: operations['admin___queue___stats'];
   };
+  '/admin/reject-quotes': {
+    /**
+     * admin/reject-quotes
+     * @description No description provided.
+     *
+     * **Credential required**: *Yes* / **Permission**: *write:admin:reject-quotes*
+     */
+    post: operations['admin___reject-quotes'];
+  };
   '/admin/relays/add': {
     /**
      * admin/relays/add
@@ -4061,6 +4070,7 @@ export type components = {
       twoFactorEnabled?: boolean;
       usePasswordLessLogin?: boolean;
       securityKeys?: boolean;
+      rejectQuotes?: boolean;
       isFollowing?: boolean;
       isFollowed?: boolean;
       hasPendingFollowRequestFromYou?: boolean;
@@ -4408,6 +4418,7 @@ export type components = {
       url?: string;
       reactionAndUserPairCache?: string[];
       clippedCount?: number;
+      processErrors?: string[] | null;
       myReaction?: string | null;
     };
     NoteReaction: {
@@ -4965,6 +4976,7 @@ export type components = {
       latestRequestReceivedAt: string | null;
       isNSFW: boolean;
       rejectReports: boolean;
+      rejectQuotes: boolean;
       moderationNote?: string | null;
     };
     GalleryPost: {
@@ -8286,6 +8298,7 @@ export type operations = {
           isNSFW?: boolean;
           rejectReports?: boolean;
           moderationNote?: string;
+          rejectQuotes?: boolean;
         };
       };
     };
@@ -9189,6 +9202,59 @@ export type operations = {
             objectStorage: components['schemas']['QueueCount'];
           };
         };
+      };
+      /** @description Client error */
+      400: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Authentication error */
+      401: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Forbidden error */
+      403: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description I'm Ai */
+      418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Internal server error */
+      500: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
+  /**
+   * admin/reject-quotes
+   * @description No description provided.
+   *
+   * **Credential required**: *Yes* / **Permission**: *write:admin:reject-quotes*
+   */
+  'admin___reject-quotes': {
+    requestBody: {
+      content: {
+        'application/json': {
+          /** Format: misskey:id */
+          userId: string;
+          rejectQuotes: boolean;
+        };
+      };
+    };
+    responses: {
+      /** @description OK (without any results) */
+      204: {
+        content: never;
       };
       /** @description Client error */
       400: {

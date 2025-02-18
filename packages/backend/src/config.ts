@@ -129,6 +129,12 @@ type Source = {
 			enableQueryParamLogging? : boolean,
 		}
 	}
+
+	activityLogging?: {
+		enabled?: boolean;
+		preSave?: boolean;
+		maxAge?: number;
+	};
 };
 
 export type Config = {
@@ -238,6 +244,12 @@ export type Config = {
 
 	pidFile: string;
 	filePermissionBits?: string;
+
+	activityLogging: {
+		enabled: boolean;
+		preSave: boolean;
+		maxAge: number;
+	};
 };
 
 export type FulltextSearchProvider = 'sqlLike' | 'sqlPgroonga' | 'meilisearch';
@@ -380,6 +392,11 @@ export function loadConfig(): Config {
 		pidFile: config.pidFile,
 		filePermissionBits: config.filePermissionBits,
 		logging: config.logging,
+		activityLogging: {
+			enabled: config.activityLogging?.enabled ?? false,
+			preSave: config.activityLogging?.preSave ?? false,
+			maxAge: config.activityLogging?.maxAge ?? (1000 * 60 * 60 * 24 * 30),
+		},
 	};
 }
 
@@ -531,4 +548,5 @@ function applyEnvOverrides(config: Source) {
 	_apply_top(['import', ['downloadTimeout', 'maxFileSize']]);
 	_apply_top([['signToActivityPubGet', 'checkActivityPubGetSignature', 'setupPassword']]);
 	_apply_top(['logging', 'sql', ['disableQueryTruncation', 'enableQueryParamLogging']]);
+	_apply_top(['activityLogging', ['enabled', 'preSave', 'maxAge']]);
 }

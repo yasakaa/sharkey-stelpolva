@@ -53,6 +53,7 @@ type Source = {
 	redisForJobQueue?: RedisOptionsSource;
 	redisForTimelines?: RedisOptionsSource;
 	redisForReactions?: RedisOptionsSource;
+	redisForRateLimit?: RedisOptionsSource;
 	fulltextSearch?: {
 		provider?: FulltextSearchProvider;
 	};
@@ -225,6 +226,7 @@ export type Config = {
 	redisForJobQueue: RedisOptions & RedisOptionsSource;
 	redisForTimelines: RedisOptions & RedisOptionsSource;
 	redisForReactions: RedisOptions & RedisOptionsSource;
+	redisForRateLimit: RedisOptions & RedisOptionsSource;
 	sentryForBackend: { options: Partial<Sentry.NodeOptions>; enableNodeProfiling: boolean; } | undefined;
 	sentryForFrontend: { options: Partial<Sentry.NodeOptions> } | undefined;
 	perChannelMaxNoteCacheCount: number;
@@ -333,6 +335,7 @@ export function loadConfig(): Config {
 		redisForJobQueue: config.redisForJobQueue ? convertRedisOptions(config.redisForJobQueue, host) : redis,
 		redisForTimelines: config.redisForTimelines ? convertRedisOptions(config.redisForTimelines, host) : redis,
 		redisForReactions: config.redisForReactions ? convertRedisOptions(config.redisForReactions, host) : redis,
+		redisForRateLimit: config.redisForRateLimit ? convertRedisOptions(config.redisForRateLimit, host) : redis,
 		sentryForBackend: config.sentryForBackend,
 		sentryForFrontend: config.sentryForFrontend,
 		id: config.id,
@@ -518,7 +521,7 @@ function applyEnvOverrides(config: Source) {
 	_apply_top(['db', ['host', 'port', 'db', 'user', 'pass', 'disableCache']]);
 	_apply_top(['dbSlaves', Array.from((config.dbSlaves ?? []).keys()), ['host', 'port', 'db', 'user', 'pass']]);
 	_apply_top([
-		['redis', 'redisForPubsub', 'redisForJobQueue', 'redisForTimelines', 'redisForReactions'],
+		['redis', 'redisForPubsub', 'redisForJobQueue', 'redisForTimelines', 'redisForReactions', 'redisForRateLimit'],
 		['host', 'port', 'username', 'pass', 'db', 'prefix'],
 	]);
 	_apply_top(['fulltextSearch', 'provider']);

@@ -520,11 +520,11 @@ export class CustomEmojiService implements OnApplicationShutdown {
 			const q = params.query;
 			if (q.updatedAtFrom) {
 				// noIndexScan
-				builder.andWhere('CAST(emoji.updatedAt AS DATE) >= :updateAtFrom', { updateAtFrom: q.updatedAtFrom });
+				builder.andWhere('CAST(emoji.updatedAt AS DATE) >= :updatedAtFrom', { updatedAtFrom: q.updatedAtFrom });
 			}
 			if (q.updatedAtTo) {
 				// noIndexScan
-				builder.andWhere('CAST(emoji.updatedAt AS DATE) <= :updateAtTo', { updateAtTo: q.updatedAtTo });
+				builder.andWhere('CAST(emoji.updatedAt AS DATE) <= :updatedAtTo', { updatedAtTo: q.updatedAtTo });
 			}
 			if (q.name) {
 				builder.andWhere('emoji.name ~~ ANY(ARRAY[:...name])', { name: multipleWordsToQuery(q.name) });

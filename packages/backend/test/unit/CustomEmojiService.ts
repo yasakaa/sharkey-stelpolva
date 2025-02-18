@@ -17,6 +17,7 @@ import { EmojisRepository } from '@/models/_.js';
 import { MiEmoji } from '@/models/Emoji.js';
 import { CoreModule } from '@/core/CoreModule.js';
 import { DriveService } from '@/core//DriveService.js';
+import { DataSource } from 'typeorm';
 
 describe('CustomEmojiService', () => {
 	let app: TestingModule;
@@ -48,6 +49,7 @@ describe('CustomEmojiService', () => {
 		service = app.get<CustomEmojiService>(CustomEmojiService);
 		emojisRepository = app.get<EmojisRepository>(DI.emojisRepository);
 		idService = app.get<IdService>(IdService);
+		await app.get<DataSource>(DI.db).query("set session time zone 'UTC'");
 	});
 
 	describe('fetchEmojis', () => {

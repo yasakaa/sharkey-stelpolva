@@ -280,8 +280,8 @@ export class SearchService {
 			.leftJoinAndSelect('renote.user', 'renoteUser');
 
 		if (this.config.fulltextSearch?.provider === 'sqlPgroonga') {
-			query.andWhere('note.text &@~ :q', {q});
-		} else if (this.config.fulltextSearch?.provider === "sqlTsvector") {
+			query.andWhere('note.text &@~ :q', { q });
+		} else if (this.config.fulltextSearch?.provider === 'sqlTsvector') {
 			query.andWhere('note.tsvector_embedding @@ websearch_to_tsquery(:q)', { q });
 		} else {
 			query.andWhere('note.text ILIKE :q', { q: `%${ sqlLikeEscape(q) }%` });

@@ -241,7 +241,7 @@ export class SearchService {
 		switch (this.provider) {
 			case 'sqlLike':
 			case 'sqlPgroonga':
-			case 'tsvector': {
+			case 'sqlTsvector': {
 				// ほとんど内容に差がないのでsqlLikeとsqlPgroongaを同じ処理にしている.
 				// 今後の拡張で差が出る用であれば関数を分ける.
 				return this.searchNoteByLike(q, me, opts, pagination);
@@ -281,7 +281,7 @@ export class SearchService {
 
 		if (this.config.fulltextSearch?.provider === 'sqlPgroonga') {
 			query.andWhere('note.text &@~ :q', {q});
-		} else if (this.config.fulltextSearch?.provider === "tsvector") {
+		} else if (this.config.fulltextSearch?.provider === "sqlTsvector") {
 			query.andWhere('note.tsvector_embedding @@ websearch_to_tsquery(:q)', { q });
 		} else {
 			query.andWhere('note.text ILIKE :q', { q: `%${ sqlLikeEscape(q) }%` });

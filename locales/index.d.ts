@@ -8567,7 +8567,7 @@ export interface Locale extends ILocale {
          */
         "write:admin:unsilence-user": string;
         /**
-         * Allow/Reject quote posts from a user
+         * Allow/Prohibit quote posts from a user
          */
         "write:admin:reject-quotes": string;
         /**
@@ -10247,11 +10247,11 @@ export interface Locale extends ILocale {
          */
         "acceptRemoteInstanceReports": string;
         /**
-         * Rejected quotes from user
+         * Blocked/Stripped quote posts from user
          */
         "rejectQuotesUser": string;
         /**
-         * Allowed quotes from user
+         * Allowed quote posts from user
          */
         "allowQuotesUser": string;
     };
@@ -11253,15 +11253,19 @@ export interface Locale extends ILocale {
      */
     "rejectReports": string;
     /**
-     * Reject quote posts from this instance
+     * Strip quote posts from this instance
      */
     "rejectQuotesInstance": string;
     /**
-     * Reject quote posts from this user
+     * Strip quote posts from this user
      */
-    "rejectQuotesUser": string;
+    "rejectQuotesRemoteUser": string;
     /**
-     * Are you sure you wish to reject quote posts?
+     * Block quote posts from this user
+     */
+    "rejectQuotesLocalUser": string;
+    /**
+     * Are you sure you wish to strip quote posts?
      */
     "rejectQuotesConfirm": string;
     /**

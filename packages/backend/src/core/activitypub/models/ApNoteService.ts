@@ -701,8 +701,11 @@ export class ApNoteService {
 
 				return quote;
 			} catch (e) {
-				const error = e instanceof Error ? `${e.name}: ${e.message}` : String(e);
-				this.logger.warn(`Failed to resolve quote "${uri}" for note "${entryUri}": ${error}`);
+				if (e instanceof Error) {
+					this.logger.warn(`Failed to resolve quote "${uri}" for note "${entryUri}":`, e);
+				} else {
+					this.logger.warn(`Failed to resolve quote "${uri}" for note "${entryUri}": ${e}`);
+				}
 
 				return (e instanceof StatusError && e.isRetryable);
 			}

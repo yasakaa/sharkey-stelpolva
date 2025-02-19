@@ -25,6 +25,7 @@ import { UtilityService } from '@/core/UtilityService.js';
 import { bindThis } from '@/decorators.js';
 import { checkHttps } from '@/misc/check-https.js';
 import { IdentifiableError } from '@/misc/identifiable-error.js';
+import { isRetryableError } from '@/misc/is-retryable-error.js';
 import { getOneApId, getApId, getOneApHrefNullable, validPost, isEmoji, getApType, isApObject, isDocument, IApDocument } from '../type.js';
 import { ApLoggerService } from '../ApLoggerService.js';
 import { ApMfmService } from '../ApMfmService.js';
@@ -707,7 +708,7 @@ export class ApNoteService {
 					this.logger.warn(`Failed to resolve quote "${uri}" for note "${entryUri}": ${e}`);
 				}
 
-				return (e instanceof StatusError && e.isRetryable);
+				return isRetryableError(e);
 			}
 		};
 

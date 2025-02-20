@@ -51,7 +51,6 @@ mediaSilencedByBase: "This host's media is silenced implicitly because a base do
 driveSearchbarPlaceholder: "Search drive"
 fileNotSelected: "No file selected"
 background: "Background"
-description: "Alt text"
 inputNewDescription: "Enter new alt text"
 describeFile: "Add alt text"
 enterFileDescription: "Enter alt text"

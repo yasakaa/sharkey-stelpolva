@@ -593,6 +593,7 @@ export class UserEntityService implements OnModuleInit {
 			noindex: user.noindex,
 			enableRss: user.enableRss,
 			mandatoryCW: user.mandatoryCW,
+			rejectQuotes: user.rejectQuotes,
 			isSilenced: user.isSilenced || this.roleService.getUserPolicies(user.id).then(r => !r.canPublicNote),
 			speakAsCat: user.speakAsCat ?? false,
 			approved: user.approved,
@@ -674,7 +675,6 @@ export class UserEntityService implements OnModuleInit {
 				securityKeys: profile!.twoFactorEnabled
 					? this.userSecurityKeysRepository.countBy({ userId: user.id }).then(result => result >= 1)
 					: false,
-				rejectQuotes: user.rejectQuotes,
 			} : {}),
 
 			...(isDetailed && isMe ? {

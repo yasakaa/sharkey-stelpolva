@@ -3987,6 +3987,7 @@ export type components = {
       noindex: boolean;
       enableRss: boolean;
       mandatoryCW: string | null;
+      rejectQuotes?: boolean;
       isBot?: boolean;
       isCat?: boolean;
       speakAsCat?: boolean;
@@ -4070,7 +4071,6 @@ export type components = {
       twoFactorEnabled?: boolean;
       usePasswordLessLogin?: boolean;
       securityKeys?: boolean;
-      rejectQuotes?: boolean;
       isFollowing?: boolean;
       isFollowed?: boolean;
       hasPendingFollowRequestFromYou?: boolean;

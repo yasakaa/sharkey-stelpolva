@@ -447,7 +447,7 @@ export class ApPersonService implements OnModuleInit {
 					await transactionalEntityManager.save(new MiUserPublickey({
 						userId: user.id,
 						keyId: person.publicKey.id,
-						keyPem: person.publicKey.publicKeyPem,
+						keyPem: person.publicKey.publicKeyPem.trim(),
 					}));
 				}
 			});

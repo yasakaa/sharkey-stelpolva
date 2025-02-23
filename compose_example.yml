@@ -39,7 +39,7 @@ services:
 
   db:
     restart: always
-    image: postgres:15-alpine
+    image: groonga/pgroonga:4.0.1-alpine-17
     networks:
       - shonk
     env_file:

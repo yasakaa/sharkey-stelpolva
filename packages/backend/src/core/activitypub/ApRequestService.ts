@@ -17,7 +17,7 @@ import { LoggerService } from '@/core/LoggerService.js';
 import { bindThis } from '@/decorators.js';
 import type Logger from '@/logger.js';
 import { validateContentTypeSetAsActivityPub } from '@/core/activitypub/misc/validator.js';
-import { IObject } from './type.js';
+import type { IObject } from './type.js';
 
 type Request = {
 	url: string;

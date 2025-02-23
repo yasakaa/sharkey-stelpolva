@@ -94,7 +94,6 @@ export class ApNoteService {
 		uri: string,
 		actor?: MiRemoteUser,
 		user?: MiRemoteUser,
-		note?: MiNote,
 	): Error | null {
 		const expectHost = this.utilityService.extractDbHost(uri);
 		const apType = getApType(object);
@@ -123,13 +122,6 @@ export class ApNoteService {
 			}
 			if (user && attribution !== user.uri) {
 				return new IdentifiableError('d450b8a9-48e4-4dab-ae36-f4db763fda7c', `invalid Note: updated attribution does not match original attribution. updated attribution: ${user.uri}, original attribution: ${attribution}`);
-			}
-		}
-
-		if (note) {
-			const url = this.apUtilityService.findSameAuthorityUrl(uri, object.url);
-			if (url && url !== note.url) {
-				return new IdentifiableError('d450b8a9-48e4-4dab-ae36-f4db763fda7c', `invalid Note: updated url does not match original url. updated url: ${url}, original url: ${note.url}`);
 			}
 		}
 
@@ -377,7 +369,7 @@ export class ApNoteService {
 		const object = await resolver.resolve(value);
 
 		const entryUri = getApId(value);
-		const err = this.validateNote(object, entryUri, actor, user, updatedNote);
+		const err = this.validateNote(object, entryUri, actor, user);
 		if (err) {
 			this.logger.error(err.message, {
 				resolver: { history: resolver.getHistory() },

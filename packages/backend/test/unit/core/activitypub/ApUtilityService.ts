@@ -95,83 +95,257 @@ describe(ApUtilityService, () => {
 		});
 	});
 
-	describe('findSameAuthorityUrl', () => {
+	describe('findBestObjectUrl', () => {
 		it('should return null when input is undefined', () => {
-			const result = serviceUnderTest.findSameAuthorityUrl('https://example.com', undefined);
+			const object = {
+				id: 'https://example.com',
+				url: undefined,
+			} as IObject;
+
+			const result = serviceUnderTest.findBestObjectUrl(object);
 
 			expect(result).toBeNull();
 		});
 
 		it('should return null when input is empty array', () => {
-			const result = serviceUnderTest.findSameAuthorityUrl('https://example.com', []);
+			const object = {
+				id: 'https://example.com',
+				url: [] as string[],
+			} as IObject;
+
+			const result = serviceUnderTest.findBestObjectUrl(object);
 
 			expect(result).toBeNull();
 		});
 
 		it('should return return url if string input matches', () => {
-			const result = serviceUnderTest.findSameAuthorityUrl('https://example.com/1', 'https://example.com/2');
+			const object = {
+				id: 'https://example.com/1',
+				url: 'https://example.com/2',
+			} as IObject;
+
+			const result = serviceUnderTest.findBestObjectUrl(object);
 
 			expect(result).toBe('https://example.com/2');
 		});
 
 		it('should return return url if object input matches', () => {
-			const input = {
-				href: 'https://example.com/2',
+			const object = {
+				id: 'https://example.com/1',
+				url: {
+					href: 'https://example.com/2',
+				} as IObject,
 			} as IObject;
 
-			const result = serviceUnderTest.findSameAuthorityUrl('https://example.com/1', input);
+			const result = serviceUnderTest.findBestObjectUrl(object);
 
 			expect(result).toBe('https://example.com/2');
 		});
 
 		it('should return return url if string[] input matches', () => {
-			const result = serviceUnderTest.findSameAuthorityUrl('https://example.com/1', ['https://example.com/2']);
+			const object = {
+				id: 'https://example.com/1',
+				url: ['https://example.com/2'],
+			} as IObject;
+
+			const result = serviceUnderTest.findBestObjectUrl(object);
 
 			expect(result).toBe('https://example.com/2');
 		});
 
 		it('should return return url if object[] input matches', () => {
-			const input = {
-				href: 'https://example.com/2',
+			const object = {
+				id: 'https://example.com/1',
+				url: [{
+					href: 'https://example.com/2',
+				} as IObject],
 			} as IObject;
 
-			const result = serviceUnderTest.findSameAuthorityUrl('https://example.com/1', [input]);
+			const result = serviceUnderTest.findBestObjectUrl(object);
 
 			expect(result).toBe('https://example.com/2');
 		});
 
 		it('should skip invalid entries', () => {
-			const result = serviceUnderTest.findSameAuthorityUrl('https://example.com/1', [{} as IObject, 'https://example.com/2']);
+			const object = {
+				id: 'https://example.com/1',
+				url: [{} as IObject, 'https://example.com/2'],
+			} as IObject;
+
+			const result = serviceUnderTest.findBestObjectUrl(object);
 
 			expect(result).toBe('https://example.com/2');
 		});
 
-		it('should return first match', () => {
-			const result = serviceUnderTest.findSameAuthorityUrl('https://example.com/1', ['https://example.com/2', 'https://example.com/3']);
+		it('should allow empty mediaType', () => {
+			const object = {
+				id: 'https://example.com/1',
+				url: {
+					href: 'https://example.com/2',
+				} as IObject,
+			} as IObject;
+
+			const result = serviceUnderTest.findBestObjectUrl(object);
+
+			expect(result).toBe('https://example.com/2');
+		});
+
+		it('should allow text/html mediaType', () => {
+			const object = {
+				id: 'https://example.com/1',
+				url: {
+					href: 'https://example.com/2',
+					mediaType: 'text/html',
+				} as IObject,
+			} as IObject;
+
+			const result = serviceUnderTest.findBestObjectUrl(object);
+
+			expect(result).toBe('https://example.com/2');
+		});
+
+		it('should allow other text/ mediaTypes', () => {
+			const object = {
+				id: 'https://example.com/1',
+				url: {
+					href: 'https://example.com/2',
+					mediaType: 'text/imaginary',
+				} as IObject,
+			} as IObject;
+
+			const result = serviceUnderTest.findBestObjectUrl(object);
+
+			expect(result).toBe('https://example.com/2');
+		});
+
+		it('should allow application/ld+json mediaType', () => {
+			const object = {
+				id: 'https://example.com/1',
+				url: {
+					href: 'https://example.com/2',
+					mediaType: 'application/ld+json;profile=https://www.w3.org/ns/activitystreams',
+				} as IObject,
+			} as IObject;
+
+			const result = serviceUnderTest.findBestObjectUrl(object);
+
+			expect(result).toBe('https://example.com/2');
+		});
+
+		it('should allow application/activity+json mediaType', () => {
+			const object = {
+				id: 'https://example.com/1',
+				url: {
+					href: 'https://example.com/2',
+					mediaType: 'application/activity+json',
+				} as IObject,
+			} as IObject;
+
+			const result = serviceUnderTest.findBestObjectUrl(object);
+
+			expect(result).toBe('https://example.com/2');
+		});
+
+		it('should reject other mediaTypes', () => {
+			const object = {
+				id: 'https://example.com/1',
+				url: [
+					{
+						href: 'https://example.com/2',
+						mediaType: 'application/json',
+					} as IObject,
+					{
+						href: 'https://example.com/3',
+						mediaType: 'image/jpeg',
+					} as IObject,
+				],
+			} as IObject;
+
+			const result = serviceUnderTest.findBestObjectUrl(object);
+
+			expect(result).toBeNull();
+		});
+
+		it('should return best match', () => {
+			const object = {
+				id: 'https://example.com/1',
+				url: [
+					'https://example.com/2',
+					{
+						href: 'https://example.com/3',
+					} as IObject,
+					{
+						href: 'https://example.com/4',
+						mediaType: 'text/html',
+					} as IObject,
+					{
+						href: 'https://example.com/5',
+						mediaType: 'text/plain',
+					} as IObject,
+					{
+						href: 'https://example.com/6',
+						mediaType: 'application/ld+json',
+					} as IObject,
+					{
+						href: 'https://example.com/7',
+						mediaType: 'application/activity+json',
+					} as IObject,
+					{
+						href: 'https://example.com/8',
+						mediaType: 'image/jpeg',
+					} as IObject,
+				],
+			} as IObject;
+
+			const result = serviceUnderTest.findBestObjectUrl(object);
+
+			expect(result).toBe('https://example.com/4');
+		});
+
+		it('should return first match in case of ties', () => {
+			const object = {
+				id: 'https://example.com/1',
+				url: ['https://example.com/2', 'https://example.com/3'],
+			} as IObject;
+
+			const result = serviceUnderTest.findBestObjectUrl(object);
 
 			expect(result).toBe('https://example.com/2');
 		});
 
 		it('should skip invalid scheme', () => {
-			const result = serviceUnderTest.findSameAuthorityUrl('https://example.com/1', ['file://example.com/1', 'https://example.com/2']);
+			const object = {
+				id: 'https://example.com/1',
+				url: ['file://example.com/1', 'https://example.com/2'],
+			} as IObject;
+
+			const result = serviceUnderTest.findBestObjectUrl(object);
 
 			expect(result).toBe('https://example.com/2');
 		});
 
 		it('should skip HTTP in production', () => {
+			// noinspection HttpUrlsUsage
+			const object = {
+				id: 'https://example.com/1',
+				url: ['http://example.com/1', 'https://example.com/2'],
+			} as IObject;
 			env.NODE_ENV = 'production';
 
-			// noinspection HttpUrlsUsage
-			const result = serviceUnderTest.findSameAuthorityUrl('https://example.com/1', ['http://example.com/1', 'https://example.com/2']);
+			const result = serviceUnderTest.findBestObjectUrl(object);
 
 			expect(result).toBe('https://example.com/2');
 		});
 
 		it('should allow HTTP in non-prod', () => {
+			// noinspection HttpUrlsUsage
+			const object = {
+				id: 'https://example.com/1',
+				url: ['http://example.com/1', 'https://example.com/2'],
+			} as IObject;
 			env.NODE_ENV = 'test';
 
-			// noinspection HttpUrlsUsage
-			const result = serviceUnderTest.findSameAuthorityUrl('https://example.com/1', ['http://example.com/1', 'https://example.com/2']);
+			const result = serviceUnderTest.findBestObjectUrl(object);
 
 			// noinspection HttpUrlsUsage
 			expect(result).toBe('http://example.com/1');

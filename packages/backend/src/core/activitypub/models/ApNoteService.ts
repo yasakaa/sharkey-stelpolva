@@ -180,7 +180,7 @@ export class ApNoteService {
 			throw new UnrecoverableError(`unexpected schema of note.id ${note.id} in ${entryUri}`);
 		}
 
-		const url = this.apUtilityService.findSameAuthorityUrl(note.id, note.url);
+		const url = this.apUtilityService.findBestObjectUrl(note);
 
 		this.logger.info(`Creating the Note: ${note.id}`);
 
@@ -395,7 +395,7 @@ export class ApNoteService {
 			throw new UnrecoverableError(`unexpected schema of note.id ${note.id} in ${noteUri}`);
 		}
 
-		const url = this.apUtilityService.findSameAuthorityUrl(note.id, note.url);
+		const url = this.apUtilityService.findBestObjectUrl(note);
 
 		this.logger.info(`Creating the Note: ${note.id}`);
 

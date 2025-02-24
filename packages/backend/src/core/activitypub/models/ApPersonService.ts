@@ -351,8 +351,7 @@ export class ApPersonService implements OnModuleInit {
 			throw new UnrecoverableError(`Refusing to create person without id: ${uri}`);
 		}
 
-		const personId = getApId(person);
-		const url = this.apUtilityService.findSameAuthorityUrl(personId, person.url);
+		const url = this.apUtilityService.findBestObjectUrl(person);
 
 		// Create user
 		let user: MiRemoteUser | null = null;
@@ -561,8 +560,8 @@ export class ApPersonService implements OnModuleInit {
 		if (person.id == null) {
 			throw new UnrecoverableError(`Refusing to update person without id: ${uri}`);
 		}
-		const personId = getApId(person);
-		const url = this.apUtilityService.findSameAuthorityUrl(personId, person.url);
+
+		const url = this.apUtilityService.findBestObjectUrl(person);
 
 		const updates = {
 			lastFetchedAt: new Date(),

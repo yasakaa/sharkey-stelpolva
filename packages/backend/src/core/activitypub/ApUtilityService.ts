@@ -45,25 +45,36 @@ export class ApUtilityService {
 	}
 
 	/**
-	 * Searches a list of URLs or Links for the first one matching a given target URL's host authority.
-	 * Returns null if none match.
-	 * @param targetUrl URL with the target host authority
-	 * @param searchUrls URL, Link, or array to search for matching URLs
+	 * Finds the "best" URL for a given AP object.
+	 * The list of URLs is first filtered via findSameAuthorityUrl, then further filtered based on mediaType, and finally sorted to select the best one.
+	 * @throws {IdentifiableError} if object does not have an ID
+	 * @returns the best URL, or null if none were found
 	 */
-	public findSameAuthorityUrl(targetUrl: string, searchUrls: string | IObject | undefined | (string | IObject)[]): string | null {
+	public findBestObjectUrl(object: IObject): string | null {
+		const targetUrl = getApId(object);
 		const targetAuthority = this.utilityService.punyHostPSLDomain(targetUrl);
 
-		const match = toArray(searchUrls)
-			.map(raw => getOneApHrefNullable(raw))
-			.find(url => {
+		const rawUrls = toArray(object.url);
+		const acceptableUrls = rawUrls
+			.map(raw => ({
+				url: getOneApHrefNullable(raw),
+				type: typeof(raw) === 'object'
+					? raw.mediaType?.toLowerCase()
+					: undefined,
+			}))
+			.filter(({ url, type }) => {
 				if (!url) return false;
 				if (!this.checkHttps(url)) return false;
+				if (!isAcceptableUrlType(type)) return false;
 
 				const urlAuthority = this.utilityService.punyHostPSLDomain(url);
 				return urlAuthority === targetAuthority;
+			})
+			.sort((a, b) => {
+				return rankUrlType(a.type) - rankUrlType(b.type);
 			});
 
-		return match ?? null;
+		return acceptableUrls[0]?.url ?? null;
 	}
 
 	/**
@@ -77,4 +88,21 @@ export class ApUtilityService {
 		// noinspection HttpUrlsUsage
 		return url.startsWith('https://') || (url.startsWith('http://') && isNonProd);
 	}
+}
+
+function isAcceptableUrlType(type: string | undefined): boolean {
+	if (!type) return true;
+	if (type.startsWith('text/')) return true;
+	if (type.startsWith('application/ld+json')) return true;
+	if (type.startsWith('application/activity+json')) return true;
+	return false;
+}
+
+function rankUrlType(type: string | undefined): number {
+	if (!type) return 2;
+	if (type === 'text/html') return 0;
+	if (type.startsWith('text/')) return 1;
+	if (type.startsWith('application/ld+json')) return 3;
+	if (type.startsWith('application/activity+json')) return 4;
+	return 5;
 }

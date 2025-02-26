@@ -25,12 +25,12 @@ class LocalTimelineChannel extends Channel {
 	constructor(
 		private metaService: MetaService,
 		private roleService: RoleService,
-		private noteEntityService: NoteEntityService,
+		noteEntityService: NoteEntityService,
 
 		id: string,
 		connection: Channel['connection'],
 	) {
-		super(id, connection);
+		super(id, connection, noteEntityService);
 		//this.onNote = this.onNote.bind(this);
 	}
 
@@ -70,7 +70,7 @@ class LocalTimelineChannel extends Channel {
 
 		if (this.isNoteMutedOrBlocked(note)) return;
 
-		const clonedNote = await this.assignMyReaction(note, this.noteEntityService);
+		const clonedNote = await this.assignMyReaction(note);
 
 		this.connection.cacheNote(clonedNote);
 

@@ -17,6 +17,7 @@ import type Connection from './Connection.js';
  */
 // eslint-disable-next-line import/no-default-export
 export default abstract class Channel {
+	protected readonly noteEntityService: NoteEntityService;
 	protected connection: Connection;
 	public id: string;
 	public abstract readonly chName: string;
@@ -82,8 +83,10 @@ export default abstract class Channel {
 	}
 
 	constructor(id: string, connection: Connection) {
+	constructor(id: string, connection: Connection, noteEntityService: NoteEntityService) {
 		this.id = id;
 		this.connection = connection;
+		this.noteEntityService = noteEntityService;
 	}
 
 	public send(payload: { type: string, body: JsonValue }): void
@@ -106,7 +109,7 @@ export default abstract class Channel {
 
 	public onMessage?(type: string, body: JsonValue): void;
 
-	public async assignMyReaction(note: Packed<'Note'>, noteEntityService: NoteEntityService): Promise<Packed<'Note'>> {
+	public async assignMyReaction(note: Packed<'Note'>): Promise<Packed<'Note'>> {
 		let changed = false;
 		// StreamingApiServerService creates a single EventEmitter per server process,
 		// so a new note arriving from redis gets de-serialised once per server process,
@@ -116,7 +119,7 @@ export default abstract class Channel {
 		const clonedNote = { ...note };
 		if (this.user && isRenotePacked(note) && !isQuotePacked(note)) {
 			if (note.renote && Object.keys(note.renote.reactions).length > 0) {
-				const myReaction = await noteEntityService.populateMyReaction(note.renote, this.user.id);
+				const myReaction = await this.noteEntityService.populateMyReaction(note.renote, this.user.id);
 				if (myReaction) {
 					changed = true;
 					clonedNote.renote = { ...note.renote };
@@ -124,7 +127,7 @@ export default abstract class Channel {
 				}
 			}
 			if (note.renote?.reply && Object.keys(note.renote.reply.reactions).length > 0) {
-				const myReaction = await noteEntityService.populateMyReaction(note.renote.reply, this.user.id);
+				const myReaction = await this.noteEntityService.populateMyReaction(note.renote.reply, this.user.id);
 				if (myReaction) {
 					changed = true;
 					clonedNote.renote = { ...note.renote };
@@ -134,7 +137,7 @@ export default abstract class Channel {
 			}
 		}
 		if (this.user && note.reply && Object.keys(note.reply.reactions).length > 0) {
-			const myReaction = await noteEntityService.populateMyReaction(note.reply, this.user.id);
+			const myReaction = await this.noteEntityService.populateMyReaction(note.reply, this.user.id);
 			if (myReaction) {
 				changed = true;
 				clonedNote.reply = { ...note.reply };

@@ -26,12 +26,12 @@ class UserListChannel extends Channel {
 	constructor(
 		private userListsRepository: UserListsRepository,
 		private userListMembershipsRepository: UserListMembershipsRepository,
-		private noteEntityService: NoteEntityService,
+		noteEntityService: NoteEntityService,
 
 		id: string,
 		connection: Channel['connection'],
 	) {
-		super(id, connection);
+		super(id, connection, noteEntityService);
 		//this.updateListUsers = this.updateListUsers.bind(this);
 		//this.onNote = this.onNote.bind(this);
 	}

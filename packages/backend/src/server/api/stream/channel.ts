@@ -6,7 +6,7 @@
 import { bindThis } from '@/decorators.js';
 import { isInstanceMuted } from '@/misc/is-instance-muted.js';
 import { isUserRelated } from '@/misc/is-user-related.js';
-import { isRenotePacked, isQuotePacked } from '@/misc/is-renote.js';
+import { isRenotePacked, isQuotePacked, isPackedPureRenote } from '@/misc/is-renote.js';
 import type { Packed } from '@/misc/json-schema.js';
 import type { JsonObject, JsonValue } from '@/misc/json-value.js';
 import { NoteEntityService } from '@/core/entities/NoteEntityService.js';
@@ -74,6 +74,9 @@ export default abstract class Channel {
 
 		// 流れてきたNoteがリノートをミュートしてるユーザが行ったもの
 		if (isRenotePacked(note) && !isQuotePacked(note) && this.userIdsWhoMeMutingRenotes.has(note.user.id)) return true;
+
+		// If it's a boost (pure renote) then we need to check the target as well
+		if (isPackedPureRenote(note) && note.renote && this.isNoteMutedOrBlocked(note.renote)) return true;
 
 		return false;
 	}

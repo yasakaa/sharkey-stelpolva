@@ -82,7 +82,19 @@ export default abstract class Channel {
 		return false;
 	}
 
-	constructor(id: string, connection: Connection) {
+	protected async hideNote(note: Packed<'Note'>): Promise<void> {
+		if (note.renote) {
+			await this.hideNote(note.renote);
+		}
+
+		if (note.reply) {
+			await this.hideNote(note.reply);
+		}
+
+		const meId = this.user?.id ?? null;
+		await this.noteEntityService.hideNote(note, meId);
+	}
+
 	constructor(id: string, connection: Connection, noteEntityService: NoteEntityService) {
 		this.id = id;
 		this.connection = connection;

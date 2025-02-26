@@ -64,6 +64,7 @@ class BubbleTimelineChannel extends Channel {
 		if (this.isNoteMutedOrBlocked(note)) return;
 
 		const clonedNote = await this.assignMyReaction(note);
+		await this.hideNote(clonedNote);
 
 		this.connection.cacheNote(clonedNote);
 

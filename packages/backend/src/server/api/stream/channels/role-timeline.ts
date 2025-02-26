@@ -48,7 +48,11 @@ class RoleTimelineChannel extends Channel {
 
 			if (this.isNoteMutedOrBlocked(note)) return;
 
-			this.send('note', note);
+			const clonedNote = await this.assignMyReaction(note);
+
+			this.connection.cacheNote(clonedNote);
+
+			this.send('note', clonedNote);
 		} else {
 			this.send(data.type, data.body);
 		}

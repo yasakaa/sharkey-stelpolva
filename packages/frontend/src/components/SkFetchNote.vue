@@ -66,9 +66,4 @@ watch(
 		immediate: true,
 	},
 );
-
 </script>
-
-<style module lang="scss">
-
-</style>

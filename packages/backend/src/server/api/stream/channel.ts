@@ -6,7 +6,7 @@
 import { bindThis } from '@/decorators.js';
 import { isInstanceMuted } from '@/misc/is-instance-muted.js';
 import { isUserRelated } from '@/misc/is-user-related.js';
-import { isRenotePacked, isQuotePacked } from '@/misc/is-renote.js';
+import { isRenotePacked, isQuotePacked, isPackedPureRenote } from '@/misc/is-renote.js';
 import type { Packed } from '@/misc/json-schema.js';
 import type { JsonObject, JsonValue } from '@/misc/json-value.js';
 import { NoteEntityService } from '@/core/entities/NoteEntityService.js';
@@ -17,6 +17,7 @@ import type Connection from './Connection.js';
  */
 // eslint-disable-next-line import/no-default-export
 export default abstract class Channel {
+	protected readonly noteEntityService: NoteEntityService;
 	protected connection: Connection;
 	public id: string;
 	public abstract readonly chName: string;
@@ -75,12 +76,29 @@ export default abstract class Channel {
 		// 流れてきたNoteがリノートをミュートしてるユーザが行ったもの
 		if (isRenotePacked(note) && !isQuotePacked(note) && this.userIdsWhoMeMutingRenotes.has(note.user.id)) return true;
 
+		// If it's a boost (pure renote) then we need to check the target as well
+		if (isPackedPureRenote(note) && note.renote && this.isNoteMutedOrBlocked(note.renote)) return true;
+
 		return false;
 	}
 
-	constructor(id: string, connection: Connection) {
+	protected async hideNote(note: Packed<'Note'>): Promise<void> {
+		if (note.renote) {
+			await this.hideNote(note.renote);
+		}
+
+		if (note.reply) {
+			await this.hideNote(note.reply);
+		}
+
+		const meId = this.user?.id ?? null;
+		await this.noteEntityService.hideNote(note, meId);
+	}
+
+	constructor(id: string, connection: Connection, noteEntityService: NoteEntityService) {
 		this.id = id;
 		this.connection = connection;
+		this.noteEntityService = noteEntityService;
 	}
 
 	public send(payload: { type: string, body: JsonValue }): void
@@ -103,7 +121,7 @@ export default abstract class Channel {
 
 	public onMessage?(type: string, body: JsonValue): void;
 
-	public async assignMyReaction(note: Packed<'Note'>, noteEntityService: NoteEntityService): Promise<Packed<'Note'>> {
+	public async assignMyReaction(note: Packed<'Note'>): Promise<Packed<'Note'>> {
 		let changed = false;
 		// StreamingApiServerService creates a single EventEmitter per server process,
 		// so a new note arriving from redis gets de-serialised once per server process,
@@ -113,7 +131,7 @@ export default abstract class Channel {
 		const clonedNote = { ...note };
 		if (this.user && isRenotePacked(note) && !isQuotePacked(note)) {
 			if (note.renote && Object.keys(note.renote.reactions).length > 0) {
-				const myReaction = await noteEntityService.populateMyReaction(note.renote, this.user.id);
+				const myReaction = await this.noteEntityService.populateMyReaction(note.renote, this.user.id);
 				if (myReaction) {
 					changed = true;
 					clonedNote.renote = { ...note.renote };
@@ -121,7 +139,7 @@ export default abstract class Channel {
 				}
 			}
 			if (note.renote?.reply && Object.keys(note.renote.reply.reactions).length > 0) {
-				const myReaction = await noteEntityService.populateMyReaction(note.renote.reply, this.user.id);
+				const myReaction = await this.noteEntityService.populateMyReaction(note.renote.reply, this.user.id);
 				if (myReaction) {
 					changed = true;
 					clonedNote.renote = { ...note.renote };
@@ -131,7 +149,7 @@ export default abstract class Channel {
 			}
 		}
 		if (this.user && note.reply && Object.keys(note.reply.reactions).length > 0) {
-			const myReaction = await noteEntityService.populateMyReaction(note.reply, this.user.id);
+			const myReaction = await this.noteEntityService.populateMyReaction(note.reply, this.user.id);
 			if (myReaction) {
 				changed = true;
 				clonedNote.reply = { ...note.reply };

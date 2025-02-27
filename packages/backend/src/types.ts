@@ -512,7 +512,6 @@ export type ModerationLogPayloads = {
 		noteUserId: string;
 		noteUserUsername: string;
 		noteUserHost: string | null;
-		note: any;
 	},
 	addRelay: {
 		inbox: string;

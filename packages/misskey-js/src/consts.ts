@@ -510,4 +510,16 @@ export type ModerationLogPayloads = {
 		id: string;
 		host: string;
 	};
+	createPromo: {
+		noteId: string,
+		noteUserId: string;
+		noteUserUsername: string;
+		noteUserHost: string | null;
+	};
+	addRelay: {
+		inbox: string;
+	};
+	removeRelay: {
+		inbox: string;
+	};
 };

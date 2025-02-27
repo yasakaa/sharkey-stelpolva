@@ -11670,7 +11670,7 @@ export interface Locale extends ILocale {
      */
     "fileImported": string;
     /**
-     * Failed to load no
+     * Failed to load note
      */
     "cannotLoadNote": string;
     "_flash": {

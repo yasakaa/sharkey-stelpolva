@@ -171,7 +171,7 @@ warnExternalUrl: "Show warning when opening external URLs"
 flash: "Flash"
 filesRemoved: "Files removed"
 fileImported: "File imported"
-cannotLoadNote: "Failed to load no"
+cannotLoadNote: "Failed to load note"
 _flash:
   contentHidden: "Flash Content Hidden"
   poweredByRuffle: "Powered by Ruffle."

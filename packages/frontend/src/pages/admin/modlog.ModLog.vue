@@ -121,9 +121,11 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<span v-else-if="log.type === 'silenceUser'">: @{{ log.info.userUsername }}{{ log.info.userHost ? '@' + log.info.userHost : '' }}</span>
 		<span v-else-if="log.type === 'unSilenceUser'">: @{{ log.info.userUsername }}{{ log.info.userHost ? '@' + log.info.userHost : '' }}</span>
 		<span v-else-if="log.type === 'createAccount'">: @{{ log.info.userUsername }}</span>
+		<span v-else-if="log.type === 'clearOwnerlessFiles'">: {{ log.info.count }}</span>
 		<span v-else-if="log.type === 'importCustomEmojis'">: {{ log.info.fileName }}</span>
 		<span v-else-if="log.type === 'clearInstanceFiles'">: {{ log.info.host }}</span>
 		<span v-else-if="log.type === 'severFollowRelations'">: {{ log.info.host }}</span>
+		<span v-else-if="log.type === 'createPromo'">: @{{ log.info.noteUserUsername }}{{ log.info.noteUserHost ? '@' + log.info.noteUserHost : '' }}</span>
 		<span v-else-if="log.type === 'addRelay'">: {{ log.info.inbox }}</span>
 		<span v-else-if="log.type === 'removeRelay'">: {{ log.info.inbox }}</span>
 	</template>
@@ -253,12 +255,24 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<template v-else-if="log.type === 'clearOwnerlessFiles'">
 			<div>{{ i18n.ts.filesRemoved }}: {{ log.info.count }}</div>
 		</template>
+		<template v-else-if="log.type === 'importCustomEmojis'">
+			<div>{{ i18n.ts.fileImported }}: <MkA :to="`/admin/file/${log.info.fileId}`" class="_link">{{ log.info.fileName }}</MkA></div>
+		</template>
 		<template v-else-if="log.type === 'clearInstanceFiles'">
 			<div>{{ i18n.ts.host }}: <MkA :to="`/instance-info/${log.info.host}`" class="_link">{{ log.info.host }}</MkA></div>
 			<div>{{ i18n.ts.filesRemoved }}: {{ log.info.count }}</div>
 		</template>
 		<template v-else-if="log.type === 'severFollowRelations'">
 			<div>{{ i18n.ts.host }}: <MkA :to="`/instance-info/${log.info.host}`" class="_link">{{ log.info.host }}</MkA></div>
+		</template>
+		<template v-else-if="log.type === 'createPromo'">
+			<SkFetchNote :noteId="log.info.noteId"/>
+		</template>
+		<template v-else-if="log.type === 'addRelay'">
+			<div>{{ i18n.ts.inboxUrl }}: {{ log.info.inbox }}</div>
+		</template>
+		<template v-else-if="log.type === 'removeRelay'">
+			<div>{{ i18n.ts.inboxUrl }}: {{ log.info.inbox }}</div>
 		</template>
 
 		<details>
@@ -275,6 +289,7 @@ import { CodeDiff } from 'v-code-diff';
 import JSON5 from 'json5';
 import { i18n } from '@/i18n.js';
 import MkFolder from '@/components/MkFolder.vue';
+import SkFetchNote from '@/components/SkFetchNote.vue';
 
 const props = defineProps<{
 	log: Misskey.entities.ModerationLog;

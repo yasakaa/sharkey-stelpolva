@@ -11662,9 +11662,13 @@ export interface Locale extends ILocale {
      */
     "flash": string;
     /**
-     * Files removed:
+     * Files removed
      */
     "filesRemoved": string;
+    /**
+     * File imported
+     */
+    "fileImported": string;
     /**
      * Failed to load no
      */

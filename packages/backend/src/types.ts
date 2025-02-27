@@ -239,7 +239,6 @@ export type ModerationLogPayloads = {
 		noteUserId: string;
 		noteUserUsername: string;
 		noteUserHost: string | null;
-		note: any;
 	};
 	createGlobalAnnouncement: {
 		announcementId: string;
@@ -422,19 +421,16 @@ export type ModerationLogPayloads = {
 		pageId: string;
 		pageUserId: string;
 		pageUserUsername: string;
-		page: any;
 	};
 	deleteFlash: {
 		flashId: string;
 		flashUserId: string;
 		flashUserUsername: string;
-		flash: any;
 	};
 	deleteGalleryPost: {
 		postId: string;
 		postUserId: string;
 		postUserUsername: string;
-		post: any;
 	};
 	acceptQuotesUser: {
 		userId: string,

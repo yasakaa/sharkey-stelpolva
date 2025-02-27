@@ -4,12 +4,8 @@ import type {
 	Ad,
 	Announcement,
 	EmojiDetailed,
-	Flash,
-	GalleryPost,
 	InviteCode,
 	MetaDetailed,
-	Note,
-	Page,
 	Role,
 	ReversiGameDetailed,
 	SystemWebhook,
@@ -295,7 +291,6 @@ export type ModerationLogPayloads = {
 		noteUserId: string;
 		noteUserUsername: string;
 		noteUserHost: string | null;
-		note: Note;
 	};
 	createGlobalAnnouncement: {
 		announcementId: string;
@@ -478,19 +473,16 @@ export type ModerationLogPayloads = {
 		pageId: string;
 		pageUserId: string;
 		pageUserUsername: string;
-		page: Page;
 	};
 	deleteFlash: {
 		flashId: string;
 		flashUserId: string;
 		flashUserUsername: string;
-		flash: Flash;
 	};
 	deleteGalleryPost: {
 		postId: string;
 		postUserId: string;
 		postUserUsername: string;
-		post: GalleryPost;
 	};
 	acceptQuotesUser: {
 		userId: string,

@@ -70,7 +70,6 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				noteUserId: user.id,
 				noteUserUsername: user.username,
 				noteUserHost: user.host,
-				note: note,
 			});
 
 			await this.promoNotesRepository.insert({

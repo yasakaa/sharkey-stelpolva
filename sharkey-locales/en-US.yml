@@ -170,6 +170,7 @@ blockingYou: "Blocking you"
 warnExternalUrl: "Show warning when opening external URLs"
 flash: "Flash"
 filesRemoved: "Files removed:"
+cannotLoadNote: "Failed to load no"
 _flash:
   contentHidden: "Flash Content Hidden"
   poweredByRuffle: "Powered by Ruffle."

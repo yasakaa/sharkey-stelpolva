@@ -11665,6 +11665,10 @@ export interface Locale extends ILocale {
      * Files removed:
      */
     "filesRemoved": string;
+    /**
+     * Failed to load no
+     */
+    "cannotLoadNote": string;
     "_flash": {
         /**
          * Flash Content Hidden

@@ -25,6 +25,7 @@ import { UtilityService } from '@/core/UtilityService.js';
 import { bindThis } from '@/decorators.js';
 import { checkHttps } from '@/misc/check-https.js';
 import { IdentifiableError } from '@/misc/identifiable-error.js';
+import { isRetryableError } from '@/misc/is-retryable-error.js';
 import { getOneApId, getApId, getOneApHrefNullable, validPost, isEmoji, getApType, isApObject, isDocument, IApDocument } from '../type.js';
 import { ApLoggerService } from '../ApLoggerService.js';
 import { ApMfmService } from '../ApMfmService.js';
@@ -296,44 +297,8 @@ export class ApNoteService {
 			: null;
 
 		// 引用
-		let quote: MiNote | undefined | null = null;
-
-		if (note._misskey_quote ?? note.quoteUrl ?? note.quoteUri) {
-			const tryResolveNote = async (uri: unknown): Promise<
-				| { status: 'ok'; res: MiNote }
-				| { status: 'permerror' | 'temperror' }
-			> => {
-				if (typeof uri !== 'string' || !/^https?:/.test(uri)) {
-					this.logger.warn(`Failed to resolve quote ${uri} for note ${entryUri}: URI is invalid`);
-					return { status: 'permerror' };
-				}
-				try {
-					const res = await this.resolveNote(uri, { resolver });
-					if (res == null) {
-						this.logger.warn(`Failed to resolve quote ${uri} for note ${entryUri}: resolution error`);
-						return { status: 'permerror' };
-					}
-					return { status: 'ok', res };
-				} catch (e) {
-					const error = e instanceof Error ? `${e.name}: ${e.message}` : String(e);
-					this.logger.warn(`Failed to resolve quote ${uri} for note ${entryUri}: ${error}`);
-
-					return {
-						status: (e instanceof StatusError && !e.isRetryable) ? 'permerror' : 'temperror',
-					};
-				}
-			};
-
-			const uris = unique([note._misskey_quote, note.quoteUrl, note.quoteUri].filter(x => x != null));
-			const results = await Promise.all(uris.map(tryResolveNote));
-
-			quote = results.filter((x): x is { status: 'ok', res: MiNote } => x.status === 'ok').map(x => x.res).at(0);
-			if (!quote) {
-				if (results.some(x => x.status === 'temperror')) {
-					throw new Error(`temporary error resolving quote for ${entryUri}`);
-				}
-			}
-		}
+		const quote = await this.getQuote(note, entryUri, resolver);
+		const processErrors = quote === null ? ['quoteUnavailable'] : null;
 
 		// vote
 		if (reply && reply.hasPoll) {
@@ -369,7 +334,8 @@ export class ApNoteService {
 				createdAt: note.published ? new Date(note.published) : null,
 				files,
 				reply,
-				renote: quote,
+				renote: quote ?? null,
+				processErrors,
 				name: note.name,
 				cw,
 				text,
@@ -538,44 +504,8 @@ export class ApNoteService {
 			: null;
 
 		// 引用
-		let quote: MiNote | undefined | null = null;
-
-		if (note._misskey_quote ?? note.quoteUrl ?? note.quoteUri) {
-			const tryResolveNote = async (uri: unknown): Promise<
-				| { status: 'ok'; res: MiNote }
-				| { status: 'permerror' | 'temperror' }
-			> => {
-				if (typeof uri !== 'string' || !/^https?:/.test(uri)) {
-					this.logger.warn(`Failed to resolve quote ${uri} for note ${entryUri}: URI is invalid`);
-					return { status: 'permerror' };
-				}
-				try {
-					const res = await this.resolveNote(uri, { resolver });
-					if (res == null) {
-						this.logger.warn(`Failed to resolve quote ${uri} for note ${entryUri}: resolution error`);
-						return { status: 'permerror' };
-					}
-					return { status: 'ok', res };
-				} catch (e) {
-					const error = e instanceof Error ? `${e.name}: ${e.message}` : String(e);
-					this.logger.warn(`Failed to resolve quote ${uri} for note ${entryUri}: ${error}`);
-
-					return {
-						status: (e instanceof StatusError && !e.isRetryable) ? 'permerror' : 'temperror',
-					};
-				}
-			};
-
-			const uris = unique([note._misskey_quote, note.quoteUrl, note.quoteUri].filter(x => x != null));
-			const results = await Promise.all(uris.map(tryResolveNote));
-
-			quote = results.filter((x): x is { status: 'ok', res: MiNote } => x.status === 'ok').map(x => x.res).at(0);
-			if (!quote) {
-				if (results.some(x => x.status === 'temperror')) {
-					throw new Error(`temporary error resolving quote for ${entryUri}`);
-				}
-			}
-		}
+		const quote = await this.getQuote(note, entryUri, resolver);
+		const processErrors = quote === null ? ['quoteUnavailable'] : null;
 
 		// vote
 		if (reply && reply.hasPoll) {
@@ -611,7 +541,8 @@ export class ApNoteService {
 				createdAt: note.published ? new Date(note.published) : null,
 				files,
 				reply,
-				renote: quote,
+				renote: quote ?? null,
+				processErrors,
 				name: note.name,
 				cw,
 				text,
@@ -733,6 +664,66 @@ export class ApNoteService {
 				license: (tag._misskey_license?.freeText ?? null)
 			});
 		}));
+	}
+
+	/**
+	 * Fetches the note's quoted post.
+	 * On success - returns the note.
+	 * On skip (no quote) - returns undefined.
+	 * On permanent error - returns null.
+	 * On temporary error - throws an exception.
+	 */
+	private async getQuote(note: IPost, entryUri: string, resolver: Resolver): Promise<MiNote | null | undefined> {
+		const quoteUris = new Set<string>();
+		if (note._misskey_quote) quoteUris.add(note._misskey_quote);
+		if (note.quoteUrl) quoteUris.add(note.quoteUrl);
+		if (note.quoteUri) quoteUris.add(note.quoteUri);
+
+		// No quote, return undefined
+		if (quoteUris.size < 1) return undefined;
+
+		/**
+		 * Attempts to resolve a quote by URI.
+		 * Returns the note if successful, true if there's a retryable error, and false if there's a permanent error.
+		 */
+		const resolveQuote = async (uri: unknown): Promise<MiNote | boolean> => {
+			if (typeof(uri) !== 'string' || !/^https?:/.test(uri)) {
+				this.logger.warn(`Failed to resolve quote "${uri}" for note "${entryUri}": URI is invalid`);
+				return false;
+			}
+
+			try {
+				const quote = await this.resolveNote(uri, { resolver });
+
+				if (quote == null) {
+					this.logger.warn(`Failed to resolve quote "${uri}" for note "${entryUri}": request error`);
+					return false;
+				}
+
+				return quote;
+			} catch (e) {
+				if (e instanceof Error) {
+					this.logger.warn(`Failed to resolve quote "${uri}" for note "${entryUri}":`, e);
+				} else {
+					this.logger.warn(`Failed to resolve quote "${uri}" for note "${entryUri}": ${e}`);
+				}
+
+				return isRetryableError(e);
+			}
+		};
+
+		const results = await Promise.all(Array.from(quoteUris).map(u => resolveQuote(u)));
+
+		// Success - return the quote
+		const quote = results.find(r => typeof(r) === 'object');
+		if (quote) return quote;
+
+		// Temporary / retryable error - throw error
+		const tempError = results.find(r => r === true);
+		if (tempError) throw new Error(`temporary error resolving quote for "${entryUri}"`);
+
+		// Permanent error - return null
+		return null;
 	}
 }
 

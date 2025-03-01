@@ -490,6 +490,7 @@ export class NoteEntityService implements OnModuleInit {
 
 			...(opts.detail ? {
 				clippedCount: note.clippedCount,
+				processErrors: note.processErrors,
 
 				reply: note.replyId ? this.pack(note.reply ?? note.replyId, me, {
 					detail: false,

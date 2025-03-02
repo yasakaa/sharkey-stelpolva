@@ -256,7 +256,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<div>{{ i18n.ts.filesRemoved }}: {{ log.info.count }}</div>
 		</template>
 		<template v-else-if="log.type === 'importCustomEmojis'">
-			<div>{{ i18n.ts.fileImported }}: <MkA :to="`/admin/file/${log.info.fileId}`" class="_link">{{ log.info.fileName }}</MkA></div>
+			<div>{{ i18n.ts.fileImported }}: {{ log.info.fileName }}</div>
 		</template>
 		<template v-else-if="log.type === 'clearInstanceFiles'">
 			<div>{{ i18n.ts.host }}: <MkA :to="`/instance-info/${log.info.host}`" class="_link">{{ log.info.host }}</MkA></div>

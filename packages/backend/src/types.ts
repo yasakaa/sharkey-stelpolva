@@ -493,7 +493,6 @@ export type ModerationLogPayloads = {
 		delAliases?: string[],
 	},
 	importCustomEmojis: {
-		fileId: string,
 		fileName: string,
 	},
 	clearInstanceFiles: {

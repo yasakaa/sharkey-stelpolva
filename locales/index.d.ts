@@ -5904,7 +5904,6 @@ export interface Locale extends ILocale {
          * 　・Followers from this account will automatically be migrated to the new account
          * 　・This account will unfollow all users it is currently following
          * 　・You will be unable to create new notes etc. on this account
-         * 　・Scheduled notes will be migrated to the new account if it's on this same instance
          *
          * While migration of followers is automatic, you must manually prepare some steps to migrate the list of users you are following. To do so, carry out a follows export that you will later import on the new account in the settings menu. The same procedure applies to your lists as well as your muted and blocked users.
          *

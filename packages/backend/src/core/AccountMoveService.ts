@@ -122,7 +122,7 @@ export class AccountMoveService {
 			await Promise.all([
 				this.copyBlocking(src, dst),
 				this.copyMutings(src, dst),
-				this.updateScheduledNotes(src, dst),
+				this.deleteScheduledNotes(src),
 				this.updateLists(src, dst),
 			]);
 		} catch {
@@ -206,18 +206,7 @@ export class AccountMoveService {
 	}
 
 	@bindThis
-	public async updateScheduledNotes(src: ThinUser, dst: MiUser): Promise<void> {
-		// we're moving to a different local user: change scheduled notes' ownership
-		if (dst.host === null) {
-			await this.noteScheduleRepository.update(
-				{ userId: src.id },
-				{ userId: dst.id },
-			);
-
-			return;
-		}
-
-		// we're moving to a remote user: delete scheduled notes
+	public async deleteScheduledNotes(src: ThinUser): Promise<void> {
 		const scheduledNotes = await this.noteScheduleRepository.findBy({
 			userId: src.id,
 		}) as MiNoteSchedule[];

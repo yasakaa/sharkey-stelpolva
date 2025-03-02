@@ -26,12 +26,13 @@ import { bindThis } from '@/decorators.js';
 import { checkHttps } from '@/misc/check-https.js';
 import { IdentifiableError } from '@/misc/identifiable-error.js';
 import { isRetryableError } from '@/misc/is-retryable-error.js';
-import { getOneApId, getApId, getOneApHrefNullable, validPost, isEmoji, getApType, isApObject, isDocument, IApDocument } from '../type.js';
+import { getOneApId, getApId, validPost, isEmoji, getApType, isApObject, isDocument, IApDocument } from '../type.js';
 import { ApLoggerService } from '../ApLoggerService.js';
 import { ApMfmService } from '../ApMfmService.js';
 import { ApDbResolverService } from '../ApDbResolverService.js';
 import { ApResolverService } from '../ApResolverService.js';
 import { ApAudienceService } from '../ApAudienceService.js';
+import { ApUtilityService } from '../ApUtilityService.js';
 import { ApPersonService } from './ApPersonService.js';
 import { extractApHashtags } from './tag.js';
 import { ApMentionService } from './ApMentionService.js';
@@ -82,6 +83,7 @@ export class ApNoteService {
 		private noteEditService: NoteEditService,
 		private apDbResolverService: ApDbResolverService,
 		private apLoggerService: ApLoggerService,
+		private readonly apUtilityService: ApUtilityService,
 	) {
 		this.logger = this.apLoggerService.logger;
 	}
@@ -92,7 +94,6 @@ export class ApNoteService {
 		uri: string,
 		actor?: MiRemoteUser,
 		user?: MiRemoteUser,
-		note?: MiNote,
 	): Error | null {
 		const expectHost = this.utilityService.extractDbHost(uri);
 		const apType = getApType(object);
@@ -121,13 +122,6 @@ export class ApNoteService {
 			}
 			if (user && attribution !== user.uri) {
 				return new IdentifiableError('d450b8a9-48e4-4dab-ae36-f4db763fda7c', `invalid Note: updated attribution does not match original attribution. updated attribution: ${user.uri}, original attribution: ${attribution}`);
-			}
-		}
-
-		if (note) {
-			const url = (object.url) ? getOneApId(object.url) : note.url;
-			if (url && url !== note.url) {
-				return new IdentifiableError('d450b8a9-48e4-4dab-ae36-f4db763fda7c', `invalid Note: updated url does not match original url. updated url: ${url}, original url: ${note.url}`);
 			}
 		}
 
@@ -186,17 +180,7 @@ export class ApNoteService {
 			throw new UnrecoverableError(`unexpected schema of note.id ${note.id} in ${entryUri}`);
 		}
 
-		const url = getOneApHrefNullable(note.url);
-
-		if (url != null) {
-			if (!checkHttps(url)) {
-				throw new UnrecoverableError(`unexpected schema of note.url ${url} in ${entryUri}`);
-			}
-
-			if (this.utilityService.punyHostPSLDomain(url) !== this.utilityService.punyHostPSLDomain(note.id)) {
-				throw new UnrecoverableError(`note url <> uri host mismatch: ${url} <> ${note.id} in ${entryUri}`);
-			}
-		}
+		const url = this.apUtilityService.findBestObjectUrl(note);
 
 		this.logger.info(`Creating the Note: ${note.id}`);
 
@@ -385,7 +369,7 @@ export class ApNoteService {
 		const object = await resolver.resolve(value);
 
 		const entryUri = getApId(value);
-		const err = this.validateNote(object, entryUri, actor, user, updatedNote);
+		const err = this.validateNote(object, entryUri, actor, user);
 		if (err) {
 			this.logger.error(err.message, {
 				resolver: { history: resolver.getHistory() },
@@ -411,17 +395,7 @@ export class ApNoteService {
 			throw new UnrecoverableError(`unexpected schema of note.id ${note.id} in ${noteUri}`);
 		}
 
-		const url = getOneApHrefNullable(note.url);
-
-		if (url != null) {
-			if (!checkHttps(url)) {
-				throw new UnrecoverableError(`unexpected schema of note.url ${url} in ${noteUri}`);
-			}
-
-			if (this.utilityService.punyHostPSLDomain(url) !== this.utilityService.punyHostPSLDomain(note.id)) {
-				throw new UnrecoverableError(`note url <> id host mismatch: ${url} <> ${note.id} in ${noteUri}`);
-			}
-		}
+		const url = this.apUtilityService.findBestObjectUrl(note);
 
 		this.logger.info(`Creating the Note: ${note.id}`);
 

@@ -136,6 +136,21 @@ export const moderationLogTypes = [
 	'rejectQuotesUser',
 	'acceptQuotesInstance',
 	'rejectQuotesInstance',
+	'clearUserFiles',
+	'nsfwUser',
+	'unNsfwUser',
+	'silenceUser',
+	'unSilenceUser',
+	'createAccount',
+	'clearRemoteFiles',
+	'clearOwnerlessFiles',
+	'updateCustomEmojis',
+	'importCustomEmojis',
+	'clearInstanceFiles',
+	'severFollowRelations',
+	'createPromo',
+	'addRelay',
+	'removeRelay',
 ] as const;
 
 export type ModerationLogPayloads = {
@@ -224,7 +239,6 @@ export type ModerationLogPayloads = {
 		noteUserId: string;
 		noteUserUsername: string;
 		noteUserHost: string | null;
-		note: any;
 	};
 	createGlobalAnnouncement: {
 		announcementId: string;
@@ -407,19 +421,16 @@ export type ModerationLogPayloads = {
 		pageId: string;
 		pageUserId: string;
 		pageUserUsername: string;
-		page: any;
 	};
 	deleteFlash: {
 		flashId: string;
 		flashUserId: string;
 		flashUserUsername: string;
-		flash: any;
 	};
 	deleteGalleryPost: {
 		postId: string;
 		postUserId: string;
 		postUserUsername: string;
-		post: any;
 	};
 	acceptQuotesUser: {
 		userId: string,
@@ -439,6 +450,70 @@ export type ModerationLogPayloads = {
 		id: string;
 		host: string;
 	};
+	clearUserFiles: {
+		userId: string;
+		userUsername: string;
+		userHost: string | null;
+		count: number;
+	};
+	nsfwUser: {
+		userId: string;
+		userUsername: string;
+		userHost: string | null;
+	};
+	unNsfwUser: {
+		userId: string;
+		userUsername: string;
+		userHost: string | null;
+	};
+	silenceUser: {
+		userId: string;
+		userUsername: string;
+		userHost: string | null;
+	};
+	unSilenceUser: {
+		userId: string;
+		userUsername: string;
+		userHost: string | null;
+	};
+	createAccount: {
+		userId: string;
+		userUsername: string;
+	};
+	clearRemoteFiles: Record<string, never>;
+	clearOwnerlessFiles: {
+		count: number;
+	};
+	updateCustomEmojis: {
+		ids: string[],
+		category?: string | null,
+		license?: string | null,
+		setAliases?: string[],
+		addAliases?: string[],
+		delAliases?: string[],
+	},
+	importCustomEmojis: {
+		fileName: string,
+	},
+	clearInstanceFiles: {
+		host: string;
+		count: number;
+	},
+	severFollowRelations: {
+		host: string;
+	},
+	createPromo: {
+		noteId: string,
+		noteUserId: string;
+		noteUserUsername: string;
+		noteUserHost: string | null;
+	},
+	addRelay: {
+		inbox: string;
+	},
+	removeRelay: {
+		inbox: string;
+	},
 };
 
 export type Serialized<T> = {

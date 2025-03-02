@@ -1403,7 +1403,7 @@ export interface Locale extends ILocale {
      */
     "inputNewFileName": string;
     /**
-     * 新しいキャプションを入力してください
+     * Enter new alt text
      */
     "inputNewDescription": string;
     /**
@@ -2603,11 +2603,11 @@ export interface Locale extends ILocale {
      */
     "description": string;
     /**
-     * キャプションを付ける
+     * Add alt text
      */
     "describeFile": string;
     /**
-     * キャプションを入力
+     * Enter alt text
      */
     "enterFileDescription": string;
     /**
@@ -4084,7 +4084,7 @@ export interface Locale extends ILocale {
      */
     "windowRestore": string;
     /**
-     * キャプション
+     * Alt text
      */
     "caption": string;
     /**
@@ -10254,6 +10254,66 @@ export interface Locale extends ILocale {
          * Allowed quote posts from user
          */
         "allowQuotesUser": string;
+        /**
+         * Cleared a user's drive files
+         */
+        "clearUserFiles": string;
+        /**
+         * Marked user as NSFW
+         */
+        "nsfwUser": string;
+        /**
+         * Un-marked user as NSFW
+         */
+        "unNsfwUser": string;
+        /**
+         * Silenced user
+         */
+        "silenceUser": string;
+        /**
+         * Un-silenced user
+         */
+        "unSilenceUser": string;
+        /**
+         * Created an account
+         */
+        "createAccount": string;
+        /**
+         * Cleared remote drive files
+         */
+        "clearRemoteFiles": string;
+        /**
+         * Cleared owner-less drive files
+         */
+        "clearOwnerlessFiles": string;
+        /**
+         * Updated custom emojis
+         */
+        "updateCustomEmojis": string;
+        /**
+         * Imported custom emojis
+         */
+        "importCustomEmojis": string;
+        /**
+         * Cleared an instance's drive files
+         */
+        "clearInstanceFiles": string;
+        /**
+         * Severed follow relations with an instance
+         */
+        "severFollowRelations": string;
+        /**
+         * Created a note promo
+         */
+        "createPromo": string;
+        /**
+         * Added a relay
+         */
+        "addRelay": string;
+        /**
+         * Removed a relay
+         */
+        "removeRelay": string;
     };
     "_fileViewer": {
         /**
@@ -11601,6 +11661,18 @@ export interface Locale extends ILocale {
      * Flash
      */
     "flash": string;
+    /**
+     * Files removed
+     */
+    "filesRemoved": string;
+    /**
+     * File imported
+     */
+    "fileImported": string;
+    /**
+     * Failed to load note
+     */
+    "cannotLoadNote": string;
     "_flash": {
         /**
          * Flash Content Hidden

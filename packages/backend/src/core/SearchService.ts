@@ -3,94 +3,93 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { Inject, Injectable } from '@nestjs/common';
-import { Brackets, In, SelectQueryBuilder } from 'typeorm';
-import { DI } from '@/di-symbols.js';
-import { type Config, FulltextSearchProvider } from '@/config.js';
-import { bindThis } from '@/decorators.js';
-import { MiNote } from '@/models/Note.js';
-import type { NotesRepository } from '@/models/_.js';
-import { MiUser } from '@/models/_.js';
-import { sqlLikeEscape } from '@/misc/sql-like-escape.js';
-import { isUserRelated } from '@/misc/is-user-related.js';
-import { CacheService } from '@/core/CacheService.js';
-import { QueryService } from '@/core/QueryService.js';
-import { IdService } from '@/core/IdService.js';
-import { LoggerService } from '@/core/LoggerService.js';
-import type { Index, MeiliSearch } from 'meilisearch';
+import { Inject, Injectable } from "@nestjs/common";
+import { Brackets, In, SelectQueryBuilder } from "typeorm";
+import { DI } from "@/di-symbols.js";
+import { type Config, FulltextSearchProvider } from "@/config.js";
+import { bindThis } from "@/decorators.js";
+import { MiNote } from "@/models/Note.js";
+import type { NotesRepository } from "@/models/_.js";
+import { MiUser } from "@/models/_.js";
+import { sqlLikeEscape } from "@/misc/sql-like-escape.js";
+import { isUserRelated } from "@/misc/is-user-related.js";
+import { CacheService } from "@/core/CacheService.js";
+import { QueryService } from "@/core/QueryService.js";
+import { IdService } from "@/core/IdService.js";
+import { LoggerService } from "@/core/LoggerService.js";
+import type { Index, MeiliSearch } from "meilisearch";
 
 type K = string;
 type V = string | number | boolean;
 type Q =
-	{ op: '=', k: K, v: V } |
-	{ op: '!=', k: K, v: V } |
-	{ op: '>', k: K, v: number } |
-	{ op: '<', k: K, v: number } |
-	{ op: '>=', k: K, v: number } |
-	{ op: '<=', k: K, v: number } |
-	{ op: 'is null', k: K } |
-	{ op: 'is not null', k: K } |
-	{ op: 'and', qs: Q[] } |
-	{ op: 'or', qs: Q[] } |
-	{ op: 'not', q: Q };
+	| { op: "="; k: K; v: V }
+	| { op: "!="; k: K; v: V }
+	| { op: ">"; k: K; v: number }
+	| { op: "<"; k: K; v: number }
+	| { op: ">="; k: K; v: number }
+	| { op: "<="; k: K; v: number }
+	| { op: "is null"; k: K }
+	| { op: "is not null"; k: K }
+	| { op: "and"; qs: Q[] }
+	| { op: "or"; qs: Q[] }
+	| { op: "not"; q: Q };
 
 const fileTypes = {
 	image: [
-		'image/webp',
-		'image/png',
-		'image/jpeg',
-		'image/avif',
-		'image/apng',
-		'image/gif',
+		"image/webp",
+		"image/png",
+		"image/jpeg",
+		"image/avif",
+		"image/apng",
+		"image/gif",
 	],
-	video: [
-		'video/mp4',
-		'video/webm',
-		'video/mpeg',
-		'video/x-m4v',
-	],
+	video: ["video/mp4", "video/webm", "video/mpeg", "video/x-m4v"],
 	audio: [
-		'audio/mpeg',
-		'audio/flac',
-		'audio/wav',
-		'audio/aac',
-		'audio/webm',
-		'audio/opus',
-		'audio/ogg',
-		'audio/x-m4a',
-		'audio/mod',
-		'audio/s3m',
-		'audio/xm',
-		'audio/it',
-		'audio/x-mod',
-		'audio/x-s3m',
-		'audio/x-xm',
-		'audio/x-it',
+		"audio/mpeg",
+		"audio/flac",
+		"audio/wav",
+		"audio/aac",
+		"audio/webm",
+		"audio/opus",
+		"audio/ogg",
+		"audio/x-m4a",
+		"audio/mod",
+		"audio/s3m",
+		"audio/xm",
+		"audio/it",
+		"audio/x-mod",
+		"audio/x-s3m",
+		"audio/x-xm",
+		"audio/x-it",
 	],
 	// Keep in sync with frontend-shared/js/const.ts
 	module: [
-		'audio/mod',
-		'audio/x-mod',
-		'audio/s3m',
-		'audio/x-s3m',
-		'audio/xm',
-		'audio/x-xm',
-		'audio/it',
-		'audio/x-it',
+		"audio/mod",
+		"audio/x-mod",
+		"audio/s3m",
+		"audio/x-s3m",
+		"audio/xm",
+		"audio/x-xm",
+		"audio/it",
+		"audio/x-it",
 	],
-	flash: [
-		'application/x-shockwave-flash',
-		'application/vnd.adobe.flash.movie',
-	],
+	flash: ["application/x-shockwave-flash", "application/vnd.adobe.flash.movie"],
 };
 
 // Make sure to regenerate misskey-js and check search.note.vue after changing these
-export const fileTypeCategories = ['image', 'video', 'audio', 'module', 'flash', null] as const;
-export type FileTypeCategory = typeof fileTypeCategories[number];
+export const fileTypeCategories = [
+	"image",
+	"video",
+	"audio",
+	"module",
+	"flash",
+	null,
+] as const;
+export type FileTypeCategory = (typeof fileTypeCategories)[number];
 
 export type SearchOpts = {
-	userId?: MiNote['userId'] | null;
-	channelId?: MiNote['channelId'] | null;
+	userId?: MiNote["userId"] | null;
+	channelId?: MiNote["channelId"] | null;
 	host?: string | null;
 	filetype?: FileTypeCategory;
 	order?: string | null;
@@ -98,42 +97,59 @@ export type SearchOpts = {
 };
 
 export type SearchPagination = {
-	untilId?: MiNote['id'];
-	sinceId?: MiNote['id'];
+	untilId?: MiNote["id"];
+	sinceId?: MiNote["id"];
 	limit: number;
 };
 
 function compileValue(value: V): string {
-	if (typeof value === 'string') {
+	if (typeof value === "string") {
 		return `'${value}'`; // TODO: escape
-	} else if (typeof value === 'number') {
+	} else if (typeof value === "number") {
 		return value.toString();
-	} else if (typeof value === 'boolean') {
+	} else if (typeof value === "boolean") {
 		return value.toString();
 	}
-	throw new Error('unrecognized value');
+	throw new Error("unrecognized value");
 }
 
 function compileQuery(q: Q): string {
 	switch (q.op) {
-		case '=': return `(${q.k} = ${compileValue(q.v)})`;
-		case '!=': return `(${q.k} != ${compileValue(q.v)})`;
-		case '>': return `(${q.k} > ${compileValue(q.v)})`;
-		case '<': return `(${q.k} < ${compileValue(q.v)})`;
-		case '>=': return `(${q.k} >= ${compileValue(q.v)})`;
-		case '<=': return `(${q.k} <= ${compileValue(q.v)})`;
-		case 'and': return q.qs.length === 0 ? '' : `(${ q.qs.map(_q => compileQuery(_q)).join(' AND ') })`;
-		case 'or': return q.qs.length === 0 ? '' : `(${ q.qs.map(_q => compileQuery(_q)).join(' OR ') })`;
-		case 'is null': return `(${q.k} IS NULL)`;
-		case 'is not null': return `(${q.k} IS NOT NULL)`;
-		case 'not': return `(NOT ${compileQuery(q.q)})`;
-		default: throw new Error('unrecognized query operator');
+		case "=":
+			return `(${q.k} = ${compileValue(q.v)})`;
+		case "!=":
+			return `(${q.k} != ${compileValue(q.v)})`;
+		case ">":
+			return `(${q.k} > ${compileValue(q.v)})`;
+		case "<":
+			return `(${q.k} < ${compileValue(q.v)})`;
+		case ">=":
+			return `(${q.k} >= ${compileValue(q.v)})`;
+		case "<=":
+			return `(${q.k} <= ${compileValue(q.v)})`;
+		case "and":
+			return q.qs.length === 0
+				? ""
+				: `(${q.qs.map((_q) => compileQuery(_q)).join(" AND ")})`;
+		case "or":
+			return q.qs.length === 0
+				? ""
+				: `(${q.qs.map((_q) => compileQuery(_q)).join(" OR ")})`;
+		case "is null":
+			return `(${q.k} IS NULL)`;
+		case "is not null":
+			return `(${q.k} IS NOT NULL)`;
+		case "not":
+			return `(NOT ${compileQuery(q.q)})`;
+		default:
+			throw new Error("unrecognized query operator");
 	}
 }
 
 @Injectable()
 export class SearchService {
-	private readonly meilisearchIndexScope: 'local' | 'global' | string[] = 'local';
+	private readonly meilisearchIndexScope: "local" | "global" | string[] =
+		"local";
 	private readonly meilisearchNoteIndex: Index | null = null;
 	private readonly provider: FulltextSearchProvider;
 
@@ -150,25 +166,22 @@ export class SearchService {
 		private cacheService: CacheService,
 		private queryService: QueryService,
 		private idService: IdService,
-		private loggerService: LoggerService,
+		private loggerService: LoggerService
 	) {
 		if (meilisearch) {
-			this.meilisearchNoteIndex = meilisearch.index(`${this.config.meilisearch?.index}---notes`);
+			this.meilisearchNoteIndex = meilisearch.index(
+				`${this.config.meilisearch?.index}---notes`
+			);
 			this.meilisearchNoteIndex.updateSettings({
-				searchableAttributes: [
-					'text',
-					'cw',
-				],
-				sortableAttributes: [
-					'createdAt',
-				],
+				searchableAttributes: ["text", "cw"],
+				sortableAttributes: ["createdAt"],
 				filterableAttributes: [
-					'createdAt',
-					'userId',
-					'userHost',
-					'channelId',
-					'tags',
-					'attachedFileTypes',
+					"createdAt",
+					"userId",
+					"userHost",
+					"channelId",
+					"tags",
+					"attachedFileTypes",
 				],
 				typoTolerance: {
 					enabled: false,
@@ -183,21 +196,23 @@ export class SearchService {
 			this.meilisearchIndexScope = this.config.meilisearch.scope;
 		}
 
-		this.provider = config.fulltextSearch?.provider ?? 'sqlLike';
-		this.loggerService.getLogger('SearchService').info(`-- Provider: ${this.provider}`);
+		this.provider = config.fulltextSearch?.provider ?? "sqlLike";
+		this.loggerService
+			.getLogger("SearchService")
+			.info(`-- Provider: ${this.provider}`);
 	}
 
 	@bindThis
 	public async indexNote(note: MiNote): Promise<void> {
 		if (!this.meilisearch) return;
 		if (note.text == null && note.cw == null) return;
-		if (!['home', 'public'].includes(note.visibility)) return;
+		if (!["home", "public"].includes(note.visibility)) return;
 
 		switch (this.meilisearchIndexScope) {
-			case 'global':
+			case "global":
 				break;
 
-			case 'local':
+			case "local":
 				if (note.userHost == null) break;
 				return;
 
@@ -208,25 +223,30 @@ export class SearchService {
 			}
 		}
 
-		await this.meilisearchNoteIndex?.addDocuments([{
-			id: note.id,
-			createdAt: this.idService.parse(note.id).date.getTime(),
-			userId: note.userId,
-			userHost: note.userHost,
-			channelId: note.channelId,
-			cw: note.cw,
-			text: note.text,
-			tags: note.tags,
-			attachedFileTypes: note.attachedFileTypes,
-		}], {
-			primaryKey: 'id',
-		});
+		await this.meilisearchNoteIndex?.addDocuments(
+			[
+				{
+					id: note.id,
+					createdAt: this.idService.parse(note.id).date.getTime(),
+					userId: note.userId,
+					userHost: note.userHost,
+					channelId: note.channelId,
+					cw: note.cw,
+					text: note.text,
+					tags: note.tags,
+					attachedFileTypes: note.attachedFileTypes,
+				},
+			],
+			{
+				primaryKey: "id",
+			}
+		);
 	}
 
 	@bindThis
 	public async unindexNote(note: MiNote): Promise<void> {
 		if (!this.meilisearch) return;
-		if (!['home', 'public'].includes(note.visibility)) return;
+		if (!["home", "public"].includes(note.visibility)) return;
 
 		await this.meilisearchNoteIndex?.deleteDocument(note.id);
 	}
@@ -236,19 +256,19 @@ export class SearchService {
 		q: string,
 		me: MiUser | null,
 		opts: SearchOpts,
-		pagination: SearchPagination,
+		pagination: SearchPagination
 	): Promise<MiNote[]> {
 		switch (this.provider) {
-			case 'sqlPgroonga': {
+			case "sqlPgroonga": {
 				return this.searchNoteByPgroonga(q, me, opts, pagination);
 			}
-			case 'sqlLike':
-			case 'sqlTsvector': {
+			case "sqlLike":
+			case "sqlTsvector": {
 				// ほとんど内容に差がないのでsqlLikeとsqlPgroongaを同じ処理にしている.
 				// 今後の拡張で差が出る用であれば関数を分ける.
 				return this.searchNoteByLike(q, me, opts, pagination);
 			}
-			case 'meilisearch': {
+			case "meilisearch": {
 				return this.searchNoteByMeiliSearch(q, me, opts, pagination);
 			}
 			default: {
@@ -264,41 +284,51 @@ export class SearchService {
 		q: string,
 		me: MiUser | null,
 		opts: SearchOpts,
-		pagination: SearchPagination,
+		pagination: SearchPagination
 	): Promise<MiNote[]> {
-		const query = this.queryService.makePaginationQuery(this.notesRepository.createQueryBuilder('note'), pagination.sinceId, pagination.untilId);
+		const query = this.queryService.makePaginationQuery(
+			this.notesRepository.createQueryBuilder("note"),
+			pagination.sinceId,
+			pagination.untilId
+		);
 
 		if (opts.userId) {
-			query.andWhere('note.userId = :userId', { userId: opts.userId });
+			query.andWhere("note.userId = :userId", { userId: opts.userId });
 		} else if (opts.channelId) {
-			query.andWhere('note.channelId = :channelId', { channelId: opts.channelId });
+			query.andWhere("note.channelId = :channelId", {
+				channelId: opts.channelId,
+			});
 		}
 
 		query
-			.innerJoinAndSelect('note.user', 'user')
-			.leftJoinAndSelect('note.reply', 'reply')
-			.leftJoinAndSelect('note.renote', 'renote')
-			.leftJoinAndSelect('reply.user', 'replyUser')
-			.leftJoinAndSelect('renote.user', 'renoteUser');
+			.innerJoinAndSelect("note.user", "user")
+			.leftJoinAndSelect("note.reply", "reply")
+			.leftJoinAndSelect("note.renote", "renote")
+			.leftJoinAndSelect("reply.user", "replyUser")
+			.leftJoinAndSelect("renote.user", "renoteUser");
 
-		if (this.config.fulltextSearch?.provider === 'sqlPgroonga') {
-			query.andWhere('note.text &@~ :q', { q });
-		} else if (this.config.fulltextSearch?.provider === 'sqlTsvector') {
-			query.andWhere('note.tsvector_embedding @@ websearch_to_tsquery(:q)', { q });
+		if (this.config.fulltextSearch?.provider === "sqlPgroonga") {
+			query.andWhere("note.text &@~ :q", { q });
+		} else if (this.config.fulltextSearch?.provider === "sqlTsvector") {
+			query.andWhere("note.tsvector_embedding @@ websearch_to_tsquery(:q)", {
+				q,
+			});
 		} else {
-			query.andWhere('note.text ILIKE :q', { q: `%${ sqlLikeEscape(q) }%` });
+			query.andWhere("note.text ILIKE :q", { q: `%${sqlLikeEscape(q)}%` });
 		}
 
 		if (opts.host) {
-			if (opts.host === '.') {
-				query.andWhere('note.userHost IS NULL');
+			if (opts.host === ".") {
+				query.andWhere("note.userHost IS NULL");
 			} else {
-				query.andWhere('note.userHost = :host', { host: opts.host });
+				query.andWhere("note.userHost = :host", { host: opts.host });
 			}
 		}
 
 		if (opts.filetype) {
-			query.andWhere('note."attachedFileTypes" && :types', { types: fileTypes[opts.filetype] });
+			query.andWhere('note."attachedFileTypes" && :types', {
+				types: fileTypes[opts.filetype],
+			});
 		}
 
 		this.queryService.generateVisibilityQuery(query, me);
@@ -313,38 +343,49 @@ export class SearchService {
 		q: string,
 		me: MiUser | null,
 		opts: SearchOpts,
-		pagination: SearchPagination,
+		pagination: SearchPagination
 	): Promise<MiNote[]> {
-		const subSearch = async (makeQuery: (query: SelectQueryBuilder<MiNote>) => void) => {
-			const query = this.queryService.makePaginationQuery(this.notesRepository.createQueryBuilder('note'), pagination.sinceId, pagination.untilId);
+		const subSearch = async (
+			makeQuery: (query: SelectQueryBuilder<MiNote>) => void
+		) => {
+			const query = this.queryService.makePaginationQuery(
+				this.notesRepository.createQueryBuilder("note"),
+				pagination.sinceId,
+				pagination.untilId
+			);
 
 			if (opts.userId) {
-				query.andWhere('note.userId = :userId', { userId: opts.userId });
+				query.andWhere("note.userId = :userId", { userId: opts.userId });
 			} else if (opts.channelId) {
-				query.andWhere('note.channelId = :channelId', { channelId: opts.channelId });
+				query.andWhere("note.channelId = :channelId", {
+					channelId: opts.channelId,
+				});
 			} else {
-				query.andWhere(new Brackets((q) => {
-					q.orWhere('note.visibility = \'public\'');
-					if (me) {
-						q.orWhere('note.userId = :meId', { meId: me.id });
-					}
-				}));
+				query.andWhere(
+					new Brackets((q) => {
+						q.orWhere("note.visibility = 'public'");
+						q.orWhere("note.visibility = 'home'");
+						if (me) {
+							q.orWhere("note.userId = :meId", { meId: me.id });
+						}
+					})
+				);
 			}
 
 			makeQuery(query);
 
 			query
-				.innerJoinAndSelect('note.user', 'user')
-				.leftJoinAndSelect('note.reply', 'reply')
-				.leftJoinAndSelect('note.renote', 'renote')
-				.leftJoinAndSelect('reply.user', 'replyUser')
-				.leftJoinAndSelect('renote.user', 'renoteUser');
+				.innerJoinAndSelect("note.user", "user")
+				.leftJoinAndSelect("note.reply", "reply")
+				.leftJoinAndSelect("note.renote", "renote")
+				.leftJoinAndSelect("reply.user", "replyUser")
+				.leftJoinAndSelect("renote.user", "renoteUser");
 
 			if (opts.host) {
-				if (opts.host === '.') {
-					query.andWhere('user.host IS NULL');
+				if (opts.host === ".") {
+					query.andWhere("user.host IS NULL");
 				} else {
-					query.andWhere('user.host = :host', { host: opts.host });
+					query.andWhere("user.host = :host", { host: opts.host });
 				}
 			}
 
@@ -361,12 +402,18 @@ export class SearchService {
 				// 	a MIME type, either at start of the array (after the
 				// 	`{`) or later (after a `,`) */
 				// query.andWhere('note."attachedFileTypes"::varchar ~* :type', { type: `[{,]${opts.filetype}/` });
-				if (opts.filetype === 'image') {
-					query.andWhere('note."attachedFileTypes"::varchar ~* :type', { type: `[{,]${opts.filetype}/` });
-				} else if (opts.filetype === 'video') {
-					query.andWhere('note."attachedFileTypes"::varchar ~* :type', { type: `[{,]${opts.filetype}/` });
-				} else if (opts.filetype === 'audio') {
-					query.andWhere('note."attachedFileTypes"::varchar ~* :type', { type: `[{,]${opts.filetype}/` });
+				if (opts.filetype === "image") {
+					query.andWhere('note."attachedFileTypes"::varchar ~* :type', {
+						type: `[{,]${opts.filetype}/`,
+					});
+				} else if (opts.filetype === "video") {
+					query.andWhere('note."attachedFileTypes"::varchar ~* :type', {
+						type: `[{,]${opts.filetype}/`,
+					});
+				} else if (opts.filetype === "audio") {
+					query.andWhere('note."attachedFileTypes"::varchar ~* :type', {
+						type: `[{,]${opts.filetype}/`,
+					});
 				}
 			}
 
@@ -384,18 +431,18 @@ export class SearchService {
 				(
 					await Promise.all([
 						subSearch((query) => {
-							query.andWhere('note.text &@~ :q', { q: searchWord });
+							query.andWhere("note.text &@~ :q", { q: searchWord });
 						}),
 						subSearch((query) => {
-							query.andWhere('note.cw &@~ :q', { q: searchWord });
+							query.andWhere("note.cw &@~ :q", { q: searchWord });
 						}),
 					])
 				)
 					.flatMap((e) => e)
-					.map((note) => [note.id, note]),
+					.map((note) => [note.id, note])
 			).values(),
 		]
-			.sort((lhs, rhs) => lhs.id < rhs.id ? 1 : -1)
+			.sort((lhs, rhs) => (lhs.id < rhs.id ? 1 : -1))
 			.slice(0, pagination.limit);
 
 		return notes;
@@ -406,45 +453,52 @@ export class SearchService {
 		q: string,
 		me: MiUser | null,
 		opts: SearchOpts,
-		pagination: SearchPagination,
+		pagination: SearchPagination
 	): Promise<MiNote[]> {
 		if (!this.meilisearch || !this.meilisearchNoteIndex) {
-			throw new Error('MeiliSearch is not available');
+			throw new Error("MeiliSearch is not available");
 		}
 
 		const filter: Q = {
-			op: 'and',
+			op: "and",
 			qs: [],
 		};
-		if (pagination.untilId) filter.qs.push({
-			op: '<',
-			k: 'createdAt',
-			v: this.idService.parse(pagination.untilId).date.getTime(),
-		});
-		if (pagination.sinceId) filter.qs.push({
-			op: '>',
-			k: 'createdAt',
-			v: this.idService.parse(pagination.sinceId).date.getTime(),
-		});
-		if (opts.userId) filter.qs.push({ op: '=', k: 'userId', v: opts.userId });
-		if (opts.channelId) filter.qs.push({ op: '=', k: 'channelId', v: opts.channelId });
+		if (pagination.untilId)
+			filter.qs.push({
+				op: "<",
+				k: "createdAt",
+				v: this.idService.parse(pagination.untilId).date.getTime(),
+			});
+		if (pagination.sinceId)
+			filter.qs.push({
+				op: ">",
+				k: "createdAt",
+				v: this.idService.parse(pagination.sinceId).date.getTime(),
+			});
+		if (opts.userId) filter.qs.push({ op: "=", k: "userId", v: opts.userId });
+		if (opts.channelId)
+			filter.qs.push({ op: "=", k: "channelId", v: opts.channelId });
 		if (opts.host) {
-			if (opts.host === '.') {
-				filter.qs.push({ op: 'is null', k: 'userHost' });
+			if (opts.host === ".") {
+				filter.qs.push({ op: "is null", k: "userHost" });
 			} else {
-				filter.qs.push({ op: '=', k: 'userHost', v: opts.host });
+				filter.qs.push({ op: "=", k: "userHost", v: opts.host });
 			}
 		}
 
 		if (opts.filetype) {
-			const filters = fileTypes[opts.filetype].map(mime => ({ op: '=' as const, k: 'attachedFileTypes', v: mime }));
-			filter.qs.push({ op: 'or', qs: filters });
+			const filters = fileTypes[opts.filetype].map((mime) => ({
+				op: "=" as const,
+				k: "attachedFileTypes",
+				v: mime,
+			}));
+			filter.qs.push({ op: "or", qs: filters });
 		}
 
 		const res = await this.meilisearchNoteIndex.search(q, {
-			sort: [`createdAt:${opts.order ? opts.order : 'desc'}`],
-			matchingStrategy: 'all',
-			attributesToRetrieve: ['id', 'createdAt'],
+			sort: [`createdAt:${opts.order ? opts.order : "desc"}`],
+			matchingStrategy: "all",
+			attributesToRetrieve: ["id", "createdAt"],
 			filter: compileQuery(filter),
 			limit: pagination.limit,
 		});
@@ -452,23 +506,22 @@ export class SearchService {
 			return [];
 		}
 
-		const [
-			userIdsWhoMeMuting,
-			userIdsWhoBlockingMe,
-		] = me
+		const [userIdsWhoMeMuting, userIdsWhoBlockingMe] = me
 			? await Promise.all([
-				this.cacheService.userMutingsCache.fetch(me.id),
-				this.cacheService.userBlockedCache.fetch(me.id),
-			])
+					this.cacheService.userMutingsCache.fetch(me.id),
+					this.cacheService.userBlockedCache.fetch(me.id),
+			  ])
 			: [new Set<string>(), new Set<string>()];
-		const notes = (await this.notesRepository.findBy({
-			id: In(res.hits.map(x => x.id)),
-		})).filter(note => {
+		const notes = (
+			await this.notesRepository.findBy({
+				id: In(res.hits.map((x) => x.id)),
+			})
+		).filter((note) => {
 			if (me && isUserRelated(note, userIdsWhoBlockingMe)) return false;
 			if (me && isUserRelated(note, userIdsWhoMeMuting)) return false;
 			return true;
 		});
 
-		return notes.sort((a, b) => a.id > b.id ? -1 : 1);
+		return notes.sort((a, b) => (a.id > b.id ? -1 : 1));
 	}
 }

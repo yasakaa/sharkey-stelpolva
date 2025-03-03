@@ -239,8 +239,10 @@ export class SearchService {
 		pagination: SearchPagination,
 	): Promise<MiNote[]> {
 		switch (this.provider) {
+			case 'sqlPgroonga': {
+				return this.searchNoteByPgroonga(q, me, opts, pagination);
+			}
 			case 'sqlLike':
-			case 'sqlPgroonga':
 			case 'sqlTsvector': {
 				// ほとんど内容に差がないのでsqlLikeとsqlPgroongaを同じ処理にしている.
 				// 今後の拡張で差が出る用であれば関数を分ける.
@@ -304,6 +306,99 @@ export class SearchService {
 		if (me) this.queryService.generateBlockedUserQuery(query, me);
 
 		return await query.limit(pagination.limit).getMany();
+	}
+
+	@bindThis
+	private async searchNoteByPgroonga(
+		q: string,
+		me: MiUser | null,
+		opts: SearchOpts,
+		pagination: SearchPagination,
+	): Promise<MiNote[]> {
+		const subSearch = async (makeQuery: (query: SelectQueryBuilder<MiNote>) => void) => {
+			const query = this.queryService.makePaginationQuery(this.notesRepository.createQueryBuilder('note'), pagination.sinceId, pagination.untilId);
+
+			if (opts.userId) {
+				query.andWhere('note.userId = :userId', { userId: opts.userId });
+			} else if (opts.channelId) {
+				query.andWhere('note.channelId = :channelId', { channelId: opts.channelId });
+			} else {
+				query.andWhere(new Brackets((q) => {
+					q.orWhere('note.visibility = \'public\'');
+					if (me) {
+						q.orWhere('note.userId = :meId', { meId: me.id });
+					}
+				}));
+			}
+
+			makeQuery(query);
+
+			query
+				.innerJoinAndSelect('note.user', 'user')
+				.leftJoinAndSelect('note.reply', 'reply')
+				.leftJoinAndSelect('note.renote', 'renote')
+				.leftJoinAndSelect('reply.user', 'replyUser')
+				.leftJoinAndSelect('renote.user', 'renoteUser');
+
+			if (opts.host) {
+				if (opts.host === '.') {
+					query.andWhere('user.host IS NULL');
+				} else {
+					query.andWhere('user.host = :host', { host: opts.host });
+				}
+			}
+
+			if (opts.filetype) {
+				// /* this is very ugly, but the "correct" solution would
+				// 	be `and exists (select 1 from
+				// 	unnest(note."attachedFileTypes") x(t) where t like
+				// 	:type)` and I can't find a way to get TypeORM to
+				// 	generate that; this hack works because `~*` is
+				// 	"regexp match, ignoring case" and the stringified
+				// 	version of an array of varchars (which is what
+				// 	`attachedFileTypes` is) looks like `{foo,bar}`, so
+				// 	we're looking for opts.filetype as the first half of
+				// 	a MIME type, either at start of the array (after the
+				// 	`{`) or later (after a `,`) */
+				// query.andWhere('note."attachedFileTypes"::varchar ~* :type', { type: `[{,]${opts.filetype}/` });
+				if (opts.filetype === 'image') {
+					query.andWhere('note."attachedFileTypes"::varchar ~* :type', { type: `[{,]${opts.filetype}/` });
+				} else if (opts.filetype === 'video') {
+					query.andWhere('note."attachedFileTypes"::varchar ~* :type', { type: `[{,]${opts.filetype}/` });
+				} else if (opts.filetype === 'audio') {
+					query.andWhere('note."attachedFileTypes"::varchar ~* :type', { type: `[{,]${opts.filetype}/` });
+				}
+			}
+
+			this.queryService.generateVisibilityQuery(query, me);
+			if (me) this.queryService.generateMutedUserQuery(query, me);
+			if (me) this.queryService.generateBlockedUserQuery(query, me);
+
+			return await query.limit(pagination.limit).getMany();
+		};
+
+		const searchWord = sqlLikeEscape(q);
+
+		const notes = [
+			...new Map(
+				(
+					await Promise.all([
+						subSearch((query) => {
+							query.andWhere('note.text &@~ :q', { q: searchWord });
+						}),
+						subSearch((query) => {
+							query.andWhere('note.cw &@~ :q', { q: searchWord });
+						}),
+					])
+				)
+					.flatMap((e) => e)
+					.map((note) => [note.id, note]),
+			).values(),
+		]
+			.sort((lhs, rhs) => lhs.id < rhs.id ? 1 : -1)
+			.slice(0, pagination.limit);
+
+		return notes;
 	}
 
 	@bindThis

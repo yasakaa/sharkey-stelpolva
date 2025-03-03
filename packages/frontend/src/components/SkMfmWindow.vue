@@ -170,16 +170,6 @@ SPDX-License-Identifier: AGPL-3.0-only
 					</div>
 				</div>
 				<div class="section _block">
-					<div class="title">边框</div>
-					<div class="content">
-						<p>在文字外面加入边框</p>
-						<div class="preview">
-							<Mfm :text="preview_border"/>
-							<MkTextarea v-model="preview_border"><template #label>MFM</template></MkTextarea>
-						</div>
-					</div>
-				</div>
-				<div class="section _block">
 					<div class="title">{{ i18n.ts._mfm.search }}</div>
 					<div class="content">
 						<p>{{ i18n.ts._mfm.searchDescription }}</p>
@@ -529,7 +519,6 @@ const preview_scale = ref(
 );
 const preview_fg = ref('$[fg.color=eb6f92 Text color]');
 const preview_bg = ref('$[bg.color=31748f Background color]');
-const preview_border = ref('$[border.color=eb6f92,style=outset,width=10,radius=10 Border]');
 const preview_plain = ref(
 	'<plain>**bold** @mention #hashtag `code` $[x2 🍮]</plain>',
 );

@@ -34,6 +34,10 @@
 
 - 添加了 pgroonga 用于全文搜索
 
+> [!NOTE]
+> 请在 `default.yml` 中配置 `fulltextSearch.provider` 为 `sqlPgroonga`
+> 关于该配置项，请阅读 `example.yml`
+
 ### Other
 
 #### Behaviour Changes

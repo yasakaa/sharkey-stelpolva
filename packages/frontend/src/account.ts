@@ -22,83 +22,91 @@ type Account = Misskey.entities.MeDetailed & { token: string };
 const accountData = miLocalStorage.getItem('account');
 
 // TODO: 外部からはreadonlyに
-export const $i = accountData ? reactive(JSON.parse(accountData) as Account) : null;
+export const $i = accountData
+  ? reactive(JSON.parse(accountData) as Account)
+  : null;
 
-export const iAmModerator = $i != null && ($i.isAdmin === true || $i.isModerator === true);
+export const iAmModerator =
+  $i != null && ($i.isAdmin === true || $i.isModerator === true);
 export const iAmAdmin = $i != null && $i.isAdmin;
 
 export function signinRequired() {
-	if ($i == null) throw new Error('signin required');
-	return $i;
+  if ($i == null) throw new Error('signin required');
+  return $i;
 }
 
 export let notesCount = $i == null ? 0 : $i.notesCount;
 export function incNotesCount() {
-	notesCount++;
+  notesCount++;
 }
 
 export async function signout() {
-	if (!$i) return;
+  if (!$i) return;
 
-	waiting();
-	miLocalStorage.removeItem('account');
-	await removeAccount($i.id);
-	document.cookie = `token=; path=/; max-age=0${ location.protocol === 'https:' ? '; Secure' : ''}`;
-	const accounts = await getAccounts();
+  waiting();
+  miLocalStorage.removeItem('account');
+  await removeAccount($i.id);
+  document.cookie = `token=; path=/; max-age=0${location.protocol === 'https:' ? '; Secure' : ''}`;
+  const accounts = await getAccounts();
 
-	//#region Remove service worker registration
-	try {
-		if (navigator.serviceWorker.controller) {
-			const registration = await navigator.serviceWorker.ready;
-			const push = await registration.pushManager.getSubscription();
-			if (push) {
-				await window.fetch(`${apiUrl}/sw/unregister`, {
-					method: 'POST',
-					body: JSON.stringify({
-						i: $i.token,
-						endpoint: push.endpoint,
-					}),
-					headers: {
-						'Content-Type': 'application/json',
-					},
-				});
-			}
-		}
+  //#region Remove service worker registration
+  try {
+    if (navigator.serviceWorker.controller) {
+      const registration = await navigator.serviceWorker.ready;
+      const push = await registration.pushManager.getSubscription();
+      if (push) {
+        await window.fetch(`${apiUrl}/sw/unregister`, {
+          method: 'POST',
+          body: JSON.stringify({
+            i: $i.token,
+            endpoint: push.endpoint,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+      }
+    }
 
-		if (accounts.length === 0) {
-			await navigator.serviceWorker.getRegistrations()
-				.then(registrations => {
-					return Promise.all(registrations.map(registration => registration.unregister()));
-				});
-		}
-	} catch (err) {}
-	//#endregion
+    if (accounts.length === 0) {
+      await navigator.serviceWorker.getRegistrations().then((registrations) => {
+        return Promise.all(
+          registrations.map((registration) => registration.unregister()),
+        );
+      });
+    }
+  } catch (err) {}
+  //#endregion
 
-	if (accounts.length > 0) login(accounts[0].token);
-	else unisonReload('/');
+  if (accounts.length > 0) login(accounts[0].token);
+  else unisonReload('/');
 }
 
-export async function getAccounts(): Promise<{ id: Account['id'], token: Account['token'] }[]> {
-	return (await get('accounts')) || [];
+export async function getAccounts(): Promise<
+  { id: Account['id']; token: Account['token'] }[]
+> {
+  return (await get('accounts')) || [];
 }
 
 export async function addAccount(id: Account['id'], token: Account['token']) {
-	const accounts = await getAccounts();
-	if (!accounts.some(x => x.id === id)) {
-		await set('accounts', accounts.concat([{ id, token }]));
-	}
+  const accounts = await getAccounts();
+  if (!accounts.some((x) => x.id === id)) {
+    await set('accounts', accounts.concat([{ id, token }]));
+  }
 }
 
 export async function removeAccount(idOrToken: Account['id']) {
-	const accounts = await getAccounts();
-	const i = accounts.findIndex(x => x.id === idOrToken || x.token === idOrToken);
-	if (i !== -1) accounts.splice(i, 1);
+  const accounts = await getAccounts();
+  const i = accounts.findIndex(
+    (x) => x.id === idOrToken || x.token === idOrToken,
+  );
+  if (i !== -1) accounts.splice(i, 1);
 
-	if (accounts.length > 0) {
-		await set('accounts', accounts);
-	} else {
-		await del('accounts');
-	}
+  if (accounts.length > 0) {
+    await set('accounts', accounts);
+  } else {
+    await del('accounts');
+  }
 }
 
 function fetchAccount(token: string, id?: string, forceShowDialog?: boolean): Promise<Account> {
@@ -165,60 +173,62 @@ function fetchAccount(token: string, id?: string, forceShowDialog?: boolean): Pr
 						});
 					}
 
-					// rejectかつ理由がtrueの場合、削除対象であることを示す
-					fail(true);
-				} else {
-					(res as Account).token = token;
-					done(res as Account);
-				}
-			})
-			.catch(fail);
-	});
+          // rejectかつ理由がtrueの場合、削除対象であることを示す
+          fail(true);
+        } else {
+          (res as Account).token = token;
+          done(res as Account);
+        }
+      })
+      .catch(fail);
+  });
 }
 
 export function updateAccount(accountData: Account) {
-	if (!$i) return;
-	for (const key of Object.keys($i)) {
-		delete $i[key];
-	}
-	for (const [key, value] of Object.entries(accountData)) {
-		$i[key] = value;
-	}
-	miLocalStorage.setItem('account', JSON.stringify($i));
+  if (!$i) return;
+  for (const key of Object.keys($i)) {
+    delete $i[key];
+  }
+  for (const [key, value] of Object.entries(accountData)) {
+    $i[key] = value;
+  }
+  miLocalStorage.setItem('account', JSON.stringify($i));
 }
 
 export function updateAccountPartial(accountData: Partial<Account>) {
-	if (!$i) return;
-	for (const [key, value] of Object.entries(accountData)) {
-		$i[key] = value;
-	}
-	miLocalStorage.setItem('account', JSON.stringify($i));
+  if (!$i) return;
+  for (const [key, value] of Object.entries(accountData)) {
+    $i[key] = value;
+  }
+  miLocalStorage.setItem('account', JSON.stringify($i));
 }
 
 export async function refreshAccount() {
-	if (!$i) return;
-	return fetchAccount($i.token, $i.id)
-		.then(updateAccount, reason => {
-			if (reason === true) return signout();
-			return;
-		});
+  if (!$i) return;
+  return fetchAccount($i.token, $i.id).then(updateAccount, (reason) => {
+    if (reason === true) return signout();
+    return;
+  });
 }
 
 export async function login(token: Account['token'], redirect?: string) {
-	const showing = ref(true);
-	const { dispose } = popup(defineAsyncComponent(() => import('@/components/MkWaitingDialog.vue')), {
-		success: false,
-		showing: showing,
-	}, {
-		closed: () => dispose(),
-	});
-	if (_DEV_) console.log('logging as token ', token);
-	const me = await fetchAccount(token, undefined, true)
-		.catch(reason => {
-			if (reason === true) {
-				// 削除対象の場合
-				removeAccount(token);
-			}
+  const showing = ref(true);
+  const { dispose } = popup(
+    defineAsyncComponent(() => import('@/components/MkWaitingDialog.vue')),
+    {
+      success: false,
+      showing: showing,
+    },
+    {
+      closed: () => dispose(),
+    },
+  );
+  if (_DEV_) console.log('logging as token ', token);
+  const me = await fetchAccount(token, undefined, true).catch((reason) => {
+    if (reason === true) {
+      // 削除対象の場合
+      removeAccount(token);
+    }
 
 			showing.value = false;
 			throw reason;
@@ -226,168 +236,199 @@ export async function login(token: Account['token'], redirect?: string) {
 	miLocalStorage.setItem('account', JSON.stringify(me));
 	await addAccount(me.id, token);
 
-	if (redirect) {
-		// 他のタブは再読み込みするだけ
-		reloadChannel.postMessage(null);
-		// このページはredirectで指定された先に移動
-		location.href = redirect;
-		return;
-	}
+  if (redirect) {
+    // 他のタブは再読み込みするだけ
+    reloadChannel.postMessage(null);
+    // このページはredirectで指定された先に移動
+    location.href = redirect;
+    return;
+  }
 
-	unisonReload();
+  unisonReload();
 }
 
-export async function openAccountMenu(opts: {
-	includeCurrentAccount?: boolean;
-	withExtraOperation: boolean;
-	active?: Misskey.entities.UserDetailed['id'];
-	onChoose?: (account: Misskey.entities.UserDetailed) => void;
-}, ev: MouseEvent) {
-	if (!$i) return;
+export async function openAccountMenu(
+  opts: {
+    includeCurrentAccount?: boolean;
+    withExtraOperation: boolean;
+    active?: Misskey.entities.UserDetailed['id'];
+    onChoose?: (account: Misskey.entities.UserDetailed) => void;
+  },
+  ev: MouseEvent,
+) {
+  if (!$i) return;
 
-	async function switchAccount(account: Misskey.entities.UserDetailed) {
-		const storedAccounts = await getAccounts();
-		const found = storedAccounts.find(x => x.id === account.id);
-		if (found == null) return;
-		switchAccountWithToken(found.token);
-	}
+  async function switchAccount(account: Misskey.entities.UserDetailed) {
+    const storedAccounts = await getAccounts();
+    const found = storedAccounts.find((x) => x.id === account.id);
+    if (found == null) return;
+    switchAccountWithToken(found.token);
+  }
 
-	function switchAccountWithToken(token: string) {
-		login(token);
-	}
+  function switchAccountWithToken(token: string) {
+    login(token);
+  }
 
-	const storedAccounts = await getAccounts().then(accounts => accounts.filter(x => x.id !== $i.id));
-	const accountsPromise = misskeyApi('users/show', { userIds: storedAccounts.map(x => x.id) });
+  const storedAccounts = await getAccounts().then((accounts) =>
+    accounts.filter((x) => x.id !== $i.id),
+  );
+  const accountsPromise = misskeyApi('users/show', {
+    userIds: storedAccounts.map((x) => x.id),
+  });
 
-	function createItem(account: Misskey.entities.UserDetailed) {
-		return {
-			type: 'user' as const,
-			user: account,
-			active: opts.active != null ? opts.active === account.id : false,
-			action: () => {
-				if (opts.onChoose) {
-					opts.onChoose(account);
-				} else {
-					switchAccount(account);
-				}
-			},
-		};
-	}
+  function createItem(account: Misskey.entities.UserDetailed) {
+    return {
+      type: 'user' as const,
+      user: account,
+      active: opts.active != null ? opts.active === account.id : false,
+      action: () => {
+        if (opts.onChoose) {
+          opts.onChoose(account);
+        } else {
+          switchAccount(account);
+        }
+      },
+    };
+  }
 
-	const accountItemPromises = storedAccounts.map(a => new Promise<ReturnType<typeof createItem> | MenuButton>(res => {
-		accountsPromise.then(accounts => {
-			const account = accounts.find(x => x.id === a.id);
-			if (account == null) return res({
-				type: 'button' as const,
-				text: a.id,
-				action: () => {
-					switchAccountWithToken(a.token);
-				},
-			});
+  const accountItemPromises = storedAccounts.map(
+    (a) =>
+      new Promise<ReturnType<typeof createItem> | MenuButton>((res) => {
+        accountsPromise.then((accounts) => {
+          const account = accounts.find((x) => x.id === a.id);
+          if (account == null)
+            return res({
+              type: 'button' as const,
+              text: a.id,
+              action: () => {
+                switchAccountWithToken(a.token);
+              },
+            });
 
-			res(createItem(account));
-		});
-	}));
+          res(createItem(account));
+        });
+      }),
+  );
 
-	const menuItems: MenuItem[] = [];
+  const menuItems: MenuItem[] = [];
 
-	if (opts.withExtraOperation) {
-		menuItems.push({
-			type: 'link',
-			text: i18n.ts.profile,
-			to: `/@${$i.username}`,
-			avatar: $i,
-		}, {
-			type: 'divider',
-		});
+  if (opts.withExtraOperation) {
+    menuItems.push(
+      {
+        type: 'link',
+        text: i18n.ts.profile,
+        to: `/@${$i.username}`,
+        avatar: $i,
+      },
+      {
+        type: 'divider',
+      },
+    );
 
-		if (opts.includeCurrentAccount) {
-			menuItems.push(createItem($i));
-		}
+    if (opts.includeCurrentAccount) {
+      menuItems.push(createItem($i));
+    }
 
-		menuItems.push(...accountItemPromises);
+    menuItems.push(...accountItemPromises);
 
-		menuItems.push({
-			type: 'parent',
-			icon: 'ti ti-plus',
-			text: i18n.ts.addAccount,
-			children: [{
-				text: i18n.ts.existingAccount,
-				action: () => {
-					getAccountWithSigninDialog().then(res => {
-						if (res != null) {
-							success();
-						}
-					});
-				},
-			}, {
-				text: i18n.ts.createAccount,
-				action: () => {
-					getAccountWithSignupDialog().then(res => {
-						if (res != null) {
-							switchAccountWithToken(res.token);
-						}
-					});
-				},
-			}],
-		}, {
-			type: 'link',
-			icon: 'ti ti-users',
-			text: i18n.ts.manageAccounts,
-			to: '/settings/accounts',
-		}, {
-			type: 'button' as const,
-			icon: 'ph-power ph-bold ph-lg',
-			text: i18n.ts.logout,
-			action: () => { signout(); },
-		});
-	} else {
-		if (opts.includeCurrentAccount) {
-			menuItems.push(createItem($i));
-		}
+    menuItems.push(
+      {
+        type: 'parent',
+        icon: 'ti ti-plus',
+        text: i18n.ts.addAccount,
+        children: [
+          {
+            text: i18n.ts.existingAccount,
+            action: () => {
+              getAccountWithSigninDialog().then((res) => {
+                if (res != null) {
+                  success();
+                }
+              });
+            },
+          },
+          {
+            text: i18n.ts.createAccount,
+            action: () => {
+              getAccountWithSignupDialog().then((res) => {
+                if (res != null) {
+                  switchAccountWithToken(res.token);
+                }
+              });
+            },
+          },
+        ],
+      },
+      {
+        type: 'link',
+        icon: 'ti ti-users',
+        text: i18n.ts.manageAccounts,
+        to: '/settings/accounts',
+      },
+    );
+  } else {
+    if (opts.includeCurrentAccount) {
+      menuItems.push(createItem($i));
+    }
 
-		menuItems.push(...accountItemPromises);
-	}
+    menuItems.push(...accountItemPromises);
+  }
 
-	popupMenu(menuItems, ev.currentTarget ?? ev.target, {
-		align: 'left',
-	});
+  popupMenu(menuItems, ev.currentTarget ?? ev.target, {
+    align: 'left',
+  });
 }
 
-export function getAccountWithSigninDialog(): Promise<{ id: string, token: string } | null> {
-	return new Promise((resolve) => {
-		const { dispose } = popup(defineAsyncComponent(() => import('@/components/MkSigninDialog.vue')), {}, {
-			done: async (res: Misskey.entities.SigninFlowResponse & { finished: true }) => {
-				await addAccount(res.id, res.i);
-				resolve({ id: res.id, token: res.i });
-			},
-			cancelled: () => {
-				resolve(null);
-			},
-			closed: () => {
-				dispose();
-			},
-		});
-	});
+export function getAccountWithSigninDialog(): Promise<{
+  id: string;
+  token: string;
+} | null> {
+  return new Promise((resolve) => {
+    const { dispose } = popup(
+      defineAsyncComponent(() => import('@/components/MkSigninDialog.vue')),
+      {},
+      {
+        done: async (
+          res: Misskey.entities.SigninFlowResponse & { finished: true },
+        ) => {
+          await addAccount(res.id, res.i);
+          resolve({ id: res.id, token: res.i });
+        },
+        cancelled: () => {
+          resolve(null);
+        },
+        closed: () => {
+          dispose();
+        },
+      },
+    );
+  });
 }
 
-export function getAccountWithSignupDialog(): Promise<{ id: string, token: string } | null> {
-	return new Promise((resolve) => {
-		const { dispose } = popup(defineAsyncComponent(() => import('@/components/MkSignupDialog.vue')), {}, {
-			done: async (res: Misskey.entities.SignupResponse) => {
-				await addAccount(res.id, res.token);
-				resolve({ id: res.id, token: res.token });
-			},
-			cancelled: () => {
-				resolve(null);
-			},
-			closed: () => {
-				dispose();
-			},
-		});
-	});
+export function getAccountWithSignupDialog(): Promise<{
+  id: string;
+  token: string;
+} | null> {
+  return new Promise((resolve) => {
+    const { dispose } = popup(
+      defineAsyncComponent(() => import('@/components/MkSignupDialog.vue')),
+      {},
+      {
+        done: async (res: Misskey.entities.SignupResponse) => {
+          await addAccount(res.id, res.token);
+          resolve({ id: res.id, token: res.token });
+        },
+        cancelled: () => {
+          resolve(null);
+        },
+        closed: () => {
+          dispose();
+        },
+      },
+    );
+  });
 }
 
 if (_DEV_) {
-	(window as any).$i = $i;
+  (window as any).$i = $i;
 }

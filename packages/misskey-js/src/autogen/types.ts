@@ -4407,6 +4407,7 @@ export type components = {
       reply?: components['schemas']['Note'] | null;
       renote?: components['schemas']['Note'] | null;
       isHidden?: boolean;
+      hiddenReason?: string | null;
       /** @enum {string} */
       visibility: 'public' | 'home' | 'followers' | 'specified';
       mentions?: string[];

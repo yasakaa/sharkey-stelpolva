@@ -134,20 +134,23 @@ export class NoteEntityService implements OnModuleInit {
 
 		// TODO: isVisibleForMe を使うようにしても良さそう(型違うけど)
 		let hide = false;
+		let hiddenReason = '';
 
 		if (packedNote.user.requireSigninToViewContents && meId == null) {
 			hide = true;
+			hiddenReason = 'PLEASE_LOGIN';
 		}
 
 		if (!hide) {
 			const hiddenBefore = packedNote.user.makeNotesHiddenBefore;
 			if ((hiddenBefore != null)
 				&& (
-					(hiddenBefore <= 0 && (Date.now() - new Date(packedNote.createdAt).getTime() > 0 - (hiddenBefore * 1000)))
+					(hiddenBefore <= 0 && (Date.now() - new Date(packedNote.createdAt).getTime() + 100 > 0 - (hiddenBefore * 1000)))
 					|| (hiddenBefore > 0 && (new Date(packedNote.createdAt).getTime() < hiddenBefore * 1000))
 				)
 			) {
 				hide = true;
+				hiddenReason = 'MISSKEY_EXPERIMENTAL_TIME';
 			}
 		}
 
@@ -156,14 +159,16 @@ export class NoteEntityService implements OnModuleInit {
 			if (packedNote.visibility === 'specified') {
 				if (meId == null) {
 					hide = true;
+					hiddenReason = 'LOCKED';
 				} else if (meId === packedNote.userId) {
 					hide = false;
 				} else {
 					// 指定されているかどうか
-					const specified = packedNote.visibleUserIds!.some(id => meId === id);
+					const specified = packedNote.visibleUserIds?.some(id => meId === id);
 
 					if (!specified) {
 						hide = true;
+						hiddenReason = 'LOCKED';
 					}
 				}
 			}
@@ -174,6 +179,7 @@ export class NoteEntityService implements OnModuleInit {
 			if (packedNote.visibility === 'followers') {
 				if (meId == null) {
 					hide = true;
+					hiddenReason = 'LOCKED';
 				} else if (meId === packedNote.userId) {
 					hide = false;
 				} else if (packedNote.reply && (meId === packedNote.reply.userId)) {
@@ -195,6 +201,9 @@ export class NoteEntityService implements OnModuleInit {
 					});
 
 					hide = !isFollowing;
+					if (hide) {
+						hiddenReason = 'LOCKED';
+					}
 				}
 			}
 		}
@@ -205,12 +214,16 @@ export class NoteEntityService implements OnModuleInit {
 		// This is pulled out to ensure that we check both the renote *and* the boosted note.
 		if (packedNote.renote?.isHidden && isPackedPureRenote(packedNote)) {
 			hide = true;
+			hiddenReason = 'PURE_RENOTE';
 		}
 
 		if (!hide && meId && packedNote.userId !== meId) {
 			const isBlocked = (await this.cacheService.userBlockedCache.fetch(meId)).has(packedNote.userId);
 
-			if (isBlocked) hide = true;
+			if (isBlocked) {
+				hide = true;
+				hiddenReason = 'BLOCKED';
+			}
 		}
 
 		if (hide) {
@@ -227,6 +240,7 @@ export class NoteEntityService implements OnModuleInit {
 			packedNote.reactionEmojis = {};
 			packedNote.reactions = {};
 			packedNote.isHidden = true;
+			packedNote.hiddenReason = hiddenReason;
 			// TODO: hiddenReason みたいなのを提供しても良さそう
 		}
 	}

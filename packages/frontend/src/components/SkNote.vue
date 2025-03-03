@@ -76,7 +76,10 @@ SPDX-License-Identifier: AGPL-3.0-only
 				</p>
 				<div v-show="mergedCW == null || showContent" :class="[{ [$style.contentCollapsed]: collapsed }]">
 					<div :class="$style.text">
-						<span v-if="appearNote.isHidden" style="opacity: 0.5">({{ i18n.ts.private }})</span>
+						<span v-if="appearNote.isHidden" style="opacity: 0.5">
+							({{ i18n.ts.private }})
+							<code v-if="defaultStore.state.devMode">{{ appearNote.hiddenReason }}</code>
+						</span>
 						<Mfm
 							v-if="appearNote.text"
 							:parsedNodes="parsed"

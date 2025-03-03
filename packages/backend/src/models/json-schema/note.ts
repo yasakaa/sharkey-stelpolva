@@ -71,6 +71,10 @@ export const packedNoteSchema = {
 			type: 'boolean',
 			optional: true, nullable: false,
 		},
+		hiddenReason: {
+			type: 'string',
+			optional: true, nullable: true,
+		},
 		visibility: {
 			type: 'string',
 			optional: false, nullable: false,

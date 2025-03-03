@@ -1,0 +1,68 @@
+---
+stpvAntennaPatch:
+  Sharkey Stelpolva Editionでは、アンテナ設定に追加のキーワード構文を追加しています。
+  domain:example.com を設定すると、example.com からのすべての投稿を対象とします。このキーワードは A OR B 構文と併用することも可能です。
+  ローカル内の投稿を条件設定したい場合は `domain:here` と設定する必要があります。
+stpvPgroongaSearchInstru: 検索で`A OR B` 構文を使用すると、AまたはBを含むノートを検索できます。  `A B`（スペースで区切る場合）は、AとBの両方のキーワードを含む投稿を検索します。
+timeTravel: タイムトラベル
+timeTravelDescription: この日付より前の投稿を表示
+makePrivate:
+  text: 非公開にする
+  description: 投稿を非公開にすると、あなたのみが閲覧できるようになり、リモートサーバーに削除リクエストが送信されます。
+  confirm: 本当にこの投稿を非公開にしますか？
+  warn: 複数の投稿を非公開にする操作は、**永久的で、元に戻すことができません**。また、サーバーに一定の負荷をかけます。実行して問題ないか慎重に進めてください。バッチで非公開にする処理は1時間に1度しか実行できません。
+  sinceDate: 開始日
+  untilDate: 終了日
+  dangerTip: これは非常に危険な操作のため、この機能を有効にするには `{text}` と入力してください。
+  manyCount: 選択している{count} 件の投稿が非公開になります
+  textmany: 投稿を非公開にする！
+  manyWarn: 本当にこれらの {count} 件の投稿を非公開にしますか？この操作は取り消すことができません。操作後、選択された投稿はあなた以外は永久に閲覧できない状態になります。
+  didStart: 非公開化プロセスが開始されました
+  bulkText: 複数の投稿を一括で非公開にする
+_stpvPlus:
+  title: Stelpolva Plus 設定
+  info: これらの設定はSharkey Stelpolvaにのみ追加されたもので、通常のSharkeyインスタンスでは利用できません。
+  disableAllReactions:
+    label: フロントエンドでの全てのリアクションを無効にする
+    caption: これはあなた表示状態のみ変更するので、他の人は絵文字でリアクションすることができます。Sharkeyスタイルのノートにのみ利用可能です。
+  defaultFont:
+    label: デフォルトフォント
+    caption: 一部の中国語フォントファイルは大きいため、切り替え後にフォントが読み込まれるまで少し時間がかかる場合があります。簡体字の峄山碑篆体と繁体字の崇羲篆體は相互に補完されます。
+  fontType:
+    label: フォントタイプ
+    caption: フォントのサブフォントを選択
+  customFont:
+    label: カスタムフォント...
+    caption: ローカルのフォントリストからフォントを選択してください
+  softMutedUsers:
+    label: ソフトミュートされたユーザーID
+    caption: Rawに表示されるユーザーIDを入力してください。1行につき1つのID、最大100個まで入力可能です。超過したIDは削除されます。
+  softMutedNotes:
+    label: ソフトミュートされた投稿ID
+    caption: URLに表示される投稿IDを入力してください。1行につき1つのID、最大100個まで入力可能です。超過したIDは削除されます。
+  softMutedDomains:
+    label: ソフトミュートされたドメイン名
+    caption: ドメイン名を入力してください。1行につき1つのドメイン、最大100個まで入力可能です。超過したドメインは削除されます。
+  hideReplyAcct:
+    label: 折りたたまれた返信のアカウントを非表示
+    caption: "@username@domain を表示しない"
+  advancedPostForm:
+    label: 高度な投稿フォーム
+    caption: プレフィックスやサフィックスなどを追加可能にします
+  combineRepliesQuotes:
+    label: 引用と返信を統合
+    caption: 投稿詳細ページで引用と返信の両方を表示します
+  disableTimeline:
+    label: タイムラインを無効にする
+    caption: "{name} タイムラインを無効にする"
+stpvMuteUser: "タイムライン内の投稿をソフトミュートする"
+stpvUnmuteUser: "タイムライン内の投稿をソフトミュートしない"
+stpvMuteNote: "この投稿を後でソフトミュートする"
+stpvUnmuteNote: "この投稿のミュートを解除する"
+stpvMuteInstance: "タイムライン内のこのインスタンスからの投稿をソフトミュートする"
+stpvDomainUserSaysSomething: "{domain} の {name} が何かを言いました"
+stpvReactionsStat: "絵文字リアクション統計"
+stpvReactionsStatDescription: "最も多く使用された上位100個の絵文字リアクションを表示します"
+stpvPFprefix: "プレフィックス..."
+stpvPFsuffix: "...サフィックス"
+stpvWarnNoQueryLocalFonts: "お使いのブラウザは queryLocalFonts をサポートしていません。テキストボックスにフォント名を手動で入力してください。"

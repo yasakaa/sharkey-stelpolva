@@ -591,7 +591,7 @@ export interface Locale extends ILocale {
      */
     "enterFileName": string;
     /**
-     * ミュート
+     * 静音
      */
     "mute": string;
     /**
@@ -607,7 +607,7 @@ export interface Locale extends ILocale {
      */
     "renoteUnmute": string;
     /**
-     * ブロック
+     * 屏蔽
      */
     "block": string;
     /**
@@ -9065,6 +9065,14 @@ export interface Locale extends ILocale {
          */
         "followedMessageDescriptionForLockedAccount": string;
         /**
+         * Update avatar
+         */
+        "updateAvatar": string;
+        /**
+         * Remove avatar
+         */
+        "removeAvatar": string;
+        /**
          * Update banner
          */
         "updateBanner": string;
@@ -12407,6 +12415,16 @@ export interface Locale extends ILocale {
              */
             "caption": ParameterizedString<"name">;
         };
+        "aprilFools": {
+            /**
+             * 愚人节彩蛋
+             */
+            "label": string;
+            /**
+             * 打开后在 4 月 1 日有意外惊喜（？）
+             */
+            "caption": string;
+        };
     };
     /**
      * 在时间线上折叠该用户的帖子
@@ -12452,6 +12470,10 @@ export interface Locale extends ILocale {
      * 啊哦! 你的浏览器不支持 queryLocalFonts 方法，因此请在文本框中手动填写字体名。
      */
     "stpvWarnNoQueryLocalFonts": string;
+    /**
+     * 表情符号大小
+     */
+    "stpvEmojiPickerItemSize": string;
 }
 declare const locales: {
     [lang: string]: Locale;

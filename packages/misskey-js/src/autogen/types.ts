@@ -5400,6 +5400,7 @@ export type components = {
        */
       noteSearchableScope: 'local' | 'global';
       trustedLinkUrlPatterns: string[];
+      stpvAprilFoolsEnabled?: boolean | null;
       maxFileSize: number;
       /** @enum {string} */
       federation: 'all' | 'specified' | 'none';
@@ -8864,6 +8865,8 @@ export type operations = {
             deeplIsPro: boolean;
             deeplFreeMode: boolean;
             deeplFreeInstance: string | null;
+            libreTranslateURL: string | null;
+            libreTranslateKey: string | null;
             defaultDarkTheme: string | null;
             defaultLightTheme: string | null;
             description: string | null;
@@ -8895,6 +8898,7 @@ export type operations = {
             urlPreviewSummaryProxyUrl: string | null;
             trustedLinkUrlPatterns: string[];
             federation: string;
+            stpvAprilFoolsEnabled?: boolean | null;
             federationHosts: string[];
           };
         };
@@ -11439,6 +11443,8 @@ export type operations = {
           deeplIsPro?: boolean;
           deeplFreeMode?: boolean;
           deeplFreeInstance?: string | null;
+          libreTranslateURL?: string | null;
+          libreTranslateKey?: string | null;
           enableEmail?: boolean;
           email?: string | null;
           smtpSecure?: boolean;

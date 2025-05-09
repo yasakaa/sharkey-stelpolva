@@ -81,6 +81,23 @@ SPDX-License-Identifier: AGPL-3.0-only
 	</FormSection>
 
 	<FormSection>
+		<template #label>{{ i18n.ts.emojiPicker }}</template>
+		<div class="_gaps_m">
+			<div class="_gaps_s">
+				<MkRange v-model="stpvEmojiPickerItemSize" :min="1" :max="3" :step="0.25">
+					<template #label>{{ i18n.ts.stpvEmojiPickerItemSize }}</template>
+					<template #caption>
+						<MkFolder :spacerMin="0" :spacerMax="0">
+							<template #label>{{ i18n.ts.preview }}</template>
+							<MkEmojiPicker :class="$style.emojiPickerPreview"></MkEmojiPicker>
+						</MkFolder>
+					</template>
+				</MkRange>
+			</div>
+		</div>
+	</FormSection>
+
+	<FormSection>
 		<template #label>{{ i18n.ts._stpvPlus.disableTimeline.label }}</template>
 		<div class="_gaps_m">
 			<div class="_gaps_s">
@@ -100,6 +117,12 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<MkSwitch v-model="stpvAdvancedPostForm">
 					{{ i18n.ts._stpvPlus.advancedPostForm.label }}
 					<template #caption>{{ i18n.ts._stpvPlus.advancedPostForm.caption }}</template>
+				</MkSwitch>
+			</div>
+			<div v-if="isAprilFoolsDay" class="_gaps_s">
+				<MkSwitch v-model="stpvAprilFools">
+					{{ i18n.ts._stpvPlus.aprilFools.label }}
+					<template #caption>{{ i18n.ts._stpvPlus.aprilFools.caption }}</template>
 				</MkSwitch>
 			</div>
 			<div class="_gaps_s">
@@ -183,6 +206,9 @@ import { TimelineSwipeKeys } from '@/stpv-store-ext';
 import { isBasicTimeline } from '@/timelines';
 import { miLocalStorage } from '@/local-storage';
 import MkInput from '@/components/MkInput.vue';
+import MkEmojiPicker from '@/components/MkEmojiPicker.vue';
+import MkRange from '@/components/MkRange.vue';
+import { instance } from '@/instance';
 
 const $i = signinRequired();
 const meId = $i.id;
@@ -192,11 +218,22 @@ console.log(defaultFont);
 
 const collapsedInReplyTo = defaultStore.reactiveState.collapseNotesRepliedTo;
 
+const today = ref(new Date());
+const isAprilFoolsDay = computed(() =>
+	instance.stpvAprilFoolsEnabled &&
+	// .getMonth() is a zero-based value
+	today.value.getMonth() === 3 &&
+	// ...but .getDate() is a one-based value
+	today.value.getDate() === 1,
+);
+
 const autoSpacingBehaviour = computed(defaultStore.makeGetterSetter('chineseAutospacing'));
 const stpvDisableAllReactions = computed(defaultStore.makeGetterSetter('stpvDisableAllReactions'));
 const stpvHideReplyAcct = computed(defaultStore.makeGetterSetter('stpvHideReplyAcct'));
 const stpvAdvancedPostForm = computed(defaultStore.makeGetterSetter('stpvAdvancedPostForm'));
 const stpvCombineRepliesQuotes = computed(defaultStore.makeGetterSetter('stpvCombineRepliesQuotes'));
+const stpvEmojiPickerItemSize = computed(defaultStore.makeGetterSetter('stpvEmojiPickerItemSize'));
+const stpvAprilFools = computed(defaultStore.makeGetterSetter('stpvAprilFools'));
 
 const stpvMutedUsersList = computed({
 	get: () => defaultStore.reactiveState.stpvClientMutedUsers.value.filter(x => x).join('\n'),
@@ -340,5 +377,9 @@ definePageMetadata(() => ({
 			border-color: var(--MI_THEME-inputBorderHover) !important;
 		}
 	}
+}
+
+.emojiPickerPreview{
+	width: 100% !important;
 }
 </style>

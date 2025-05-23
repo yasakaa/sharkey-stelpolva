@@ -8,7 +8,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<MkPagination ref="latestNotesPaging" :pagination="latestNotesPagination" @init="onListReady">
 		<template #empty>
 			<div class="_fullinfo">
-				<img :src="infoImageUrl" class="_ghost" :alt="i18n.ts.noNotes" aria-hidden="true"/>
+				<img :src="infoImageUrl" draggable="false" :alt="i18n.ts.noNotes" aria-hidden="true"/>
 				<div>{{ i18n.ts.noNotes }}</div>
 			</div>
 		</template>
@@ -25,16 +25,17 @@ SPDX-License-Identifier: AGPL-3.0-only
 <script setup lang="ts">
 import * as Misskey from 'misskey-js';
 import { computed, shallowRef } from 'vue';
+import type { FollowingFeedTab } from '@/utility/following-feed-utils.js';
+import type { Paging } from '@/components/MkPagination.vue';
 import { infoImageUrl } from '@/instance.js';
 import { i18n } from '@/i18n.js';
 import MkDateSeparatedList from '@/components/MkDateSeparatedList.vue';
-import MkPagination, { Paging } from '@/components/MkPagination.vue';
+import MkPagination from '@/components/MkPagination.vue';
 import SkFollowingFeedEntry from '@/components/SkFollowingFeedEntry.vue';
-import { $i } from '@/account.js';
-import { checkWordMute } from '@/scripts/check-word-mute.js';
-import { FollowingFeedTab } from '@/scripts/following-feed-utils.js';
+import { $i } from '@/i.js';
+import { checkWordMute } from '@/utility/check-word-mute.js';
 import MkPullToRefresh from '@/components/MkPullToRefresh.vue';
-import { defaultStore } from '@/store';
+import { store } from '@/store';
 
 const props = defineProps<{
 	userList: FollowingFeedTab;
@@ -86,9 +87,9 @@ const latestNotesPagination: Paging<'notes/following'> = {
 const latestNotesPaging = shallowRef<InstanceType<typeof MkPagination>>();
 
 function isSoftMuted(note: Misskey.entities.Note): boolean {
-	if (defaultStore.state.stpvClientMutedNotes.includes(note.id)) { return true; }
-	if (note.replyId && defaultStore.state.stpvClientMutedNotes.includes(note.replyId)) { return true; }
-	if (note.renoteId && defaultStore.state.stpvClientMutedNotes.includes(note.renoteId)) { return true; }
+	if (store.s.stpvClientMutedNotes.includes(note.id)) { return true; }
+	if (note.replyId && store.s.stpvClientMutedNotes.includes(note.replyId)) { return true; }
+	if (note.renoteId && store.s.stpvClientMutedNotes.includes(note.renoteId)) { return true; }
 	return isMuted(note, $i?.mutedWords);
 }
 
@@ -116,7 +117,7 @@ function checkMute(note: Misskey.entities.Note | undefined | null, mutes: Mutes)
 		return false;
 	}
 
-	return checkWordMute(note, $i, mutes);
+	return !!checkWordMute(note, $i, mutes);
 }
 </script>
 

@@ -1,0 +1,13 @@
+@font-face {
+  font-family: 'Noto Sans JP';
+  src:
+    local('Noto Sans JP'),
+    url('/static-assets/fonts/NotoSansJP-Regular.woff') format('woff');
+
+  font-display: swap;
+}
+
+html.default-font-genryomin2 {
+  font-family: 'Noto Sans JP', 'Meiryo', 'GenRyuMin2 TC R', 'Times New Roman',
+    Times, serif;
+}

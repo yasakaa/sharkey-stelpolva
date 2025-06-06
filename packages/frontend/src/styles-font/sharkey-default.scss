@@ -1,27 +1,37 @@
 html.default-font-sharkey-default {
-	font-family: 'sharkey-theme-font-face', 'Lexend', 'Hiragino Maru Gothic Pro', "BIZ UDGothic", Roboto, HelveticaNeue, Arial, sans-serif;
+  font-family: 'Noto Sans JP', 'sharkey-theme-font-face', 'Lexend',
+    'Hiragino Maru Gothic Pro', 'BIZ UDGothic', Roboto, HelveticaNeue, Arial,
+    sans-serif;
 }
 
 html.default-font-system-ui {
-	font-family: system-ui;
+  font-family: system-ui;
+}
+
+html.default-font-notosansjp {
+  font-family: 'Noto Sans JP', 'sharkey-theme-font-face', 'Lexend',
+    'Hiragino Maru Gothic Pro', 'BIZ UDGothic', Roboto, HelveticaNeue, Arial,
+    sans-serif;
 }
 
 html.default-font-misskey-biz {
-	font-family: 'sharkey-theme-font-face', "BIZ UDGothic", Roboto, HelveticaNeue, Arial, sans-serif;
+  font-family: 'sharkey-theme-font-face', 'BIZ UDGothic', 'Noto Sans JP', Roboto,
+    HelveticaNeue, Arial, sans-serif;
 }
 
 html.default-font-roboto {
-	font-family: 'sharkey-theme-font-face', Roboto, Arial, sans-serif;
+  font-family: 'sharkey-theme-font-face', Roboto, 'Noto Sans JP', Arial,
+    sans-serif;
 }
 
 html.default-font-arial {
-	font-family: 'sharkey-theme-font-face', Arial, sans-serif;
+  font-family: 'sharkey-theme-font-face', Arial, 'Noto Sans JP', sans-serif;
 }
 
 html.default-font-times {
-	font-family: 'sharkey-theme-font-face', 'Times New Roman', Times, serif;
+  font-family: 'sharkey-theme-font-face', 'Times New Roman', Times, serif;
 }
 
 html.default-font-custom {
-	font-family: var(--STPV_custom-fontface);
+  font-family: var(--STPV_custom-fontface);
 }

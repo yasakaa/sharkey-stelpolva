@@ -469,9 +469,9 @@ _announcement:
   new: "新着"
 _deck:
   _columns:
-   following: "フォロー中"
+    following: "フォロー中"
 
- selectFollowRelationship: "フォロー関係を選択..."
+selectFollowRelationship: "フォロー関係を選択..."
 
 schedulePost: "予約投稿"
 schedulePostList: "予約投稿一覧"
@@ -528,7 +528,7 @@ showTranslationButtonInNoteFooter: "翻訳ボタンをノートメニューに�
 translationFailed: "ノートの翻訳に失敗しました。後でもう一度試すか、管理者に問い合わせてください。"
 
 _processErrors:
- quoteUnavailable: "引用を処理できません。この投稿はコンテキストが不足している可能性があります。"
+  quoteUnavailable: "引用を処理できません。この投稿はコンテキストが不足している可能性があります。"
 
 authorizedFetchSection: "Authorized Fetch"
 authorizedFetchLabel: "未署名のActivityPubリクエストを許可:"
@@ -542,7 +542,7 @@ _authorizedFetchValueDescription:
   never: "すべての未署名リクエストをブロックします。プライバシーを向上させ、ブロックの効果を高めますが、一部の古いサーバーや一般的なサーバーソフトウェアとは互換性がありません。"
   always: "すべての未署名リクエストを許可します。他のサーバーとの互換性は最も高いですが、プライバシーを低下させ、ブロックの効果を弱めます。"
   essential: "制限された未署名リクエストのみを許可します。古いソフトウェアとの連合に必要な最小限のプロフィールメタデータのみを公開することで、「しない」と「常に」の間のハイブリッドを提供します。"
-  staff: "Use the default value of \"{value}\" recommended by the instance staff."
+  staff: 'Use the default value of "{value}" recommended by the instance staff.'
 authorizedFetchLegacyWarning: "設定プロパティ「checkActivityPubGetSignature」は非推奨となり、新しいAuthorized Fetch設定に置き換えられました。設定ファイルから削除してください。"
 _followRequest:
   recieved: "受信"
@@ -616,7 +616,7 @@ hibernated: "休止中"
 keepCwDescription: "コンテンツ警告のある投稿に返信する際、自動的に同じCWを返信に適用します。"
 keepCwDisabled: "無効 (CWをコピーしない)"
 keepCwEnabled: "有効 (CWをそのままコピー)"
-keepCwPrependRe: "有効 (CWをコピーし、「\"RE:\"」を前に追加)"
+keepCwPrependRe: '有効 (CWをコピーし、「"RE:"」を前に追加)'
 
 noteFooterLabel: "Note controls"
 

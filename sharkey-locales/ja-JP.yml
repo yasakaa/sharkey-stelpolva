@@ -162,7 +162,6 @@ undoFollowRequestConfirm: "フォローリクエストをキャンセルして�
 showQuotes: "引用を表示"
 showReplies: "返信を表示"
 showNonPublicNotes: "非公開ノートを表示"
-allowClickingNotifications: "ポップアップ通知のクリックを許可"
 pinnedOnly: "ピン止めのみ"
 blockingYou: "あなたをブロック中"
 warnExternalUrl: "外部URLを開くときに警告を表示"

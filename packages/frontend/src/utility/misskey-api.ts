@@ -68,6 +68,16 @@ export function misskeyApi<
 			headers,
 			signal,
 		}).then(async (res) => {
+			if (res.status === 502 && window.location.host === 'stelpolva.moe') {
+				reject({
+					id: 'b942c85a-58eb-4e64-8a49-0ad216343394',
+					code: 'OOPS_STELPOLVA_CRASHED',
+					message: '呜呜，屑又小崩了，等半分钟吧',
+					kind: 'server',
+				});
+				return;
+			}
+
 			const body = res.status === 204 ? null : await res.json();
 
 			if (res.status === 200) {
@@ -143,4 +153,22 @@ export function misskeyApiGet<
 	promise.then(onFinally, onFinally);
 
 	return promise;
+}
+
+export function printError(error: unknown): string {
+	if (error != null && typeof(error) === 'object') {
+		if ('info' in error && typeof (error.info) === 'object' && error.info) {
+			if ('e' in error.info && typeof (error.info.e) === 'object' && error.info.e) {
+				if ('message' in error.info.e && typeof (error.info.e.message) === 'string') return error.info.e.message;
+				if ('code' in error.info.e && typeof (error.info.e.code) === 'string') return error.info.e.code;
+				if ('id' in error.info.e && typeof (error.info.e.id) === 'string') return error.info.e.id;
+			}
+		}
+
+		if ('message' in error && typeof (error.message) === 'string') return error.message;
+		if ('code' in error && typeof (error.code) === 'string') return error.code;
+		if ('id' in error && typeof (error.id) === 'string') return error.id;
+	}
+
+	return String(error);
 }

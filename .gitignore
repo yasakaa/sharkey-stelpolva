@@ -88,3 +88,6 @@ vite.config.local-dev.ts.timestamp-*
 # Sharkey
 /packages/megalodon/lib
 /dump.rdb
+
+#Windows
+*.Zone.Identifier

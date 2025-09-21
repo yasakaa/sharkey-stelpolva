@@ -6006,6 +6006,22 @@ export interface Locale extends ILocale {
          */
         "new": string;
         /**
+         * Restrict to roles
+         */
+        "onlyForRoles": string;
+        /**
+         * Change role restrictions
+         */
+        "onlyForRolesChange": string;
+        /**
+         * Shown to everyone
+         */
+        "onlyForRolesUnrestricted": string;
+        /**
+         * Shown to members of {roles} roles
+         */
+        "onlyForRolesRestricted": ParameterizedString<"roles">;
+        /**
          * Throw confetti
          */
         "confetti": string;
@@ -6406,7 +6422,7 @@ export interface Locale extends ILocale {
          */
         "deliverSuspendedSoftware": string;
         /**
-         * 脆弱性などの理由で、サーバーのソフトウェアの名前及びバージョンの範囲を指定して配信を停止できます。このバージョン情報はサーバーが提供したものであり、信頼性は保証されません。バージョン指定には semver の範囲指定が使用できますが、>= 2024.3.1 と指定すると 2024.3.1-custom.0 のようなカスタムバージョンが含まれないため、>= 2024.3.1-0 のように prerelease の指定を行うことを推奨します。
+         * You can specify a range of names and versions of the server's software to stop delivery for vulnerability or other reasons. This version information is provided by the server and is not guaranteed to be reliable. A semver range specification can be used to specify the version, but specifying >= 2024.3.1 will not include custom versions such as 2024.3.1-custom.0, so it is recommended that a prerelease specification be used, such as >= 2024.3.1-0. Specifying * will match any name or version, even when the server doesn't provide one. You can also provide a regular expression like /^sharkey-/i or /^1-/
          */
         "deliverSuspendedSoftwareDescription": string;
         /**
@@ -10398,6 +10414,10 @@ export interface Locale extends ILocale {
          * Import of {x} has been completed
          */
         "importOfXCompleted": ParameterizedString<"x">;
+        /**
+         * 举报被接受
+         */
+        "reportAccepted": string;
     };
     "_deck": {
         /**
@@ -13380,6 +13400,10 @@ export interface Locale extends ILocale {
         "keepFilesInUseDescription": string;
     };
     /**
+     * Custom font size
+     */
+    "customFontSize": string;
+    /**
      * Sharkey Stelpolva Edition 为天线的设置添加了额外的关键词语法。
      * 具体而言， `domain:example.com` 这个特殊关键词会匹配所有来自 `example.com` 的帖子。这个关键词同样能使用在 OR 语法中。
      * 特别地，你必须用 `domain:here` 来匹配本实例的帖子。
@@ -13626,6 +13650,10 @@ export interface Locale extends ILocale {
      * 表情符号大小
      */
     "stpvEmojiPickerItemSize": string;
+    /**
+     * 您对 {target} 的举报已被接受。感谢您的帮助！管理人员已经采取了适当的措施。
+     */
+    "reportAcceptedBody": ParameterizedString<"target">;
 }
 declare const locales: {
     [lang: string]: Locale;

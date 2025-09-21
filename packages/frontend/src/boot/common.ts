@@ -331,6 +331,9 @@ export async function common(createVue: () => Promise<App<Element>>) {
 	const fontId = def_arr?.[0];
 	if (fontId) {
 		loadFontStyle(fontId);
+	} else if (window.navigator.language.includes('zh')) {
+		// 猫啃糖圆对日文不友好，所以只在中文环境下默认加载
+		loadFontStyle('maokentangyuan');
 	}
 	//#region Self-XSS 対策メッセージ
 	if (!_DEV_) {

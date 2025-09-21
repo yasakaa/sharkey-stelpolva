@@ -129,7 +129,12 @@
 
 	const fontSize = localStorage.getItem('fontSize') || 2;
 	if (fontSize) {
-		document.documentElement.classList.add('f-' + fontSize);
+		if (fontSize === "custom") {
+			const customFontSize = localStorage.getItem('customFontSize');
+			document.documentElement.style.setProperty('font-size', `${customFontSize}px`);
+		} else {
+			document.documentElement.classList.add('f-' + fontSize);
+		}
 	}
 
 	const cornerRadius = localStorage.getItem('cornerRadius');
@@ -143,9 +148,11 @@
 	}
 
 	function stpvCustomLoader() {
-		const defaultFontFace = localStorage.getItem('defaultFontFace') || 'maokentangyuan';
+		const defaultFontFace = localStorage.getItem('defaultFontFace');
 		if (defaultFontFace) {
 			document.documentElement.classList.add(`default-font-${defaultFontFace}`);
+		} else if (navigator.language.includes('zh')) {
+			document.documentElement.classList.add('default-font-maokentangyuan');
 		}
 	}
 

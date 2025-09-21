@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import type { SoundStore } from '@/preferences/def.js';
-import { prefer } from '@/preferences.js';
-import { PREF_DEF } from '@/preferences/def.js';
+import type { SoundStore } from "@/preferences/def.js";
+import { prefer } from "@/preferences.js";
+import { PREF_DEF } from "@/preferences/def.js";
 
 let ctx: AudioContext;
 const cache = new Map<string, AudioBuffer>();
@@ -16,87 +16,122 @@ export const soundsTypes = [
 	null,
 
 	// ドライブの音声
-	'_driveFile_',
+	"_driveFile_",
 
 	// プリインストール
-	'syuilo/n-aec',
-	'syuilo/n-aec-4va',
-	'syuilo/n-aec-4vb',
-	'syuilo/n-aec-8va',
-	'syuilo/n-aec-8vb',
-	'syuilo/n-cea',
-	'syuilo/n-cea-4va',
-	'syuilo/n-cea-4vb',
-	'syuilo/n-cea-8va',
-	'syuilo/n-cea-8vb',
-	'syuilo/n-eca',
-	'syuilo/n-eca-4va',
-	'syuilo/n-eca-4vb',
-	'syuilo/n-eca-8va',
-	'syuilo/n-eca-8vb',
-	'syuilo/n-ea',
-	'syuilo/n-ea-4va',
-	'syuilo/n-ea-4vb',
-	'syuilo/n-ea-8va',
-	'syuilo/n-ea-8vb',
-	'syuilo/n-ea-harmony',
-	'syuilo/up',
-	'syuilo/down',
-	'syuilo/pope1',
-	'syuilo/pope2',
-	'syuilo/waon',
-	'syuilo/popo',
-	'syuilo/triple',
-	'syuilo/bubble1',
-	'syuilo/bubble2',
-	'syuilo/poi1',
-	'syuilo/poi2',
-	'syuilo/pirori',
-	'syuilo/pirori-wet',
-	'syuilo/pirori-square-wet',
-	'syuilo/square-pico',
-	'syuilo/reverved',
-	'syuilo/ryukyu',
-	'syuilo/kick',
-	'syuilo/snare',
-	'syuilo/queue-jammed',
-	'aisha/1',
-	'aisha/2',
-	'aisha/3',
-	'noizenecio/kick_gaba1',
-	'noizenecio/kick_gaba2',
-	'noizenecio/kick_gaba3',
-	'noizenecio/kick_gaba4',
-	'noizenecio/kick_gaba5',
-	'noizenecio/kick_gaba6',
-	'noizenecio/kick_gaba7',
+	"syuilo/n-aec",
+	"syuilo/n-aec-4va",
+	"syuilo/n-aec-4vb",
+	"syuilo/n-aec-8va",
+	"syuilo/n-aec-8vb",
+	"syuilo/n-cea",
+	"syuilo/n-cea-4va",
+	"syuilo/n-cea-4vb",
+	"syuilo/n-cea-8va",
+	"syuilo/n-cea-8vb",
+	"syuilo/n-eca",
+	"syuilo/n-eca-4va",
+	"syuilo/n-eca-4vb",
+	"syuilo/n-eca-8va",
+	"syuilo/n-eca-8vb",
+	"syuilo/n-ea",
+	"syuilo/n-ea-4va",
+	"syuilo/n-ea-4vb",
+	"syuilo/n-ea-8va",
+	"syuilo/n-ea-8vb",
+	"syuilo/n-ea-harmony",
+	"syuilo/up",
+	"syuilo/down",
+	"syuilo/pope1",
+	"syuilo/pope2",
+	"syuilo/waon",
+	"syuilo/popo",
+	"syuilo/triple",
+	"syuilo/bubble1",
+	"syuilo/bubble2",
+	"syuilo/poi1",
+	"syuilo/poi2",
+	"syuilo/pirori",
+	"syuilo/pirori-wet",
+	"syuilo/pirori-square-wet",
+	"syuilo/square-pico",
+	"syuilo/reverved",
+	"syuilo/ryukyu",
+	"syuilo/kick",
+	"syuilo/snare",
+	"syuilo/queue-jammed",
+	"aisha/1",
+	"aisha/2",
+	"aisha/3",
+	"noizenecio/kick_gaba1",
+	"noizenecio/kick_gaba2",
+	"noizenecio/kick_gaba3",
+	"noizenecio/kick_gaba4",
+	"noizenecio/kick_gaba5",
+	"noizenecio/kick_gaba6",
+	"noizenecio/kick_gaba7",
+	"garo/battlebonus3000",
+	"garo/fog_bare",
+	"garo/gfog_kansei",
+	"garo/pfog_navigation",
+	"garo/pfog_shutsugen",
+	"garo/faceofzero",
+	"garo/throughoutbonus_keizoku",
+	"garo/impact_honoo",
+	"garo/impact_zanbaken",
+	"garo/garo_flash",
+	"garo/garo_horyuu",
+	"garo/sp_reach_title_red1",
+	"garo/sp_reach_title_red2",
+	"garo/sp_reach_tenun",
+	"garo/garoken_pushed",
+	"garo/garoken_tobidashi",
+	"garo/garoken_tobidashi2",
+	"garo/garoken_horyuu",
+	"garo/garozanbaken_tobidashi",
+	"garo/garozanbaken_horyuu",
+	"garo/gekkou_special_bonus3000",
+	"garo/genkai_sokuhagyaku_emblem",
+	"garo/shoukaku_victory7",
+	"garo/shoukaku_gekkou_special_bonus3000",
+	"garo/shoukaku_zugara_seikou",
+	"garo/hendoukaishi_emblem_chance",
+	"garo/hendoukaishi_emblem_gekiatsu",
+	"garo/reijuurin_garo",
+	"garo/renzokuyokoku_title_victory",
+	"garo/fog_kansei",
+	"garo/fog_kansei_ooatari",
+	"garo/garo_bonus_max",
+	"garo/garo_logo_flash_red",
+	"garo/garos_eyes_red",
+	"garo/sansei_flash",
 ] as const;
 
 export const operationTypes = [
-	'noteMy',
-	'note',
-	'notification',
-	'reaction',
-	'chatMessage',
+	"noteMy",
+	"note",
+	"notification",
+	"reaction",
+	"chatMessage",
 ] as const;
 
 /** サウンドの種類 */
-export type SoundType = typeof soundsTypes[number];
+export type SoundType = (typeof soundsTypes)[number];
 
 /** スプライトの種類 */
-export type OperationType = typeof operationTypes[number];
+export type OperationType = (typeof operationTypes)[number];
 
 /**
  * 音声を読み込む
  * @param url url
  * @param options `useCache`: デフォルトは`true` 一度再生した音声はキャッシュする
  */
-export async function loadAudio(url: string, options?: { useCache?: boolean; }) {
+export async function loadAudio(url: string, options?: { useCache?: boolean }) {
 	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 	if (ctx == null) {
 		ctx = new AudioContext();
 
-		window.addEventListener('beforeunload', () => {
+		window.addEventListener("beforeunload", () => {
 			ctx.close();
 		});
 	}
@@ -131,10 +166,14 @@ export async function loadAudio(url: string, options?: { useCache?: boolean; }) 
 export function playMisskeySfx(operationType: OperationType) {
 	const sound = prefer.s[`sound.on.${operationType}`];
 	playMisskeySfxFile(sound).then((succeed) => {
-		if (!succeed && sound.type === '_driveFile_') {
+		if (!succeed && sound.type === "_driveFile_") {
 			// ドライブファイルが存在しない場合はデフォルトのサウンドを再生する
-			const soundName = PREF_DEF[`sound_${operationType}`].default.type as Exclude<SoundType, '_driveFile_'>;
-			if (_DEV_) console.debug(`Failed to play sound: ${sound.fileUrl}, so play default sound: ${soundName}`);
+			const soundName = PREF_DEF[`sound_${operationType}`].default
+				.type as Exclude<SoundType, "_driveFile_">;
+			if (_DEV_)
+				console.debug(
+					`Failed to play sound: ${sound.fileUrl}, so play default sound: ${soundName}`,
+				);
 			playMisskeySfxFileInternal({
 				type: soundName,
 				volume: sound.volume,
@@ -147,13 +186,20 @@ export function playMisskeySfx(operationType: OperationType) {
  * サウンド設定形式で指定された音声を再生する
  * @param soundStore サウンド設定
  */
-export async function playMisskeySfxFile(soundStore: SoundStore): Promise<boolean> {
+export async function playMisskeySfxFile(
+	soundStore: SoundStore,
+): Promise<boolean> {
 	// 連続して再生しない
 	if (!canPlay) return false;
 	// ユーザーアクティベーションが必要な場合はそれがない場合は再生しない
-	if ('userActivation' in navigator && !navigator.userActivation.hasBeenActive) return false;
+	if ("userActivation" in navigator && !navigator.userActivation.hasBeenActive)
+		return false;
 	// サウンドがない場合は再生しない
-	if (soundStore.type === null || soundStore.type === '_driveFile_' && !soundStore.fileUrl) return false;
+	if (
+		soundStore.type === null ||
+		(soundStore.type === "_driveFile_" && !soundStore.fileUrl)
+	)
+		return false;
 
 	canPlay = false;
 	return await playMisskeySfxFileInternal(soundStore).finally(() => {
@@ -164,15 +210,23 @@ export async function playMisskeySfxFile(soundStore: SoundStore): Promise<boolea
 	});
 }
 
-async function playMisskeySfxFileInternal(soundStore: SoundStore): Promise<boolean> {
-	if (soundStore.type === null || (soundStore.type === '_driveFile_' && !soundStore.fileUrl)) {
+async function playMisskeySfxFileInternal(
+	soundStore: SoundStore,
+): Promise<boolean> {
+	if (
+		soundStore.type === null ||
+		(soundStore.type === "_driveFile_" && !soundStore.fileUrl)
+	) {
 		return false;
 	}
-	const masterVolume = prefer.s['sound.masterVolume'];
+	const masterVolume = prefer.s["sound.masterVolume"];
 	if (isMute() || masterVolume === 0 || soundStore.volume === 0) {
 		return true; // ミュート時は成功として扱う
 	}
-	const url = soundStore.type === '_driveFile_' ? soundStore.fileUrl : `/client-assets/sounds/${soundStore.type}.mp3`;
+	const url =
+		soundStore.type === "_driveFile_"
+			? soundStore.fileUrl
+			: `/client-assets/sounds/${soundStore.type}.mp3`;
 	const buffer = await loadAudio(url).catch(() => {
 		return undefined;
 	});
@@ -182,11 +236,14 @@ async function playMisskeySfxFileInternal(soundStore: SoundStore): Promise<boole
 	return true;
 }
 
-export async function playUrl(url: string, opts: {
-	volume?: number;
-	pan?: number;
-	playbackRate?: number;
-}) {
+export async function playUrl(
+	url: string,
+	opts: {
+		volume?: number;
+		pan?: number;
+		playbackRate?: number;
+	},
+) {
 	if (opts.volume === 0) {
 		return;
 	}
@@ -195,15 +252,18 @@ export async function playUrl(url: string, opts: {
 	createSourceNode(buffer, opts).soundSource.start();
 }
 
-export function createSourceNode(buffer: AudioBuffer, opts: {
-	volume?: number;
-	pan?: number;
-	playbackRate?: number;
-}): {
-		soundSource: AudioBufferSourceNode;
-		panNode: StereoPannerNode;
-		gainNode: GainNode;
-	} {
+export function createSourceNode(
+	buffer: AudioBuffer,
+	opts: {
+		volume?: number;
+		pan?: number;
+		playbackRate?: number;
+	},
+): {
+	soundSource: AudioBufferSourceNode;
+	panNode: StereoPannerNode;
+	gainNode: GainNode;
+} {
 	const panNode = ctx.createStereoPanner();
 	panNode.pan.value = opts.pan ?? 0;
 
@@ -214,10 +274,7 @@ export function createSourceNode(buffer: AudioBuffer, opts: {
 	const soundSource = ctx.createBufferSource();
 	soundSource.buffer = buffer;
 	soundSource.playbackRate.value = opts.playbackRate ?? 1;
-	soundSource
-		.connect(panNode)
-		.connect(gainNode)
-		.connect(ctx.destination);
+	soundSource.connect(panNode).connect(gainNode).connect(ctx.destination);
 
 	return { soundSource, panNode, gainNode };
 }
@@ -227,7 +284,7 @@ export function createSourceNode(buffer: AudioBuffer, opts: {
  * @param file ファイルのURL（ドライブIDではない）
  */
 export async function getSoundDuration(file: string): Promise<number> {
-	const audioEl = window.document.createElement('audio');
+	const audioEl = window.document.createElement("audio");
 	audioEl.src = file;
 	return new Promise((resolve) => {
 		const si = window.setInterval(() => {
@@ -244,13 +301,16 @@ export async function getSoundDuration(file: string): Promise<number> {
  * ミュートすべきかどうかを判断する
  */
 export function isMute(): boolean {
-	if (prefer.s['sound.notUseSound']) {
+	if (prefer.s["sound.notUseSound"]) {
 		// サウンドを出力しない
 		return true;
 	}
 
 	// noinspection RedundantIfStatementJS
-	if (prefer.s['sound.useSoundOnlyWhenActive'] && window.document.visibilityState === 'hidden') {
+	if (
+		prefer.s["sound.useSoundOnlyWhenActive"] &&
+		window.document.visibilityState === "hidden"
+	) {
 		// ブラウザがアクティブな時のみサウンドを出力する
 		return true;
 	}

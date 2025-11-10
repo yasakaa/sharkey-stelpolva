@@ -3,107 +3,52 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { Inject, Injectable } from "@nestjs/common";
-import { In } from "typeorm";
-import * as Bull from "bullmq";
-import { DI } from "@/di-symbols.js";
-import type { Config } from "@/config.js";
-import { UserFollowingService } from "@/core/UserFollowingService.js";
-import { ReactionService } from "@/core/ReactionService.js";
-import { RelayService } from "@/core/RelayService.js";
-import { NotePiningService } from "@/core/NotePiningService.js";
-import { UserBlockingService } from "@/core/UserBlockingService.js";
-import { NoteDeleteService } from "@/core/NoteDeleteService.js";
-import { NoteCreateService } from "@/core/NoteCreateService.js";
-import { concat, toArray, toSingle, unique } from "@/misc/prelude/array.js";
-import { AppLockService } from "@/core/AppLockService.js";
-import type Logger from "@/logger.js";
-import { IdService } from "@/core/IdService.js";
-import { StatusError } from "@/misc/status-error.js";
-import { UtilityService } from "@/core/UtilityService.js";
-import { NoteEntityService } from "@/core/entities/NoteEntityService.js";
-import { UserEntityService } from "@/core/entities/UserEntityService.js";
-import { QueueService } from "@/core/QueueService.js";
-import type {
-	UsersRepository,
-	NotesRepository,
-	FollowingsRepository,
-	AbuseUserReportsRepository,
-	FollowRequestsRepository,
-	MiMeta,
-} from "@/models/_.js";
-import { bindThis } from "@/decorators.js";
-import type { MiRemoteUser } from "@/models/User.js";
-import { GlobalEventService } from "@/core/GlobalEventService.js";
-import { AbuseReportService } from "@/core/AbuseReportService.js";
-import { FederatedInstanceService } from "@/core/FederatedInstanceService.js";
-import { fromTuple } from "@/misc/from-tuple.js";
-import { IdentifiableError } from "@/misc/identifiable-error.js";
-import { renderInlineError } from "@/misc/render-inline-error.js";
-import InstanceChart from "@/core/chart/charts/instance.js";
-import FederationChart from "@/core/chart/charts/federation.js";
-import { FetchInstanceMetadataService } from "@/core/FetchInstanceMetadataService.js";
-import { UpdateInstanceQueue } from "@/core/UpdateInstanceQueue.js";
-import { CacheService } from "@/core/CacheService.js";
-import {
-	getApHrefNullable,
-	getApId,
-	getApIds,
-	getApType,
-	getNullableApId,
-	isAccept,
-	isActor,
-	isAdd,
-	isAnnounce,
-	isApObject,
-	isBlock,
-	isCollectionOrOrderedCollection,
-	isCreate,
-	isDelete,
-	isFlag,
-	isFollow,
-	isLike,
-	isDislike,
-	isMove,
-	isPost,
-	isReject,
-	isRemove,
-	isTombstone,
-	isUndo,
-	isUpdate,
-	validActor,
-	validPost,
-	isActivity,
-	IObjectWithId,
-} from "./type.js";
-import { ApNoteService } from "./models/ApNoteService.js";
-import { ApLoggerService } from "./ApLoggerService.js";
-import { ApDbResolverService } from "./ApDbResolverService.js";
-import { ApResolverService } from "./ApResolverService.js";
-import { ApAudienceService } from "./ApAudienceService.js";
-import { ApPersonService } from "./models/ApPersonService.js";
-import { ApQuestionService } from "./models/ApQuestionService.js";
-import type { Resolver } from "./ApResolverService.js";
-import type {
-	IAccept,
-	IAdd,
-	IAnnounce,
-	IBlock,
-	ICreate,
-	IDelete,
-	IFlag,
-	IFollow,
-	ILike,
-	IDislike,
-	IObject,
-	IReject,
-	IRemove,
-	IUndo,
-	IUpdate,
-	IMove,
-	IPost,
-	IActivity,
-} from "./type.js";
+import { Inject, Injectable } from '@nestjs/common';
+import { In } from 'typeorm';
+import * as Bull from 'bullmq';
+import { DI } from '@/di-symbols.js';
+import type { Config } from '@/config.js';
+import { UserFollowingService } from '@/core/UserFollowingService.js';
+import { ReactionService } from '@/core/ReactionService.js';
+import { RelayService } from '@/core/RelayService.js';
+import { NotePiningService } from '@/core/NotePiningService.js';
+import { UserBlockingService } from '@/core/UserBlockingService.js';
+import { NoteDeleteService } from '@/core/NoteDeleteService.js';
+import { NoteCreateService } from '@/core/NoteCreateService.js';
+import { concat, toArray, toSingle, unique } from '@/misc/prelude/array.js';
+import { AppLockService } from '@/core/AppLockService.js';
+import type Logger from '@/logger.js';
+import { IdService } from '@/core/IdService.js';
+import { StatusError } from '@/misc/status-error.js';
+import { UtilityService } from '@/core/UtilityService.js';
+import { NoteEntityService } from '@/core/entities/NoteEntityService.js';
+import { UserEntityService } from '@/core/entities/UserEntityService.js';
+import { QueueService } from '@/core/QueueService.js';
+import type { UsersRepository, NotesRepository, FollowingsRepository, AbuseUserReportsRepository, FollowRequestsRepository, MiMeta } from '@/models/_.js';
+import { bindThis } from '@/decorators.js';
+import type { MiRemoteUser } from '@/models/User.js';
+import { GlobalEventService } from '@/core/GlobalEventService.js';
+import { AbuseReportService } from '@/core/AbuseReportService.js';
+import { FederatedInstanceService } from '@/core/FederatedInstanceService.js';
+import { fromTuple } from '@/misc/from-tuple.js';
+import { IdentifiableError } from '@/misc/identifiable-error.js';
+import { renderInlineError } from '@/misc/render-inline-error.js';
+import InstanceChart from '@/core/chart/charts/instance.js';
+import FederationChart from '@/core/chart/charts/federation.js';
+import { FetchInstanceMetadataService } from '@/core/FetchInstanceMetadataService.js';
+import { UpdateInstanceQueue } from '@/core/UpdateInstanceQueue.js';
+import { CacheService } from '@/core/CacheService.js';
+import { NoteVisibilityService } from '@/core/NoteVisibilityService.js';
+import { getApHrefNullable, getApId, getApIds, getApType, getNullableApId, isAccept, isActor, isAdd, isAnnounce, isApObject, isBlock, isCollectionOrOrderedCollection, isCreate, isDelete, isFlag, isFollow, isLike, isDislike, isMove, isPost, isReject, isRemove, isTombstone, isUndo, isUpdate, validActor, validPost, isActivity, IObjectWithId } from './type.js';
+import { ApNoteService } from './models/ApNoteService.js';
+import { ApLoggerService } from './ApLoggerService.js';
+import { ApDbResolverService } from './ApDbResolverService.js';
+import { ApResolverService } from './ApResolverService.js';
+import { ApAudienceService } from './ApAudienceService.js';
+import { ApPersonService } from './models/ApPersonService.js';
+import { ApQuestionService } from './models/ApQuestionService.js';
+import type { Resolver } from './ApResolverService.js';
+import type { IAccept, IAdd, IAnnounce, IBlock, ICreate, IDelete, IFlag, IFollow, ILike, IDislike, IObject, IReject, IRemove, IUndo, IUpdate, IMove, IPost, IActivity } from './type.js';
 
 @Injectable()
 export class ApInboxService {
@@ -156,6 +101,7 @@ export class ApInboxService {
 		private readonly federationChart: FederationChart,
 		private readonly updateInstanceQueue: UpdateInstanceQueue,
 		private readonly cacheService: CacheService,
+		private readonly noteVisibilityService: NoteVisibilityService,
 	) {
 		this.logger = this.apLoggerService.logger;
 	}
@@ -498,12 +444,9 @@ export class ApInboxService {
 			});
 			if (renote == null) return "announce target is null";
 
-			if (
-				!(await this.noteEntityService.isVisibleForMe(renote, actor.id, {
-					me: actor,
-				}))
-			) {
-				return "skip: invalid actor for this activity";
+			const { accessible } = await this.noteVisibilityService.checkNoteVisibilityAsync(renote, actor);
+			if (!accessible) {
+				return 'skip: invalid actor for this activity';
 			}
 
 			if (renote.userHost == null && renote.localOnly) {

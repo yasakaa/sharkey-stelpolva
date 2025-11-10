@@ -32,6 +32,7 @@ import { launchPlugins } from '@/plugin.js';
 import { updateCurrentAccountPartial } from '@/accounts.js';
 import { signout } from '@/signout.js';
 import { migrateOldSettings } from '@/pref-migrate.js';
+import { deviceKind } from '@/utility/device-kind.js';
 
 export async function mainBoot() {
 	const { isClientUpdated, lastVersion } = await common(async () => {
@@ -44,6 +45,14 @@ export async function mainBoot() {
 		if (uiStyle === 'deck' && prefer.s['deck.useSimpleUiForNonRootPages'] && window.location.pathname !== '/') uiStyle = 'zen';
 
 		if (searchParams.has('ui')) uiStyle = searchParams.get('ui');
+
+		if (prefer.s.devMode && deviceKind !== 'desktop') {
+			await window.fetch('https://cdn.jsdelivr.net/npm/eruda')
+				.then((x) => x.text())
+				.then(code => new Function(code)())
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				.then(() => (window as any).eruda.init());
+		}
 
 		let rootComponent: Component;
 		switch (uiStyle) {
@@ -64,8 +73,16 @@ export async function mainBoot() {
 		return createApp(rootComponent);
 	});
 
-	reactionPicker.init();
-	emojiPicker.init();
+	const initEmojiPickers = () => Promise.all([
+		reactionPicker.init(),
+		emojiPicker.init(),
+	]);
+
+	const sleep = (ms: number) => new Promise(resolve => window.setTimeout(resolve, ms));
+
+	sleep(500).then(() => initEmojiPickers())
+		.catch(() => sleep(1000).then(() => initEmojiPickers()))
+		.catch(() => sleep(1000).then(() => initEmojiPickers()));
 
 	if (isClientUpdated && $i) {
 		const { dispose } = popup(defineAsyncComponent(() => import('@/components/MkUpdated.vue')), {}, {

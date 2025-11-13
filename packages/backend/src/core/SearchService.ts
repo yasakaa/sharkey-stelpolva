@@ -352,7 +352,7 @@ export class SearchService {
 		this.queryService.generateVisibilityQuery(query, me);
 		this.queryService.generateBlockedHostQueryForNote(query);
 		this.queryService.generateSuspendedUserQueryForNote(query);
-		this.queryService.generateSilencedUserQueryForNotes(query, me);
+		// this.queryService.generateSilencedUserQueryForNotes(query, me);
 		if (me) this.queryService.generateMutedUserQueryForNotes(query, me);
 		if (me) this.queryService.generateBlockedUserQueryForNotes(query, me);
 

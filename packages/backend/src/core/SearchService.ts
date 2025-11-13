@@ -390,9 +390,9 @@ export class SearchService {
 							q.orWhere("note.userId = :meId", { meId: me.id });
 						}
 						// 修正
-            // フォローしているユーザーのフォロワー限定投稿を許可
+						// フォローしているユーザーのフォロワー限定投稿を許可
             q.orWhere(new Brackets(qbb => qbb
-                // orFollowingUserの代わりに、EXISTSクエリを直接組み込む
+									// orFollowingUserの代わりに、EXISTSクエリを直接組み込む
                 .andWhere('note.visibility = \'followers\'')
                 .andWhere(new Brackets(qbbb => this.queryService.orFollowingUser(qbbb, ':meId', 'note.userId')))
             ));
@@ -445,7 +445,8 @@ export class SearchService {
 				}
 			}
 
-			this.queryService.generateVisibilityQuery(query, me);
+			//修正箇所 クエリ効率化
+			// this.queryService.generateVisibilityQuery(query, me);
 			this.queryService.generateBlockedHostQueryForNote(query);
 			if (me) this.queryService.generateMutedUserQueryForNotes(query, me);
 			if (me) this.queryService.generateBlockedUserQueryForNotes(query, me);
@@ -455,25 +456,16 @@ export class SearchService {
 
 		const searchWord = sqlLikeEscape(q);
 
-		const notes = [
-			...new Map(
-				(
-					await Promise.all([
-						subSearch((query) => {
-							query.andWhere("note.text &@~ :q", { q: searchWord });
-						}),
-						subSearch((query) => {
-							query.andWhere("note.cw &@~ :q", { q: searchWord });
-						}),
-					])
-				)
-					.flatMap((e) => e)
-					.map((note) => [note.id, note])
-			).values(),
-		]
-			.sort((lhs, rhs) => (lhs.id < rhs.id ? 1 : -1))
-			.slice(0, pagination.limit);
-
+		//修正箇所 クエリ効率化
+		const notes = await subSearch((query) => {
+			// textまたはcwのいずれかにキーワードが含まれる投稿を検索するよう、ORで結合
+			query.andWhere(
+				new Brackets((q) => {
+					q.orWhere("note.text &@~ :q", { q: searchWord });
+					q.orWhere("note.cw &@~ :q", { q: searchWord });
+				}),
+			);
+		});
 		return notes;
 	}
 

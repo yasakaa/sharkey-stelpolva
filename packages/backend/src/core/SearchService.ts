@@ -352,7 +352,7 @@ export class SearchService {
 		this.queryService.generateVisibilityQuery(query, me);
 		this.queryService.generateBlockedHostQueryForNote(query);
 		this.queryService.generateSuspendedUserQueryForNote(query);
-		// this.queryService.generateSilencedUserQueryForNotes(query, me);
+		this.queryService.generateSilencedUserQueryForNotes(query, me);
 		if (me) this.queryService.generateMutedUserQueryForNotes(query, me);
 		if (me) this.queryService.generateBlockedUserQueryForNotes(query, me);
 
@@ -389,6 +389,13 @@ export class SearchService {
 						if (me) {
 							q.orWhere("note.userId = :meId", { meId: me.id });
 						}
+						// 修正
+            // フォローしているユーザーのフォロワー限定投稿を許可
+            q.orWhere(new Brackets(qbb => qbb
+                // orFollowingUserの代わりに、EXISTSクエリを直接組み込む
+                .andWhere('note.visibility = \'followers\'')
+                .andWhere(new Brackets(qbbb => this.queryService.orFollowingUser(qbbb, ':meId', 'note.userId')))
+            ));
 					})
 				);
 			}

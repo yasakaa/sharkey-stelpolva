@@ -55,6 +55,9 @@ _stpvPlus:
   disableTimeline:
     label: タイムラインを無効にする
     caption: "{name} タイムラインを無効にする"
+  aprilFools:
+    label: "エイプリルフールのイースターエッグ"
+    caption: "有効にすると、4月1日にサプライズがあります（？）。"
 stpvMuteUser: "タイムライン内の投稿をソフトミュートする"
 stpvUnmuteUser: "タイムライン内の投稿をソフトミュートしない"
 stpvMuteNote: "この投稿を後でソフトミュートする"
@@ -66,3 +69,14 @@ stpvReactionsStatDescription: "最も多く使用された上位100個の絵文�
 stpvPFprefix: "プレフィックス..."
 stpvPFsuffix: "...サフィックス"
 stpvWarnNoQueryLocalFonts: "お使いのブラウザは queryLocalFonts をサポートしていません。テキストボックスにフォント名を手動で入力してください。"
+stpvEmojiPickerItemSize: "絵文字ピッカーのアイテムサイズ"
+
+wordMute: "ワードを折りたたむ"
+hardWordMute: "ワードを非表示にする"
+mute: "ミュート"
+block: "ブロック"
+
+_notification:
+  reportAccepted: "通報が承認されました"
+
+reportAcceptedBody: " {target}に対するあなたの通報は承認されました。ご協力ありがとうございます！管理者が適切な措置を講じました。"

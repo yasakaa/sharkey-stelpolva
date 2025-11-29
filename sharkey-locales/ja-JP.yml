@@ -66,7 +66,6 @@ silencedByBase: "このホストは、ベースドメインがサイレンスさ
 mediaSilencedByBase: "このホストのメディアは、ベースドメインのメディアがサイレンスされているため、暗黙的にサイレンスされています。このホストのサイレンスを解除するには、まずベースドメインのサイレンスを解除してください。"
 driveSearchbarPlaceholder: "検索ドライブ"
 fileNotSelected: "ファイルが選択されていません"
-background: "背景"
 antennaUsersDescription: "ユーザー名を改行で区切って指定します"
 aboutMisskey: "Sharkeyについて"
 expandAllCws: "すべての返信の内容を表示する"
@@ -328,8 +327,6 @@ _notification:
   _types:
     renote: "ブースト"
     edited: "編集済み"
-    scheduledNoteFailed: "予約投稿に失敗しました"
-    scheduledNotePosted: "予約投稿が完了しました"
     importCompleted: "インポートが完了しました"
   _actions:
     renote: "ブースト"
@@ -476,8 +473,7 @@ _externalNavigationWarning:
   title: "外部サイトに移動します"
   description: "{host}を離れて外部サイトに移動します"
   trustThisDomain: "このデバイスで今後このドメインを信頼する"
-schedulePost: "予約投稿"
-schedulePostList: "予約投稿一覧"
+
 
 _auth:
   allowed: "許可済み"
@@ -501,8 +497,6 @@ postOn: "投稿日時"
 scheduledNotes: "予約投稿"
 
 _permissions:
-  "read:notes-schedule": "予約投稿を見る"
-  "write:notes-schedule": "予約投稿を作成・削除する"
   "write:admin:nsfw-user": "ユーザーをNSFWとしてマークする"
   "write:admin:unnsfw-user": "ユーザーのNSFWマークを解除する"
   "write:admin:cw-user": "ユーザーに強制CWを適用する"

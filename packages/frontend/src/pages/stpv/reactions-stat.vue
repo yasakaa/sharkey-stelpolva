@@ -4,84 +4,114 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-<MkStickyContainer>
-	<template #header><MkPageHeader v-model:tab="tab" :actions="headerActions" :tabs="headerTabs"/></template>
-	<MkInfo>
-		{{ i18n.ts.stpvReactionsStatDescription }}
-	</MkInfo>
-	<MkSpacer v-if="tab === 'me'" :contentMax="1000" :marginMin="20">
-		<div class="_gaps_s">
-			<MkButton key="copyMyReactionsList" @click="copyToClipboard(myReactionsListMfm)"><i class="ti ti-copy"></i> {{ i18n.ts.copyContent }}</MkButton>
-		</div>
-		<div class="_gaps_s">
-			<p>
-				<Mfm key="myreactionslist" :text="myReactionsListMfm"></Mfm>
-			</p>
-		</div>
-	</MkSpacer>
-	<MkSpacer v-else-if="tab === 'site'" :contentMax="1000" :marginMin="20">
-		<div class="_gaps_s">
-			<MkButton key="copySiteReactionsList" @click="copyToClipboard(serverReactionsListMfm)"><i class="ti ti-copy"></i> {{ i18n.ts.copyContent }}</MkButton>
-		</div>
-		<div class="_gaps_s">
-			<p>
-				<Mfm key="sitereactionslist" :text="serverReactionsListMfm"></Mfm>
-			</p>
-		</div>
-	</MkSpacer>
-</MkStickyContainer>
+	<MkStickyContainer>
+		<template #header
+			><MkPageHeader
+				v-model:tab="tab"
+				:actions="headerActions"
+				:tabs="headerTabs"
+		/></template>
+		<MkInfo>
+			{{ i18n.ts.stpvReactionsStatDescription }}
+		</MkInfo>
+		<MkSpacer v-if="tab === 'me'" :contentMax="1000" :marginMin="20">
+			<div class="_gaps_s">
+				<MkButton
+					key="copyMyReactionsList"
+					@click="copyToClipboard(myReactionsListMfm)"
+					><i class="ti ti-copy"></i> {{ i18n.ts.copyContent }}</MkButton
+				>
+			</div>
+			<div class="_gaps_s">
+				<p>
+					<Mfm key="myreactionslist" :text="myReactionsListMfm"></Mfm>
+				</p>
+			</div>
+		</MkSpacer>
+		<MkSpacer v-else-if="tab === 'site'" :contentMax="1000" :marginMin="20">
+			<div class="_gaps_s">
+				<MkButton
+					key="copySiteReactionsList"
+					@click="copyToClipboard(serverReactionsListMfm)"
+					><i class="ti ti-copy"></i> {{ i18n.ts.copyContent }}</MkButton
+				>
+			</div>
+			<div class="_gaps_s">
+				<p>
+					<Mfm key="sitereactionslist" :text="serverReactionsListMfm"></Mfm>
+				</p>
+			</div>
+		</MkSpacer>
+	</MkStickyContainer>
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue';
-import { misskeyApi } from '@/utility/misskey-api';
-import { i18n } from '@/i18n.js';
-import MkInfo from '@/components/MkInfo.vue';
-import MkButton from '@/components/MkButton.vue';
-import { copyToClipboard } from '@/utility/copy-to-clipboard';
-import { definePage } from '@/page';
-import { ensureSignin } from '@/i';
+import { computed, ref, watch } from "vue";
+import { misskeyApi } from "@/utility/misskey-api";
+import { i18n } from "@/i18n.js";
+import MkInfo from "@/components/MkInfo.vue";
+import MkButton from "@/components/MkButton.vue";
+import { copyToClipboard } from "@/utility/copy-to-clipboard";
+import { definePage } from "@/page";
+import { ensureSignin } from "@/i";
 
 const $i = ensureSignin();
 
-const myReactionsListMfm = ref('Loading...');
-const serverReactionsListMfm = ref('Loading...');
+const DISABLED_MESSAGE =
+	"この機能はサーバー安定稼働のため現在一時的に停止されています。ご理解ください。";
+// または、i18nに追加: const DISABLED_MESSAGE = i18n.ts.stpvReactionsStatDisabled;
 
-const tab = ref('me');
+const myReactionsListMfm = ref(DISABLED_MESSAGE); // 初期値をメッセージに変更
+const serverReactionsListMfm = ref(DISABLED_MESSAGE); // 初期値をメッセージに変更
 
-watch(tab, async () => {
-	if (tab.value === 'site' && serverReactionsListMfm.value !== 'Loading...') { return; }
-	if (tab.value !== 'site' && myReactionsListMfm.value !== 'Loading...') { return; }
+const tab = ref("me");
 
-	const reactionsList = await misskeyApi('stpv/reactions-stat', { site: tab.value === 'site' });
+// watch(
+// 	tab,
+// 	async () => {
+// 		if (tab.value === "site" && serverReactionsListMfm.value !== "Loading...") {
+// 			return;
+// 		}
+// 		if (tab.value !== "site" && myReactionsListMfm.value !== "Loading...") {
+// 			return;
+// 		}
 
-	const res = reactionsList.map((x) => `${x.reaction} ${x.count}`).join('\n');
+// 		const reactionsList = await misskeyApi("stpv/reactions-stat", {
+// 			site: tab.value === "site",
+// 		});
 
-	if (tab.value === 'site') {
-		serverReactionsListMfm.value = res;
-	} else {
-		myReactionsListMfm.value = res;
-	}
-}, {
-	deep: true,
-	immediate: true,
-});
+// 		const res = reactionsList.map((x) => `${x.reaction} ${x.count}`).join("\n");
+
+// 		if (tab.value === "site") {
+// 			serverReactionsListMfm.value = res;
+// 		} else {
+// 			myReactionsListMfm.value = res;
+// 		}
+// 	},
+// 	{
+// 		deep: true,
+// 		immediate: true,
+// 	},
+// );
 
 const headerActions = computed(() => []);
 
-const headerTabs = computed(() => [{
-	key: 'me',
-	title: $i.username,
-	icon: 'ph-user ph-bold ph-lg',
-}, {
-	key: 'site',
-	title: i18n.ts.instance,
-	icon: 'ph-planet ph-bold ph-lg',
-}]);
+const headerTabs = computed(() => [
+	{
+		key: "me",
+		title: $i.username,
+		icon: "ph-user ph-bold ph-lg",
+	},
+	{
+		key: "site",
+		title: i18n.ts.instance,
+		icon: "ph-planet ph-bold ph-lg",
+	},
+]);
 
 definePage(() => ({
 	title: i18n.ts.stpvReactionsStat,
-	icon: 'ph-chart-bar ph-bold ph-lg',
+	icon: "ph-chart-bar ph-bold ph-lg",
 }));
 </script>
 

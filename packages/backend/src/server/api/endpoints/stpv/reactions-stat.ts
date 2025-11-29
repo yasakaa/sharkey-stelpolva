@@ -3,28 +3,28 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { Inject, Injectable } from '@nestjs/common';
-import { Endpoint } from '@/server/api/endpoint-base.js';
-import type { NoteReactionsRepository } from '@/models/_.js';
-import { DI } from '@/di-symbols.js';
+// import { Inject, Injectable } from "@nestjs/common";
+import { Endpoint } from "@/server/api/endpoint-base.js";
+import type { NoteReactionsRepository } from "@/models/_.js";
+import { DI } from "@/di-symbols.js";
 
 export const meta = {
-	tags: ['stpv'],
+	tags: ["stpv"],
 
 	requireCredential: true,
-	kind: 'read:account',
+	kind: "read:account",
 
 	res: {
-		type: 'array',
+		type: "array",
 		items: {
-			type: 'object',
+			type: "object",
 			properties: {
 				reaction: {
-					type: 'string',
+					type: "string",
 					optional: false,
 				},
 				count: {
-					type: 'number',
+					type: "number",
 					optional: false,
 				},
 			},
@@ -33,47 +33,52 @@ export const meta = {
 
 	errors: {
 		noSuchUser: {
-			message: 'No such user.',
-			code: 'NO_SUCH_USER',
-			id: '27e494ba-2ac2-48e8-893b-10d4d8c2387b',
+			message: "No such user.",
+			code: "NO_SUCH_USER",
+			id: "27e494ba-2ac2-48e8-893b-10d4d8c2387b",
 		},
 	},
 } as const;
 
 export const paramDef = {
-	type: 'object',
+	type: "object",
 	properties: {
-		site: { type: 'boolean', default: false },
+		site: { type: "boolean", default: false },
 	},
 	required: [],
 } as const;
 
-@Injectable()
-export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-disable-line import/no-default-export
-	constructor(
-		@Inject(DI.noteReactionsRepository)
-		private noteReactionsRepository: NoteReactionsRepository,
-	) {
+// @Injectable()
+export default class extends Endpoint<typeof meta, typeof paramDef> {
+	// eslint-disable-line import/no-default-export
+	// constructor(
+	// 	@Inject(DI.noteReactionsRepository)
+	// 	private noteReactionsRepository: NoteReactionsRepository,
+	// ) {
+	// 	super(meta, paramDef, async (ps, me) => {
+	// 		// Get tokens
+	// 		const query =
+	// 			this.noteReactionsRepository.createQueryBuilder('nr')
+	// 				.select('nr.reaction', 'reaction')
+	// 				.addSelect('count(nr.id)', 'count')
+	// 				.groupBy('nr.reaction')
+	// 				.orderBy('count', 'DESC')
+	// 				.limit(100);
+
+	// 		if (!ps.site) {
+	// 			query.where('nr.userId = :id', { id: me.id });
+	// 		}
+
+	// 		const res = await query.getRawMany();
+
+	// 		return res.map(x => ({
+	// 			reaction: x.reaction,
+	// 			count: x.count,
+	// 		}));
+	// NestJSのDIを使わない形式に完全に書き換える場合（より安全）
+	constructor() {
 		super(meta, paramDef, async (ps, me) => {
-			// Get tokens
-			const query =
-				this.noteReactionsRepository.createQueryBuilder('nr')
-					.select('nr.reaction', 'reaction')
-					.addSelect('count(nr.id)', 'count')
-					.groupBy('nr.reaction')
-					.orderBy('count', 'DESC')
-					.limit(100);
-
-			if (!ps.site) {
-				query.where('nr.userId = :id', { id: me.id });
-			}
-
-			const res = await query.getRawMany();
-
-			return res.map(x => ({
-				reaction: x.reaction,
-				count: x.count,
-			}));
+			return [];
 		});
 	}
 }

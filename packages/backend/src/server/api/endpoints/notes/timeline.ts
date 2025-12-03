@@ -12,7 +12,6 @@ import ActiveUsersChart from '@/core/chart/charts/active-users.js';
 import { NoteEntityService } from '@/core/entities/NoteEntityService.js';
 import { DI } from '@/di-symbols.js';
 import { IdService } from '@/core/IdService.js';
-import { CacheService } from '@/core/CacheService.js';
 import { UserFollowingService } from '@/core/UserFollowingService.js';
 import { MiLocalUser } from '@/models/User.js';
 import { FanoutTimelineEndpointService } from '@/core/FanoutTimelineEndpointService.js';
@@ -80,7 +79,6 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 		private noteEntityService: NoteEntityService,
 		private activeUsersChart: ActiveUsersChart,
 		private idService: IdService,
-		private cacheService: CacheService,
 		private fanoutTimelineEndpointService: FanoutTimelineEndpointService,
 		private userFollowingService: UserFollowingService,
 		private queryService: QueryService,
@@ -164,7 +162,9 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 			.leftJoinAndSelect('renote.user', 'renoteUser')
 			.limit(ps.limit);
 
-		this.queryService.generateExcludedRepliesQueryForNotes(query, me);
+		if (!ps.withReplies) {
+			this.queryService.generateExcludedRepliesQueryForNotes(query, me);
+		}
 		this.queryService.generateVisibilityQuery(query, me);
 		this.queryService.generateBlockedHostQueryForNote(query);
 		this.queryService.generateSuspendedUserQueryForNote(query);

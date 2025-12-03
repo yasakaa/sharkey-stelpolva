@@ -79,7 +79,7 @@ Detailed view of a note in the Sharkey style. Used when opening a note onto its 
 						<span v-if="appearNote.updatedAt" ref="menuVersionsButton" style="margin-left: 0.5em;" title="Edited" @mousedown="menuVersions()"><i class="ph-pencil-simple ph-bold ph-lg"></i></span>
 						<span v-if="appearNote.localOnly" style="margin-left: 0.5em;" :title="i18n.ts._visibility['disableFederation']"><i class="ti ti-rocket-off"></i></span>
 					</div>
-					<SkInstanceTicker v-if="showTicker" :host="appearNote.user.host" :instance="appearNote.user.instance"/>
+					<SkInstanceTicker v-if="showTicker" style="cursor: pointer;" :host="appearNote.user.host" :instance="appearNote.user.instance" @click.stop="showNoteOnOriginalInstance(appearNote)"/>
 				</div>
 			</div>
 		</header>
@@ -248,7 +248,6 @@ Detailed view of a note in the Sharkey style. Used when opening a note onto its 
 import { computed, inject, onMounted, onUnmounted, onUpdated, provide, ref, useTemplateRef, watch } from 'vue';
 import * as mfm from 'mfm-js';
 import * as Misskey from 'misskey-js';
-import { isPureRenote } from 'misskey-js/note.js';
 import { isLink } from '@@/js/is-link.js';
 import * as config from '@@/js/config.js';
 import type { OpenOnRemoteOptions } from '@/utility/please-login.js';
@@ -303,6 +302,7 @@ import SkNoteTranslation from '@/components/SkNoteTranslation.vue';
 import { getSelfNoteIds } from '@/utility/get-self-note-ids.js';
 import SkUrlPreviewGroup from '@/components/SkUrlPreviewGroup.vue';
 import MkNoteSub from '@/components/MkNoteSub.vue';
+import { showNoteOnOriginalInstance } from '@/utility/show-note-on-original-instance.js';
 
 const props = withDefaults(defineProps<{
 	note: Misskey.entities.Note;

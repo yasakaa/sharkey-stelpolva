@@ -142,17 +142,25 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 			// DeepL/DeepLX handling
 			if (this.serverSettings.deeplAuthKey || deeplFreeInstance) {
 				const params = new URLSearchParams();
-				if (this.serverSettings.deeplAuthKey) params.append('auth_key', this.serverSettings.deeplAuthKey);
+				// auth_key はヘッダーへ移動するため params には append しない
 				params.append('text', note.text);
 				params.append('target_lang', targetLang);
+
 				const endpoint = deeplFreeInstance ?? ( this.serverSettings.deeplIsPro ? 'https://api.deepl.com/v2/translate' : 'https://api-free.deepl.com/v2/translate' );
+
+				const headers: Record<string, string> = {
+					'Content-Type': 'application/x-www-form-urlencoded',
+					Accept: 'application/json, */*',
+				};
+
+				// DeepL公式APIキーがある場合のみ、新しい認証ヘッダーを追加
+				if (this.serverSettings.deeplAuthKey) {
+					headers['Authorization'] = `DeepL-Auth-Key ${this.serverSettings.deeplAuthKey}`;
+				}
 
 				const res = await this.httpRequestService.send(endpoint, {
 					method: 'POST',
-					headers: {
-						'Content-Type': 'application/x-www-form-urlencoded',
-						Accept: 'application/json, */*',
-					},
+					headers: headers,
 					body: params.toString(),
 					timeout: this.serverSettings.translationTimeout,
 				});

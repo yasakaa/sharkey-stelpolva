@@ -145,7 +145,6 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				// auth_key はヘッダーへ移動するため params には append しない
 				params.append('text', note.text);
 				params.append('target_lang', targetLang);
-
 				const endpoint = deeplFreeInstance ?? ( this.serverSettings.deeplIsPro ? 'https://api.deepl.com/v2/translate' : 'https://api-free.deepl.com/v2/translate' );
 
 				const headers: Record<string, string> = {

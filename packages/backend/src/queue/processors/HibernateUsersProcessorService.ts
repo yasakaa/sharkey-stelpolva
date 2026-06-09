@@ -13,7 +13,7 @@ import { CacheService } from "@/core/CacheService.js";
 import { TimeService } from "@/global/TimeService.js";
 import type { FollowingsRepository, UsersRepository } from "@/models/_.js";
 import { DI } from "@/di-symbols.js";
-import { InternalEventService } from "@global/InternalEventService.js";
+import { InternalEventService } from "@/global/InternalEventService.js";
 
 @Injectable()
 export class HibernateUsersProcessorService {

@@ -13,67 +13,69 @@ import { CacheService } from "@/core/CacheService.js";
 import { TimeService } from "@/global/TimeService.js";
 import type { FollowingsRepository, UsersRepository } from "@/models/_.js";
 import { DI } from "@/di-symbols.js";
+import { InternalEventService } from "@global/InternalEventService.js";
 
 @Injectable()
 export class HibernateUsersProcessorService {
-	private readonly logger: Logger;
+  private readonly logger: Logger;
 
-	constructor(
-		@Inject(DI.usersRepository)
-		private readonly usersRepository: UsersRepository,
+  constructor(
+    @Inject(DI.usersRepository)
+    private readonly usersRepository: UsersRepository,
 
-		@Inject(DI.followingsRepository)
-		private readonly followingsRepository: FollowingsRepository,
+    @Inject(DI.followingsRepository)
+    private readonly followingsRepository: FollowingsRepository,
 
-		private readonly cacheService: CacheService,
-		private readonly timeService: TimeService,
+    private readonly timeService: TimeService,
+    private readonly internalEventService: InternalEventService,
 
-		queueLoggerService: QueueLoggerService,
-	) {
-		this.logger = queueLoggerService.logger.createSubLogger("hibernate-users");
-	}
+    queueLoggerService: QueueLoggerService,
+  ) {
+    this.logger = queueLoggerService.logger.createSubLogger("hibernate-users");
+  }
 
-	@bindThis
-	public async process() {
-		// エラー対応のため休眠阻止
-		this.logger.warn(
-			"Hibernation process is TEMPORARILY DISABLED due to online status bug.",
-		);
-		return;
+  @bindThis
+  public async process() {
+    // エラー対応のため休眠阻止
+    this.logger.warn(
+      "Hibernation process is TEMPORARILY DISABLED due to online status bug.",
+    );
+    return;
 
-		// try {
-		// 	let totalHibernated = 0;
+    // try {
+    //   let totalHibernated = 0;
 
-		// 	// Any users last active *before* this date should be hibernated
-		// 	const hibernationThreshold = new Date(this.timeService.now - (1000 * 60 * 60 * 24 * 50));
+    //   // Any users last active *before* this date should be hibernated
+    //   const hibernationThreshold = new Date(this.timeService.now - (1000 * 60 * 60 * 24 * 50));
 
-		// 	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-		// 	while (true) {
-		// 		// Work in batches of 100
-		// 		const page = await this.usersRepository.find({
-		// 			where: { isHibernated: false, lastActiveDate: LessThan(hibernationThreshold) },
-		// 			select: { id: true },
-		// 			take: 100,
-		// 		}) as { id: string }[];
-		// 		const ids = page.map(u => u.id);
+    //   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    //   while (true) {
+    //     // Work in batches of 100
+    //     const page = await this.usersRepository.find({
+    //       where: { isHibernated: false, lastActiveDate: LessThan(hibernationThreshold) },
+    //       select: { id: true },
+    //       take: 100,
+    //     }) as { id: string }[];
+    //     const ids = page.map(u => u.id);
 
-		// 		// Stop when we get them all
-		// 		if (ids.length < 1) break;
+    //     // Stop when we get them all
+    //     if (ids.length < 1) break;
 
-		// 		await this.usersRepository.update({ id: In(ids) }, { isHibernated: true });
-		// 		await this.followingsRepository.update({ followerId: In(ids) }, { isFollowerHibernated: true });
-		// 		await this.cacheService.hibernatedUserCache.refreshMany(ids);
+    //     await this.usersRepository.update({ id: In(ids) }, { isHibernated: true });
+    //     await this.followingsRepository.update({ followerId: In(ids) }, { isFollowerHibernated: true });
+    //     await this.internalEventService.emit("userChangeHibernatedState", { id: ids, isHibernated: true });
+    //     await this.cacheService.hibernatedUserCache.refreshMany(ids);
 
-		// 		totalHibernated += ids.length;
-		// 	}
+    //     totalHibernated += ids.length;
+    //   }
 
-		// 	if (totalHibernated > 0) {
-		// 		this.logger.info(`Hibernated ${totalHibernated} inactive users`);
-		// 	} else {
-		// 		this.logger.debug('Skipping hibernation: nothing to do');
-		// 	}
-		// } catch (err) {
-		// 	this.logger.error(`Error hibernating users: ${renderInlineError(err)}`);
-		// }
-	}
+    //   if (totalHibernated > 0) {
+    //     this.logger.info(`Hibernated ${totalHibernated} inactive users`);
+    //   } else {
+    //    this.logger.debug("Skipping hibernation: nothing to do");
+    //   }
+    // } catch (err) {
+    //   this.logger.error(`Error hibernating users: ${renderInlineError(err)}`);
+    // }
+  }
 }

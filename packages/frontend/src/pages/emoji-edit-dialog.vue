@@ -6,7 +6,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 <template>
 <MkWindow
 	ref="windowEl"
-	:initialWidth="480"
+	:initialWidth="800"
 	:initialHeight="720"
 	:viewportResponsive="true"
 	:canResize="true"

@@ -89,7 +89,7 @@ function dragClear(fn) {
 const props = withDefaults(defineProps<{
 	initialWidth: number;
 	initialHeight: number | null;
-	/** Fit the viewport dynamically, using the initial dimensions as upper bounds. */
+	/** Fit the viewport dynamically while allowing handles to change the preferred size. */
 	viewportResponsive?: boolean;
 	canResize?: boolean;
 	closeButton?: boolean;
@@ -428,7 +428,7 @@ function onBottomLeftHandleMousedown(evt: MouseEvent | TouchEvent) {
 // 高さを適用
 function applyTransformHeight(height) {
 	if (props.viewportResponsive && !maximized.value) {
-		if (rootEl.value) rootEl.value.style.height = `min(${Math.min(height, props.initialHeight ?? height)}px, 80dvh)`;
+		if (rootEl.value) rootEl.value.style.height = `min(${height}px, 80dvh)`;
 		return;
 	}
 	if (height > window.innerHeight) height = window.innerHeight;
@@ -438,7 +438,7 @@ function applyTransformHeight(height) {
 // 幅を適用
 function applyTransformWidth(width) {
 	if (props.viewportResponsive && !maximized.value) {
-		if (rootEl.value) rootEl.value.style.width = `min(${Math.min(width, props.initialWidth)}px, 90dvw)`;
+		if (rootEl.value) rootEl.value.style.width = `min(${width}px, 90dvw)`;
 		return;
 	}
 	if (width > window.innerWidth) width = window.innerWidth;

@@ -6,8 +6,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 <template>
 <MkWindow
 	ref="windowEl"
-	:initialWidth="initialWidth"
-	:initialHeight="initialHeight"
+	:initialWidth="480"
+	:initialHeight="720"
+	:viewportResponsive="true"
 	:canResize="true"
 	@close="windowEl?.close()"
 	@closed="emit('closed')"
@@ -93,9 +94,6 @@ import { customEmojiCategories } from '@/custom-emojis.js';
 import MkSwitch from '@/components/MkSwitch.vue';
 import { selectFile } from '@/utility/select-file.js';
 import MkRolePreview from '@/components/MkRolePreview.vue';
-
-const initialWidth = Math.round(window.innerWidth * 0.8);
-const initialHeight = Math.round(window.innerHeight * 0.8);
 
 const props = defineProps<{
 	emoji?: Misskey.entities.EmojiDetailed,

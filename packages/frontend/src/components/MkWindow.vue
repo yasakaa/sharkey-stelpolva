@@ -89,6 +89,8 @@ function dragClear(fn) {
 const props = withDefaults(defineProps<{
 	initialWidth: number;
 	initialHeight: number | null;
+	/** Fit the viewport dynamically, using the initial dimensions as upper bounds. */
+	viewportResponsive?: boolean;
 	canResize?: boolean;
 	closeButton?: boolean;
 	mini?: boolean;
@@ -99,6 +101,7 @@ const props = withDefaults(defineProps<{
 }>(), {
 	initialWidth: 400,
 	initialHeight: null,
+	viewportResponsive: false,
 	canResize: false,
 	closeButton: true,
 	mini: false,
@@ -169,6 +172,7 @@ function unMaximize() {
 	rootEl.value.style.left = unResizedLeft;
 	rootEl.value.style.width = unResizedWidth;
 	rootEl.value.style.height = unResizedHeight;
+	if (props.viewportResponsive) onBrowserResize();
 }
 
 function minimize() {
@@ -176,7 +180,7 @@ function minimize() {
 	minimized.value = true;
 	unResizedWidth = rootEl.value.style.width;
 	unResizedHeight = rootEl.value.style.height;
-	rootEl.value.style.width = minWidth + 'px';
+	rootEl.value.style.width = props.viewportResponsive ? `min(${minWidth}px, 90dvw)` : minWidth + 'px';
 	rootEl.value.style.height = props.mini ? '32px' : '39px';
 }
 
@@ -187,6 +191,10 @@ function unMinimize() {
 	minimized.value = false;
 	rootEl.value.style.width = unResizedWidth;
 	rootEl.value.style.height = unResizedHeight;
+	if (props.viewportResponsive) {
+		onBrowserResize();
+		return;
+	}
 	const browserWidth = window.innerWidth;
 	const browserHeight = window.innerHeight;
 	const windowWidth = main.offsetWidth;
@@ -419,12 +427,20 @@ function onBottomLeftHandleMousedown(evt: MouseEvent | TouchEvent) {
 
 // 高さを適用
 function applyTransformHeight(height) {
+	if (props.viewportResponsive && !maximized.value) {
+		if (rootEl.value) rootEl.value.style.height = `min(${Math.min(height, props.initialHeight ?? height)}px, 80dvh)`;
+		return;
+	}
 	if (height > window.innerHeight) height = window.innerHeight;
 	if (rootEl.value) rootEl.value.style.height = height + 'px';
 }
 
 // 幅を適用
 function applyTransformWidth(width) {
+	if (props.viewportResponsive && !maximized.value) {
+		if (rootEl.value) rootEl.value.style.width = `min(${Math.min(width, props.initialWidth)}px, 90dvw)`;
+		return;
+	}
 	if (width > window.innerWidth) width = window.innerWidth;
 	if (rootEl.value) rootEl.value.style.width = width + 'px';
 }
@@ -448,6 +464,11 @@ function onBrowserResize() {
 	const browserHeight = window.innerHeight;
 	const windowWidth = main.offsetWidth;
 	const windowHeight = main.offsetHeight;
+	if (props.viewportResponsive) {
+		main.style.left = Math.max(0, Math.min(position.left, browserWidth - windowWidth)) + 'px';
+		main.style.top = Math.max(0, Math.min(position.top, browserHeight - windowHeight)) + 'px';
+		return;
+	}
 	if (position.left < 0) main.style.left = '0'; // 左はみ出し
 	if (position.top + windowHeight > browserHeight) main.style.top = browserHeight - windowHeight + 'px'; // 下はみ出し
 	if (position.left + windowWidth > browserWidth) main.style.left = browserWidth - windowWidth + 'px'; // 右はみ出し

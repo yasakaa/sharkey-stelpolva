@@ -181,6 +181,16 @@ if (!mock) {
 <style lang="scss" module>
 .root {
 	display: inline-flex;
+	max-width: 100%;
+	box-sizing: border-box;
+	> :first-child {
+		height: 1.5em;
+		min-width: 0;
+		object-fit: contain;
+	}
+	> .count {
+		flex-shrink: 0;
+	}
 	height: 42px;
 	padding: 0 6px;
 	font-size: 1.5em;

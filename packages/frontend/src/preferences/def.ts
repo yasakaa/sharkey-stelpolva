@@ -256,7 +256,7 @@ export const PREF_DEF = {
 		default: 'medium' as 'small' | 'medium' | 'large',
 	},
 	limitWidthOfReaction: {
-		default: true,
+		default: false,
 	},
 	forceShowAds: {
 		default: false,

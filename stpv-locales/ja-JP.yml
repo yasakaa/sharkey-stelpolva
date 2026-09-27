@@ -80,3 +80,14 @@ _notification:
   reportAccepted: "通報が承認されました"
 
 reportAcceptedBody: " {target}に対するあなたの通報は承認されました。ご協力ありがとうございます！管理者が適切な措置を講じました。"
+
+_stpvVisibilityColors:
+  title: "公開範囲ごとの背景色"
+  enable: "投稿と投稿フォームを色分けする"
+  description: "この端末に適用します。自分のみ・ダイレクト・フォロワー限定はローカルのみより優先し、ローカルのみはホームより優先します。"
+  home: "ホーム"
+  followers: "フォロワー限定"
+  localOnly: "ローカルのみ"
+  specified: "ダイレクト"
+  private: "自分のみ"
+  opacity: "色の濃さ（%）"

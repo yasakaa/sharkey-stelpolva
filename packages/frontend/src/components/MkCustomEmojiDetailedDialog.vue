@@ -84,7 +84,12 @@ function cancel() {
 <style lang="scss" module>
 .emojiImgWrapper {
   max-width: 100%;
-  height: 40cqh;
+  height: clamp(3rem, 15dvh, 10rem);
+  max-width: 100%;
+  > img {
+    max-width: 100%;
+    object-fit: contain;
+  }
   background-image: repeating-linear-gradient(45deg, transparent, transparent 8px, light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.05)) 8px, light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.05)) 14px);
   border-radius: var(--MI-radius);
   margin: auto;

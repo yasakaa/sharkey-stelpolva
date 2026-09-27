@@ -6,6 +6,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 <template>
 <div
 	:class="[$style.root, { [$style.modal]: modal, _popup: modal }]"
+	:style="visibilityColorStyle({ visibility, localOnly, visibleUserIds: visibleUsers.map(user => user.id) }, modal ? 'popup' : 'panel')"
 	@dragover.stop="onDragover"
 	@dragenter="onDragenter"
 	@dragleave="onDragleave"
@@ -159,6 +160,8 @@ import { mfmFunctionPicker } from '@/utility/mfm-function-picker.js';
 import { prefer } from '@/preferences.js';
 import { getPluginHandlers } from '@/plugin.js';
 import { DI } from '@/di.js';
+
+import { visibilityColorStyle } from '@/utility/visibility-color.js';
 
 const $i = ensureSignin();
 

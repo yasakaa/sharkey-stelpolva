@@ -47,7 +47,7 @@ Detailed view of a note in the Sharkey style. Used when opening a note onto its 
 		<SkNoteSub v-for="note in conversation" :key="note.id" :note="note" :expandAllCws="props.expandAllCws" detailed @expandMute="n => emit('expandMute', n)"/>
 	</template>
 	<SkNoteSub v-if="appearNote.reply" :note="appearNote.reply" :class="$style.replyTo" :expandAllCws="props.expandAllCws" detailed @expandMute="n => emit('expandMute', n)"/>
-	<article :id="appearNote.id" ref="noteEl" :class="$style.note" tabindex="-1" @contextmenu.stop="onContextmenu">
+	<article :id="appearNote.id" ref="noteEl" :class="$style.note" :style="visibilityColorStyle(appearNote)" tabindex="-1" @contextmenu.stop="onContextmenu">
 		<header :class="$style.noteHeader">
 			<MkAvatar :class="$style.noteHeaderAvatar" :user="appearNote.user" indicator link preview/>
 			<div style="display: flex; align-items: center; white-space: nowrap; overflow: hidden;">
@@ -102,6 +102,7 @@ Detailed view of a note in the Sharkey style. Used when opening a note onto its 
 					v-if="appearNote.text"
 					:parsedNodes="parsed"
 					:text="appearNote.text"
+					style="--stpv-note-emoji-height: 3em;"
 					:author="appearNote.user"
 					:nyaize="'respect'"
 					:emojiUrls="appearNote.emojis"
@@ -302,6 +303,8 @@ import SkNoteTranslation from '@/components/SkNoteTranslation.vue';
 import { getSelfNoteIds } from '@/utility/get-self-note-ids.js';
 import SkUrlPreviewGroup from '@/components/SkUrlPreviewGroup.vue';
 import { showNoteOnOriginalInstance } from '@/utility/show-note-on-original-instance.js';
+
+import { visibilityColorStyle } from '@/utility/visibility-color.js';
 
 const props = withDefaults(defineProps<{
 	note: Misskey.entities.Note;

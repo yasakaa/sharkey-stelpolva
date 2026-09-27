@@ -521,6 +521,8 @@ defineExpose({
 
 	display: flex;
 	flex-direction: column;
+	max-width: min(100%, calc(100dvw - 1rem));
+	min-height: 0;
 
 	&.s1 {
 		--eachSize: max(40px, v-bind("emojiSize"));
@@ -535,28 +537,23 @@ defineExpose({
 	}
 
 	&.w1 {
-		width: calc((var(--eachSize) * 5) + (#{$pad} * 2));
-		--columns: 1fr 1fr 1fr 1fr 1fr;
+		width: calc((var(--eachSize) * 5 * 1.4) + (#{$pad} * 2));
 	}
 
 	&.w2 {
-		width: calc((var(--eachSize) * 6) + (#{$pad} * 2));
-		--columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+		width: calc((var(--eachSize) * 6 * 1.4) + (#{$pad} * 2));
 	}
 
 	&.w3 {
-		width: calc((var(--eachSize) * 7) + (#{$pad} * 2));
-		--columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+		width: calc((var(--eachSize) * 7 * 1.4) + (#{$pad} * 2));
 	}
 
 	&.w4 {
-		width: calc((var(--eachSize) * 8) + (#{$pad} * 2));
-		--columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+		width: calc((var(--eachSize) * 8 * 1.4) + (#{$pad} * 2));
 	}
 
 	&.w5 {
-		width: calc((var(--eachSize) * 9) + (#{$pad} * 2));
-		--columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+		width: calc((var(--eachSize) * 9 * 1.4) + (#{$pad} * 2));
 	}
 
 	&.h1 {
@@ -575,82 +572,17 @@ defineExpose({
 		height: calc((var(--eachSize) * 10) + (#{$pad} * 2));
 	}
 
-	&.asDrawer {
-		width: 100% !important;
-
-		> .emojis {
-			::v-deep(section) {
-				> header {
-					height: 32px;
-					line-height: 32px;
-					padding: 0 12px;
-					font-size: 15px;
-				}
-
-				> .body {
-					display: grid;
-					grid-template-columns: var(--columns);
-					font-size: 30px;
-
-					> .item {
-						aspect-ratio: 1 / 1;
-						width: auto;
-						height: auto;
-						min-width: 0;
-
-						&:disabled {
-							cursor: not-allowed;
-							background: linear-gradient(-45deg, transparent 0% 48%, light-dark(rgba(0, 0, 0, 0.25), rgba(255, 255, 255, 0.15)) 48% 52%, transparent 52% 100%);
-							opacity: 1;
-
-							> .emoji {
-								filter: grayscale(1);
-								mix-blend-mode: exclusion;
-								opacity: 0.8;
-							}
-						}
-					}
-				}
-			}
-		}
+	&.asDrawer, &.asWindow {
+		width: 100%;
+		max-width: 100%;
 	}
 
 	&.asWindow {
-		width: 100% !important;
-		height: 100% !important;
-
-		> .emojis {
-			::v-deep(section) {
-				> .body {
-					display: grid;
-					grid-template-columns: var(--columns);
-					font-size: 30px;
-
-					> .item {
-						aspect-ratio: 1 / 1;
-						width: auto;
-						height: auto;
-						min-width: 0;
-						padding: 0;
-
-						&:disabled {
-							cursor: not-allowed;
-							background: linear-gradient(-45deg, transparent 0% 48%, light-dark(rgba(0, 0, 0, 0.25), rgba(255, 255, 255, 0.15)) 48% 52%, transparent 52% 100%);
-							opacity: 1;
-
-							> .emoji {
-								filter: grayscale(1);
-								mix-blend-mode: exclusion;
-								opacity: 0.8;
-							}
-						}
-					}
-				}
-			}
-		}
+		height: 100%;
 	}
 
 	> .search {
+		flex-shrink: 0;
 		width: 100%;
 		padding: 12px;
 		box-sizing: border-box;
@@ -688,6 +620,7 @@ defineExpose({
 	}
 
 	> .emojis {
+		min-height: 0;
 		height: 100%;
 		overflow-y: auto;
 		overflow-x: hidden;
@@ -733,15 +666,24 @@ defineExpose({
 			}
 
 			> .body {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.25rem;
 				position: relative;
 				padding: $pad;
 
 				> .item {
 					position: relative;
 					padding: 0 3px;
-					width: var(--eachSize);
-					height: var(--eachSize);
-					contain: strict;
+					width: auto;
+					min-width: min(var(--eachSize), 100%);
+					max-width: 100%;
+					box-sizing: border-box;
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					min-height: var(--eachSize);
+					contain: layout;
 					border-radius: var(--MI-radius-xs);
 					font-size: 24px;
 
@@ -770,7 +712,9 @@ defineExpose({
 						height: v-bind("emojiSize");
 						vertical-align: -.25em;
 						pointer-events: none;
-						width: 100%;
+						width: auto;
+						max-width: 100%;
+						min-width: 0;
 						object-fit: contain;
 					}
 				}

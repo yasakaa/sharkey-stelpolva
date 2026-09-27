@@ -75,3 +75,14 @@ _notification:
   reportAccepted: "Report Accepted"
 
 reportAcceptedBody: "Your report against {target} has been accepted. Thank you for your help! The administrators have taken appropriate action."
+
+_stpvVisibilityColors:
+  title: "Visibility background colors"
+  enable: "Color notes and the post form"
+  description: "Applies on this device. Private, direct and followers-only colors take precedence over local-only, which takes precedence over home."
+  home: "Home"
+  followers: "Followers only"
+  localOnly: "Local only"
+  specified: "Direct"
+  private: "Private"
+  opacity: "Color strength (%)"

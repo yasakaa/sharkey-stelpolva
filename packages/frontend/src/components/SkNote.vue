@@ -54,7 +54,7 @@ Displays a note in the Sharkey style. Used to show the "main" note in a given co
 		<MkAvatar :class="$style.collapsedRenoteTargetAvatar" :user="appearNote.user" link preview/>
 		<Mfm :text="getNoteSummary(appearNote)" :isBlock="true" :stpvInline="true" :nowrap="true" :author="appearNote.user" :nyaize="'respect'" :class="$style.collapsedRenoteTargetText" @click="renoteCollapsed = false; inReplyToCollapsed = false"/>
 	</div>
-	<article v-else :class="$style.article" @contextmenu.stop="onContextmenu">
+	<article v-else :class="$style.article" :style="visibilityColorStyle(appearNote)" @contextmenu.stop="onContextmenu">
 		<div style="display: flex; padding-bottom: 10px;">
 			<div v-if="appearNote.channel" :class="$style.colorBar" :style="{ background: appearNote.channel.color }"></div>
 			<MkAvatar :class="[$style.avatar, { [$style.avatarReplyTo]: appearNote.reply }]" :user="appearNote.user" :link="!mock" :preview="!mock"/>
@@ -87,6 +87,7 @@ Displays a note in the Sharkey style. Used to show the "main" note in a given co
 							v-if="appearNote.text"
 							:parsedNodes="parsed"
 							:text="appearNote.text"
+							style="--stpv-note-emoji-height: 3em;"
 							:author="appearNote.user"
 							:nyaize="'respect'"
 							:emojiUrls="appearNote.emojis"
@@ -240,6 +241,8 @@ import { getSelfNoteIds } from '@/utility/get-self-note-ids.js';
 import { extractPreviewUrls } from '@/utility/extract-preview-urls.js';
 import SkUrlPreviewGroup from '@/components/SkUrlPreviewGroup.vue';
 import MkNoteSub from '@/components/MkNoteSub.vue';
+
+import { visibilityColorStyle } from '@/utility/visibility-color.js';
 
 const props = withDefaults(defineProps<{
 	note: Misskey.entities.Note;

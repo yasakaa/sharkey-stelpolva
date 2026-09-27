@@ -10,7 +10,7 @@ For example, when viewing a reply on the timeline, SkNoteSub will be used to dis
 <template>
 <SkMutedNote v-show="!isDeleted" ref="rootComp" :note="appearNote" :mutedClass="$style.muted" :expandedClass="[$style.root, { [$style.children]: depth > 1, [$style.isReply]: props.isReply, [$style.detailed]: props.detailed }]" @expandMute="n => emit('expandMute', n)">
 	<div v-if="!hideLine" :class="$style.line"></div>
-	<div :class="$style.main">
+	<div :class="$style.main" :style="visibilityColorStyle(appearNote)">
 		<div v-if="note.channel" :class="$style.colorBar" :style="{ background: note.channel.color }"></div>
 		<!-- new avatar container with line (post section) -->
 		<div :class="$style.avatarContainer">
@@ -28,7 +28,7 @@ For example, when viewing a reply on the timeline, SkNoteSub will be used to dis
 					<MkCwButton v-model="showContent" :text="note.text" :files="note.files" :poll="note.poll"/>
 				</p>
 				<div v-show="appearNote.cw == null || showContent">
-					<MkSubNoteContent :class="$style.text" :note="note" :translating="translating" :translation="translation" :expandAllCws="props.expandAllCws"/>
+					<MkSubNoteContent style="--stpv-note-emoji-height: 3em;" :class="$style.text" :note="note" :translating="translating" :translation="translation" :expandAllCws="props.expandAllCws"/>
 				</div>
 			</div>
 			<MkReactionsViewer ref="reactionsViewer" :note="note"/>
@@ -128,6 +128,8 @@ import { instance, policies } from '@/instance';
 import { getAppearNote } from '@/utility/get-appear-note';
 import { setupNoteViewInterruptors } from '@/plugin.js';
 import { deepClone } from '@/utility/clone.js';
+
+import { visibilityColorStyle } from '@/utility/visibility-color.js';
 
 const props = withDefaults(defineProps<{
 	note: Misskey.entities.Note;

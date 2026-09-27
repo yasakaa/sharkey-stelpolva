@@ -87,6 +87,26 @@ SPDX-License-Identifier: AGPL-3.0-only
 	</FormSection>
 
 	<FormSection>
+		<template #label>{{ i18n.ts._stpvVisibilityColors.title }}</template>
+		<div class="_gaps_m">
+			<MkSwitch v-model="visibilityColorsEnabled">
+				{{ i18n.ts._stpvVisibilityColors.enable }}
+				<template #caption>{{ i18n.ts._stpvVisibilityColors.description }}</template>
+			</MkSwitch>
+			<template v-if="visibilityColorsEnabled">
+				<label v-for="key in visibilityColorKeys" :key="key" class="_gaps_s">
+					<span>{{ i18n.ts._stpvVisibilityColors[key] }}</span>
+					<input type="color" :value="visibilityColors[key]" @input="setVisibilityColor(key, $event)">
+					<div :style="visibilityColorStyle(visibilityPreviewTargets[key])" style="padding: 1em; border-radius: var(--MI-radius-sm);">{{ i18n.ts.preview }}</div>
+				</label>
+				<MkRange v-model="visibilityColorOpacity" :min="0" :max="50" :step="1">
+					<template #label>{{ i18n.ts._stpvVisibilityColors.opacity }}</template>
+				</MkRange>
+			</template>
+		</div>
+	</FormSection>
+
+	<FormSection>
 		<template #label>{{ i18n.ts.emojiPicker }}</template>
 		<div class="_gaps_m">
 			<div class="_gaps_s">
@@ -208,6 +228,22 @@ import MkRange from '@/components/MkRange.vue';
 import { instance } from '@/instance';
 import { store } from '@/store';
 import { definePage } from '@/page';
+import { visibilityColorStyle } from '@/utility/visibility-color.js';
+
+const visibilityColorsEnabled = computed(store.makeGetterSetter('stpvVisibilityColorsEnabled'));
+const visibilityColors = computed(store.makeGetterSetter('stpvVisibilityColors'));
+const visibilityColorOpacity = computed(store.makeGetterSetter('stpvVisibilityColorOpacity'));
+const visibilityColorKeys = ['home', 'followers', 'localOnly', 'specified', 'private'] as const;
+const visibilityPreviewTargets = {
+	home: { visibility: 'home' },
+	followers: { visibility: 'followers' },
+	localOnly: { visibility: 'public', localOnly: true },
+	specified: { visibility: 'specified' },
+	private: { visibility: 'specified', visibleUserIds: [] },
+};
+function setVisibilityColor(key: typeof visibilityColorKeys[number], event: Event) {
+	visibilityColors.value = { ...visibilityColors.value, [key]: (event.target as HTMLInputElement).value };
+}
 
 const defaultFont = getDefaultFontSettings();
 console.log(defaultFont);

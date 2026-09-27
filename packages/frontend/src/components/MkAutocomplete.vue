@@ -213,7 +213,7 @@ function setPosition() {
 		rootEl.value.style.left = `${props.x}px`;
 	}
 	if (props.y + rootEl.value.offsetHeight > window.innerHeight) {
-		rootEl.value.style.top = (props.y - rootEl.value.offsetHeight) + 'px';
+		rootEl.value.style.top = Math.max(0, props.y - rootEl.value.offsetHeight) + 'px';
 		rootEl.value.style.marginTop = '0';
 	} else {
 		rootEl.value.style.top = props.y + 'px';
@@ -403,6 +403,7 @@ onMounted(() => {
 	setPosition();
 
 	props.textarea.addEventListener('keydown', onKeydown);
+	window.addEventListener('resize', setPosition);
 
 	window.document.body.addEventListener('mousedown', onMousedown);
 
@@ -419,6 +420,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
 	props.textarea.removeEventListener('keydown', onKeydown);
+	window.removeEventListener('resize', setPosition);
 
 	window.document.body.removeEventListener('mousedown', onMousedown);
 });
@@ -427,6 +429,7 @@ onBeforeUnmount(() => {
 <style lang="scss" module>
 .root {
 	position: fixed;
+	width: min(32rem, 100dvw);
 	max-width: 100%;
 	margin-top: calc(1em + 8px);
 	overflow: clip;
@@ -437,8 +440,8 @@ onBeforeUnmount(() => {
 	display: block;
 	margin: 0;
 	padding: 4px 0;
-	max-height: 190px;
-	max-width: 500px;
+	max-height: min(16rem, 40dvh);
+	max-width: 100%;
 	overflow: auto;
 	list-style: none;
 }
@@ -487,8 +490,11 @@ onBeforeUnmount(() => {
 	flex-shrink: 0 !important;
 	display: flex !important;
 	margin: 0 4px 0 0 !important;
-	height: 24px !important;
-	width: 24px !important;
+	height: 2em !important;
+	width: auto !important;
+	max-width: 60%;
+	object-fit: contain;
+	min-width: 2em;
 	justify-content: center !important;
 	align-items: center !important;
 	font-size: 20px !important;
@@ -496,9 +502,10 @@ onBeforeUnmount(() => {
 }
 
 .emojiImg {
-	height: 24px;
-	width: 24px;
-	object-fit: scale-down;
+	height: 2em;
+	width: auto;
+	max-width: 100%;
+	object-fit: contain;
 }
 
 .emojiName {

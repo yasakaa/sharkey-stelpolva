@@ -11,6 +11,18 @@ export const TimelineSwipeKeys = [
 ] as const;
 
 export const stpvDefaultStoreExtension = {
+	stpvVisibilityColorsEnabled: {
+		where: 'device',
+		default: false as boolean,
+	},
+	stpvVisibilityColors: {
+		where: 'device',
+		default: { home: '#00ffff', followers: '#ff00ff', localOnly: '#64ff64', specified: '#0000ff', private: '#6464ff' } as Record<'home' | 'followers' | 'localOnly' | 'specified' | 'private', string>,
+	},
+	stpvVisibilityColorOpacity: {
+		where: 'device',
+		default: 20 as number,
+	},
 	chineseAutospacing: {
 		where: 'device',
 		default: null as 'all' | 'special' | null,

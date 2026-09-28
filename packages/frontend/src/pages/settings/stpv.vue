@@ -106,6 +106,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 		</div>
 	</FormSection>
 
+	<StpvEmojiSizeSettings/>
+
 	<FormSection>
 		<template #label>{{ i18n.ts.emojiPicker }}</template>
 		<div class="_gaps_m">
@@ -225,6 +227,7 @@ import { miLocalStorage } from '@/local-storage';
 import MkInput from '@/components/MkInput.vue';
 import MkEmojiPicker from '@/components/MkEmojiPicker.vue';
 import MkRange from '@/components/MkRange.vue';
+import StpvEmojiSizeSettings from '@/components/StpvEmojiSizeSettings.vue';
 import { instance } from '@/instance';
 import { store } from '@/store';
 import { definePage } from '@/page';

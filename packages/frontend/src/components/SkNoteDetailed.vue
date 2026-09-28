@@ -102,7 +102,7 @@ Detailed view of a note in the Sharkey style. Used when opening a note onto its 
 					v-if="appearNote.text"
 					:parsedNodes="parsed"
 					:text="appearNote.text"
-					style="--stpv-note-emoji-height: 3em;"
+					:style="noteEmojiStyle"
 					:author="appearNote.user"
 					:nyaize="'respect'"
 					:emojiUrls="appearNote.emojis"
@@ -304,6 +304,7 @@ import { getSelfNoteIds } from '@/utility/get-self-note-ids.js';
 import SkUrlPreviewGroup from '@/components/SkUrlPreviewGroup.vue';
 import { showNoteOnOriginalInstance } from '@/utility/show-note-on-original-instance.js';
 
+import { noteEmojiStyle } from '@/utility/note-emoji-style.js';
 import { visibilityColorStyle } from '@/utility/visibility-color.js';
 
 const props = withDefaults(defineProps<{

@@ -28,7 +28,7 @@ For example, when viewing a reply on the timeline, SkNoteSub will be used to dis
 					<MkCwButton v-model="showContent" :text="note.text" :files="note.files" :poll="note.poll"/>
 				</p>
 				<div v-show="appearNote.cw == null || showContent">
-					<MkSubNoteContent style="--stpv-note-emoji-height: 3em;" :class="$style.text" :note="note" :translating="translating" :translation="translation" :expandAllCws="props.expandAllCws"/>
+					<MkSubNoteContent :style="noteEmojiStyle" :class="$style.text" :note="note" :translating="translating" :translation="translation" :expandAllCws="props.expandAllCws"/>
 				</div>
 			</div>
 			<MkReactionsViewer ref="reactionsViewer" :note="note"/>
@@ -129,6 +129,7 @@ import { getAppearNote } from '@/utility/get-appear-note';
 import { setupNoteViewInterruptors } from '@/plugin.js';
 import { deepClone } from '@/utility/clone.js';
 
+import { noteEmojiStyle } from '@/utility/note-emoji-style.js';
 import { visibilityColorStyle } from '@/utility/visibility-color.js';
 
 const props = withDefaults(defineProps<{

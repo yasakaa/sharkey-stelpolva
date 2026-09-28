@@ -11,6 +11,14 @@ export const TimelineSwipeKeys = [
 ] as const;
 
 export const stpvDefaultStoreExtension = {
+	stpvNoteEmojiScale: {
+		where: 'device',
+		default: 100 as number,
+	},
+	stpvReactionEmojiScale: {
+		where: 'device',
+		default: 100 as number,
+	},
 	stpvVisibilityColorsEnabled: {
 		where: 'device',
 		default: false as boolean,

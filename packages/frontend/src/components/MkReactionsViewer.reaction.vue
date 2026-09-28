@@ -36,6 +36,9 @@ import { checkReactionPermissions } from '@/utility/check-reaction-permissions.j
 import { customEmojisMap } from '@/custom-emojis.js';
 import { prefer } from '@/preferences.js';
 import { DI } from '@/di.js';
+import { store } from '@/store.js';
+
+const reactionEmojiHeight = computed(() => `${1.5 * store.r.stpvReactionEmojiScale.value / 100}em`);
 
 const props = defineProps<{
 	reaction: string;
@@ -184,14 +187,14 @@ if (!mock) {
 	max-width: 100%;
 	box-sizing: border-box;
 	> :first-child {
-		height: 1.5em;
+		height: v-bind(reactionEmojiHeight);
 		min-width: 0;
 		object-fit: contain;
 	}
 	> .count {
 		flex-shrink: 0;
 	}
-	height: 42px;
+	height: max(42px, calc(v-bind(reactionEmojiHeight) + 0.125em));
 	padding: 0 6px;
 	font-size: 1.5em;
 	border-radius: var(--MI-radius-sm);
@@ -211,7 +214,7 @@ if (!mock) {
 	}
 
 	&.small {
-		height: 32px;
+		height: max(32px, calc(v-bind(reactionEmojiHeight) + 0.125em));
 		font-size: 1em;
 		border-radius: var(--MI-radius-xs);
 
@@ -222,7 +225,7 @@ if (!mock) {
 	}
 
 	&.large {
-		height: 52px;
+		height: max(52px, calc(v-bind(reactionEmojiHeight) + 0.125em));
 		font-size: 2em;
 		border-radius: var(--MI-radius-sm);
 

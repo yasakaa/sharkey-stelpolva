@@ -76,6 +76,17 @@ _notification:
 
 reportAcceptedBody: "Your report against {target} has been accepted. Thank you for your help! The administrators have taken appropriate action."
 
+_stpvEmojiSize:
+  title: "Emoji display size"
+  description: "Adjust sizes on this device. 100% is the default. Moving a slider immediately updates the preview and your notes."
+  preview: "Sample note with custom emoji and emoji reactions"
+  note: "Custom emoji in notes"
+  reaction: "Emoji in reactions"
+  reset: "Reset both sizes to 100%"
+  sampleText: "Check emoji sizes and how they fit alongside text."
+  reactionsHidden: "Reactions are currently hidden. Disable that setting to see them in the preview."
+  customCss: "Custom CSS that enlarges emoji (such as zoom) may further change their size. Reaction button size and width limit settings also affect the display."
+
 _stpvVisibilityColors:
   title: "Visibility background colors"
   enable: "Color notes and the post form"

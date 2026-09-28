@@ -87,7 +87,7 @@ Displays a note in the Sharkey style. Used to show the "main" note in a given co
 							v-if="appearNote.text"
 							:parsedNodes="parsed"
 							:text="appearNote.text"
-							style="--stpv-note-emoji-height: 3em;"
+							:style="noteEmojiStyle"
 							:author="appearNote.user"
 							:nyaize="'respect'"
 							:emojiUrls="appearNote.emojis"
@@ -242,6 +242,7 @@ import { extractPreviewUrls } from '@/utility/extract-preview-urls.js';
 import SkUrlPreviewGroup from '@/components/SkUrlPreviewGroup.vue';
 import MkNoteSub from '@/components/MkNoteSub.vue';
 
+import { noteEmojiStyle } from '@/utility/note-emoji-style.js';
 import { visibilityColorStyle } from '@/utility/visibility-color.js';
 
 const props = withDefaults(defineProps<{

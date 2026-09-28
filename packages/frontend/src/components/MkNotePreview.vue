@@ -16,7 +16,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<MkCwButton v-model="showContent" :text="text.trim()" :files="files" :poll="poll" style="margin: 4px 0;"/>
 			</p>
 			<div v-show="!useCw || showContent">
-				<Mfm :text="text.trim()" :isBlock="true" :author="user" :nyaize="'respect'" :i="user"/>
+				<Mfm :style="noteEmojiStyle" :text="text.trim()" :isBlock="true" :author="user" :nyaize="'respect'" :i="user"/>
 			</div>
 		</div>
 	</div>
@@ -25,6 +25,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { noteEmojiStyle } from '@/utility/note-emoji-style.js';
 import * as Misskey from 'misskey-js';
 import type { PollEditorModelValue } from '@/components/MkPollEditor.vue';
 import MkCwButton from '@/components/MkCwButton.vue';

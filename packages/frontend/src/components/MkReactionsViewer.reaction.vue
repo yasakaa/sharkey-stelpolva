@@ -12,7 +12,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 	@click="toggleReaction()"
 	@contextmenu.prevent.stop="menu"
 >
-	<MkReactionIcon :class="prefer.s.limitWidthOfReaction ? $style.limitWidth : ''" :reaction="reaction" :emojiUrl="note.reactionEmojis[reaction.substring(1, reaction.length - 1)]" @click="toggleReaction()" @click.stop/>
+	<MkReactionIcon :class="$style.emoji" :style="reactionEmojiStyle" :reaction="reaction" :emojiUrl="note.reactionEmojis[reaction.substring(1, reaction.length - 1)]" @click="toggleReaction()" @click.stop/>
 	<span :class="$style.count">{{ count }}</span>
 </button>
 </template>
@@ -39,6 +39,12 @@ import { DI } from '@/di.js';
 import { store } from '@/store.js';
 
 const reactionEmojiHeight = computed(() => `${1.5 * store.r.stpvReactionEmojiScale.value / 100}em`);
+const reactionEmojiStyle = computed(() => ({
+	height: reactionEmojiHeight.value,
+	// Scale both bounds: a fixed width otherwise prevents wide emoji from
+	// visibly growing even when their image element becomes taller.
+	maxWidth: prefer.s.limitWidthOfReaction ? `${70 * store.r.stpvReactionEmojiScale.value / 100}px` : undefined,
+}));
 
 const props = defineProps<{
 	reaction: string;
@@ -186,8 +192,8 @@ if (!mock) {
 	display: inline-flex;
 	max-width: 100%;
 	box-sizing: border-box;
-	> :first-child {
-		height: v-bind(reactionEmojiHeight);
+	> .emoji {
+		width: auto;
 		min-width: 0;
 		object-fit: contain;
 	}
@@ -248,11 +254,6 @@ if (!mock) {
 			filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
 		}
 	}
-}
-
-.limitWidth {
-	max-width: 70px;
-	object-fit: contain;
 }
 
 .count {
